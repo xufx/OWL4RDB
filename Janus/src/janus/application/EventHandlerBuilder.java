@@ -5,6 +5,7 @@ import janus.application.dbscheme.DBTree;
 import janus.application.dbscheme.DBTreeSelectionListener;
 import janus.application.description.AttrDescribable;
 import janus.application.ontscheme.ClsTree;
+import janus.application.ontscheme.ClsTreePopupTrigger;
 import janus.application.ontscheme.ClsTreeSelectionListener;
 import janus.application.ontscheme.DPTree;
 import janus.application.ontscheme.DPTreeSelectionListener;
@@ -40,6 +41,7 @@ class EventHandlerBuilder {
 	private static void buildSchemeTreesHandlers() {
 		connectDBTreeSelectionListener();
 		connectClsTreeSelectionListener();
+		connectClsTreePopupTrigger();
 		connectObjPropTreeSelectionListener();
 		connectDataPropTreeSelectionListener();
 	}
@@ -59,16 +61,22 @@ class EventHandlerBuilder {
 	}
 	
 	private static void connectObjPropTreeSelectionListener() {
-		OPTree tree = UIRegistry.findObjPropTree();
+		OPTree tree = UIRegistry.getObjPropTree();
 		AttrDescribable announcer = UIRegistry.getDescriptionTree();
 		OPTreeSelectionListener listener = new OPTreeSelectionListener(announcer);
 		tree.addTreeSelectionListener(listener);
 	}
 	
 	private static void connectClsTreeSelectionListener() {
-		ClsTree tree = UIRegistry.findClsTreePane();
+		ClsTree tree = UIRegistry.getClsTreePane();
 		AttrDescribable announcer = UIRegistry.getDescriptionTree();
 		ClsTreeSelectionListener listener = new ClsTreeSelectionListener(announcer);
 		tree.addTreeSelectionListener(listener);
+	}
+	
+	private static void connectClsTreePopupTrigger() {
+		ClsTree tree = UIRegistry.getClsTreePane();
+		ClsTreePopupTrigger trigger = new ClsTreePopupTrigger(tree);
+		tree.addTreePopupTrigger(trigger);
 	}
 }

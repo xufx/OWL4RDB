@@ -17,12 +17,13 @@ import javax.swing.JTabbedPane;
 public class UIRegistry {
 	private static JFrame frame;
 	private static JTabbedPane queryPane;
-	private static JScrollPane resultSetPane;
+	private static JScrollPane queryResultPane;
 	private static JScrollPane dbSchemePane;
 	private static JScrollPane descriptionPane;
 	private static JScrollPane dataPropertyPane;
 	private static JScrollPane objectPropertyPane;
 	private static JScrollPane classPane;
+	private static JScrollPane individualPane;
 	
 	static void registerWindow(JFrame frame) {
 		UIRegistry.frame = frame;
@@ -32,8 +33,8 @@ public class UIRegistry {
 		UIRegistry.queryPane = queryPane;
 	}
 	
-	static void registerResultSetPane(JScrollPane resultSetPane) {
-		UIRegistry.resultSetPane = resultSetPane;
+	static void registerQueryResultPane(JScrollPane queryResultPane) {
+		UIRegistry.queryResultPane = queryResultPane;
 	}
 	
 	static void registerDBSchemePane(JScrollPane dbSchemePane) {
@@ -56,27 +57,31 @@ public class UIRegistry {
 		UIRegistry.classPane = classPane;
 	}
 	
+	static void registerIndividualPane(JScrollPane individualPane) {
+		UIRegistry.individualPane = individualPane;
+	}
+	
 	public static Window getDialogOwner() { return frame; }
 	
 	static JFrame getWindow() { return frame; }
 	
-	public static Submittable getSelectedSubmittable() {
+	public static Submittable getSelectedQueryPane() {
 		return (Submittable)queryPane.getSelectedComponent();
 	}
 	
-	public static Showable getShowable() {
-		return (Showable)resultSetPane;
+	public static Showable getQueryResultPane() {
+		return (Showable)queryResultPane;
 	}
 	
 	static DPTree getDataPropTree() {
 		return (DPTree)dataPropertyPane;
 	}
 	
-	static OPTree findObjPropTree() {
+	static OPTree getObjPropTree() {
 		return (OPTree)objectPropertyPane;
 	}
 	
-	static ClsTree findClsTreePane() {
+	public static ClsTree getClsTreePane() {
 		return (ClsTree)classPane;
 	}
 	

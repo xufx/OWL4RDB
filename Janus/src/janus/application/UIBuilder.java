@@ -26,7 +26,6 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -119,15 +118,17 @@ class UIBuilder {
 		sp.setResizeWeight(0.5);
 		sp.setOneTouchExpandable(true);
 		
-		sp.setTopComponent(buildIndividualListPane());
+		sp.setLeftComponent(buildIndividualListPane());
 		
-		sp.setBottomComponent(buildSQLResultSetPane());
+		//sp.setBottomComponent(buildSQLResultSetPane());
 		
 		return sp;
 	}
 	
 	private static JScrollPane buildIndividualListPane() {
 		JScrollPane sp = new IndividualList();
+		
+		UIRegistry.registerIndividualPane(sp);
 		
 		return sp;
 	}
@@ -163,7 +164,7 @@ class UIBuilder {
 	private static JScrollPane buildSQLResultSetPane() {
 		JScrollPane resultSetPane = new ResultSetPane();
 		
-		UIRegistry.registerResultSetPane(resultSetPane);
+		UIRegistry.registerQueryResultPane(resultSetPane);
 		
 		return resultSetPane;
 	}
