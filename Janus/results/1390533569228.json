@@ -1,0 +1,15 @@
+?y: http://cosmos.ssu.ac.kr/ontologies/college.owl#lecturer.id
+?y: http://cosmos.ssu.ac.kr/ontologies/college.owl#person.id
+?y: http://cosmos.ssu.ac.kr/ontologies/college.owl#student.id
+?y: http://cosmos.ssu.ac.kr/ontologies/college.owl#takes.sid
+?y: http://www.w3.org/2002/07/owl#Thing
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__lecturer.id__P4
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__person.id__P1
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__person.id__P3
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__person.id__P4
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__student.id__P4
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__student.id__P1
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__student.id__P3
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__takes.sid__P1
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__takes.sid__P3
+?x: http://cosmos.ssu.ac.kr/ontologies/college.owl#c__takes.sid__P4
