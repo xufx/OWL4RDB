@@ -482,7 +482,7 @@ class Individual {
 			familyClasses.remove(sClassURI);
 
 			for (URI familyClass: familyClasses) {
-				String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
+				String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
 				URI familyIndividualURI = getTypeChangedIndividual(familyClass);
 				Individual familyIndividual = new Individual(familyIndividualURI);
 
@@ -625,8 +625,8 @@ class Individual {
 			
 			for (URI familyClass: familyClasses) {
 				if (Janus.ontBridge.isSubClassOf(getClassURI(), familyClass)) {
-					String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+					String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 					
 					URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 					
@@ -639,8 +639,8 @@ class Individual {
 					Individual familyIndividual = new Individual(familyIndividualURI);
 					
 					if (familyIndividual.isExistentIndividual()) {
-						String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+						String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 						
 						URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 						
@@ -715,7 +715,7 @@ class Individual {
 			familyClasses.remove(sClassURI);
 			
 			for (URI familyClass: familyClasses) {
-				String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
+				String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
 				URI familyIndividualURI = getTypeChangedIndividual(familyClass);
 				Individual familyIndividual = new Individual(familyIndividualURI);
 				
@@ -836,8 +836,8 @@ class Individual {
 			
 			for (URI familyClass: familyClasses) {
 				if (Janus.ontBridge.isSubClassOf(getClassURI(), familyClass)) {
-					String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+					String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 					
 					URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 					
@@ -847,8 +847,8 @@ class Individual {
 					Individual familyIndividual = new Individual(familyIndividualURI);
 					
 					if (familyIndividual.isExistentIndividual()) {
-						String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+						String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 						
 						URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 						
@@ -917,7 +917,7 @@ class Individual {
 			familyClasses.remove(getClassURI());
 			
 			for (URI familyClass: familyClasses) {
-				String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
+				String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
 				URI familyIndividualURI = getTypeChangedIndividual(familyClass);
 				Individual familyIndividual = new Individual(familyIndividualURI);
 				
@@ -1114,8 +1114,8 @@ class Individual {
 			
 			for (URI familyClass: familyClasses) {
 				if (Janus.ontBridge.isSubClassOf(getClassURI(), familyClass)) {
-					String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+					String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+					String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 					
 					URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 					
@@ -1129,8 +1129,8 @@ class Individual {
 					Individual familyIndividual = new Individual(familyIndividualURI);
 					
 					if (familyIndividual.isExistentIndividual()) {
-						String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+						String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+						String familyColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 						
 						URI familyPredicate = Janus.mappingMetadata.getMappedDataProperty(familyTable, familyColumn);
 						
@@ -1229,7 +1229,7 @@ class Individual {
 			familyClasses.remove(getClassURI());
 			
 			for (URI familyClass: familyClasses) {
-				String familyTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
+				String familyTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
 				URI familyIndividualURI = getTypeChangedIndividual(familyClass);
 				Individual familyIndividual = new Individual(familyIndividualURI);
 				

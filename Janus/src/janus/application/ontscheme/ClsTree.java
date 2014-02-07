@@ -19,6 +19,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class ClsTree extends JScrollPane {
@@ -73,14 +74,26 @@ public class ClsTree extends JScrollPane {
 	}
 	
 	public URI getSelectedClass() {
-		try {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-			OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
 
-			return clsNode.getURI();
-		} catch (NullPointerException e) {
-			return null; 
-		}
+		return clsNode.getURI();
+	}
+	
+	TreePath getPathForLocation(int x, int y) {
+		return tree.getPathForLocation(x, y);
+	}
+	
+	void setSelectionPath(TreePath path) {
+		tree.setSelectionPath(path);
+	}
+	
+	boolean isPathSelected(TreePath path) {
+		return tree.isPathSelected(path);
+	}
+	
+	boolean isSelectionEmpty() {
+		return tree.isSelectionEmpty();
 	}
 }
 

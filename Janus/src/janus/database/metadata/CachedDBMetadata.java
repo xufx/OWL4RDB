@@ -134,6 +134,13 @@ public class CachedDBMetadata {
 		return null;
 	}
 	
+	public boolean isPrimaryKeySingleColumn(String tableName) {
+		if (getPrimaryKeys(tableName).size() < 2)
+			return true;
+		
+		return false;
+	}
+	
 	public int getRowCount(String tableName) {
 		for (TableMetadata table: tables)
 			if (table.getTableName().equals(tableName))

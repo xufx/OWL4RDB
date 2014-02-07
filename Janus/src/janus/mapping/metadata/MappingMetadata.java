@@ -27,7 +27,7 @@ public class MappingMetadata {
 		properties.add(propertyMetaData);
 	}
 	
-	public String getMappedTableNameOfTheClass(URI classURI) {
+	public String getMappedTableNameOfClass(URI classURI) {
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))
@@ -37,7 +37,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedTableNameOfTheProperty(URI propertyURI) {
+	public String getMappedTableNameOfProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))
@@ -47,7 +47,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedColumnNameOfTheClass(URI classURI) {
+	public String getMappedColumnNameOfClass(URI classURI) {
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))
@@ -57,7 +57,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedColumnNameOfTheProperty(URI propertyURI) {
+	public String getMappedColumnNameOfProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))
@@ -68,6 +68,9 @@ public class MappingMetadata {
 	}
 	
 	public ClassTypes getClassType(URI classURI) {
+		if (classURI.toString().equals(ClassTypes.OWL_THING.value()))
+			return ClassTypes.OWL_THING;
+		
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))

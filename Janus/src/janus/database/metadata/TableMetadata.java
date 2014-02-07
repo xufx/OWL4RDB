@@ -148,8 +148,6 @@ class TableMetadata implements Comparable<TableMetadata> {
 		
 		query = query.substring(0, query.lastIndexOf(",")) + ") FROM " + tableName;
 		
-		//System.out.println(query);
-		
 		Janus.dbBridge.executeQuery(query);
 		
 		List<String> rowData = Janus.dbBridge.getResultSetRowAt(1);

@@ -33,9 +33,9 @@ public class OntMapper {
 		String catalog = Janus.cachedDBMetadata.getCatalog();
 		
 		if (isDump)
-			output = new File(Janus.defaultDumpOntRepositoryPath + catalog + ".owl");
+			output = new File(Janus.DEFAULT_DIR_FOR_DUMP_FILE + catalog + ".owl");
 		else
-			output = new File(Janus.defaultOntRepositoryPath + catalog + ".owl");
+			output = new File(Janus.DEFAULT_DIR_FOR_TBOX_FILE + catalog + ".owl");
 		
 		try {
 			writer = new PrintWriter(output);
@@ -45,16 +45,18 @@ public class OntMapper {
 	}
 	
 	private void writePrefixes() {
+		String currentNamespace = Janus.DEFAULT_PARENT_PATH_FOR_ONT_NAMESPACE + output.getName();
+		
 		try {
 			writer.println("Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)");
-			writer.println("Prefix(:=<" + Janus.defaultOntURIPath + output.getName() + "#>)");
+			writer.println("Prefix(:=<" + currentNamespace + "#>)");
 			writer.println("Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)");
 			writer.println("Prefix(skos:=<http://www.w3.org/2004/02/skos/core#>)");
 			writer.println("Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)");
 			writer.println("Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)");
 			writer.println("Prefix(owl:=<http://www.w3.org/2002/07/owl#>)");
 			writer.println();
-			writer.println("Ontology(<" + Janus.defaultOntURIPath + output.getName() + ">");
+			writer.println("Ontology(<" + currentNamespace + ">");
 			writer.println();
 		} catch (Exception e) {
 			e.printStackTrace();

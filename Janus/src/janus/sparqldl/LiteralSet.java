@@ -32,12 +32,12 @@ class LiteralSet implements Comparable<LiteralSet> {
 		
 		classType = Janus.mappingMetadata.getClassType(classURI);
 		
-		mappedTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(classURI);
+		mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(classURI);
 		
 		if (classType.equals(ClassTypes.COLUMN_CLASS))
-			mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(classURI);
+			mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(classURI);
 		else {
-			mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfTheProperty(dataPropertyURI);
+			mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfProperty(dataPropertyURI);
 			
 			primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(mappedTable);
 		}
@@ -105,13 +105,13 @@ class LiteralSet implements Comparable<LiteralSet> {
 		if (Janus.ontBridge.isSubClassOf(classURI, familyClassURI) || classURI.equals(familyClassURI))
 			return;
 		
-		String joinTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClassURI);
+		String joinTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClassURI);
 		
 		fromSet.add(joinTable);
 		
 		String joinColumn = null;
 		if (classType.equals(ClassTypes.COLUMN_CLASS)) {
-			joinColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClassURI);
+			joinColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClassURI);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
 			
@@ -170,8 +170,8 @@ class LiteralSet implements Comparable<LiteralSet> {
 				
 				familyIndividualSets.add(familyIndividualSet);
 				
-				String mappedTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-				String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+				String mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+				String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 				
 				URI familyDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 				familyDataProperties.add(familyDataProperty);

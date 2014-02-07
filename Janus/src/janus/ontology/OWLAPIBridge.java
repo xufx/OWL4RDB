@@ -50,7 +50,7 @@ import de.derivo.sparqldlapi.types.QueryAtomType;
 
 import uk.ac.manchester.cs.owl.owlapi.mansyntaxrenderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 
-public class OWLAPIBridge implements OntBridge {
+class OWLAPIBridge implements OntBridge {
 	static OntBridge getInstance(File ontFile, ReasonerType reasonerType) {
 		return new OWLAPIBridge(ontFile, reasonerType);
 	}

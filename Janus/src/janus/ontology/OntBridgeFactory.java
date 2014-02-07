@@ -14,5 +14,4 @@ public class OntBridgeFactory {
 		
 		return ontBridge;
 	}
-
 }

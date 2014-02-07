@@ -1688,8 +1688,8 @@ public class ABox2Processor {
 
 						Set<LiteralSet> literalSets = new ConcurrentSkipListSet<LiteralSet>();
 
-						String mappedTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(assertedDomainURI);
-						String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(assertedDomainURI);
+						String mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(assertedDomainURI);
+						String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(assertedDomainURI);
 
 						URI mappedDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 
@@ -1697,8 +1697,8 @@ public class ABox2Processor {
 						literalSets.add(literalSet);
 
 						for (URI familyClass: familyClasses) {
-							mappedTable = Janus.mappingMetadata.getMappedTableNameOfTheClass(familyClass);
-							mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfTheClass(familyClass);
+							mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
+							mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
 
 							mappedDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 

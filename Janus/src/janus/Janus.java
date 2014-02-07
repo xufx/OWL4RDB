@@ -14,6 +14,8 @@ import janus.mapping.metadata.MappingMetadata;
 import janus.ontology.OntBridge;
 import janus.ontology.OntBridgeFactory;
 import janus.ontology.ReasonerType;
+import janus.query.SQLGenerator;
+import janus.query.SQLGeneratorFactory;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -21,16 +23,17 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class Janus {
-	public static String defaultOntRepositoryPath = "./ontologies/";
-	public static String defaultDumpOntRepositoryPath = "./ontologies/dump/";
+	public static final String DEFAULT_DIR_FOR_TBOX_FILE = "./ontologies/";
+	public static final String DEFAULT_DIR_FOR_DUMP_FILE = "./ontologies/dump/";
 	
-	public static String defaultOntURIPath = "http://cosmos.ssu.ac.kr/ontologies/";
+	public static final String DEFAULT_PARENT_PATH_FOR_ONT_NAMESPACE = "http://cosmos.ssu.ac.kr/ontologies/";
 	
 	public static DBBridge dbBridge;
 	public static OntBridge ontBridge;
 	public static OntMapper ontMapper;
 	public static CachedDBMetadata cachedDBMetadata;
 	public static MappingMetadata mappingMetadata;
+	public static SQLGenerator sqlGenerator;
 	
 	public static void main (String[] args) {
 		Splash splash = new Splash(ImageURIs.SPLASH, ImageURIs.LOGO);
@@ -42,7 +45,9 @@ public class Janus {
 		
 		do {
 			loginDialog.setVisible(true);
-			if(!loginDialog.isNormalExit()) System.exit(0);
+			
+			if(!loginDialog.isNormalExit()) 
+				System.exit(0);
 
 			dbBridge = DBBridgeFactory.getDBBridge(loginDialog.getDBMSType(),
 															loginDialog.getHost(),
@@ -50,12 +55,15 @@ public class Janus {
 															loginDialog.getID(),
 															loginDialog.getPassword(),
 															loginDialog.getSchema());
-			if(!dbBridge.isConnected()) JOptionPane.showMessageDialog(splash,
-																	  "Could not connect to the DBMS.",
-																	  "Janus Error",
-																	  JOptionPane.ERROR_MESSAGE);
-			else break;
+			
+			if(!dbBridge.isConnected()) 
+				JOptionPane.showMessageDialog(splash, "Could not connect to the DBMS.", 
+											  "Janus Error", JOptionPane.ERROR_MESSAGE);
+			else 
+				break;
 		} while(true);
+		
+		sqlGenerator = SQLGeneratorFactory.getSQLGenerator(loginDialog.getDBMSType());
 		
 		loginDialog.dispose();
 		
@@ -63,7 +71,7 @@ public class Janus {
 		
 		ontMapper = new OntMapper();
 		
-		File ontFile = new File(Janus.defaultOntRepositoryPath + dbBridge.getConnectedCatalog() + ".owl");
+		File ontFile = new File(Janus.DEFAULT_DIR_FOR_TBOX_FILE + dbBridge.getConnectedCatalog() + ".owl");
 		if (!ontFile.exists())
 			ontFile = ontMapper.generateTBoxFile();
 			
