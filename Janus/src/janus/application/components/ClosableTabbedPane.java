@@ -10,10 +10,9 @@ public class ClosableTabbedPane extends JTabbedPane {
 		super(tabPlacement, JTabbedPane.WRAP_TAB_LAYOUT);
 	}
 	
-	public void addTab(String title, Component component, boolean closable) {
+	public void addTab(String title, Component component) {
 		super.addTab(title, component);
 		
-		if (closable)
-			setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this));
+		setTabComponentAt(indexOfComponent(component), new ButtonTabComponent(this));
 	}
 }

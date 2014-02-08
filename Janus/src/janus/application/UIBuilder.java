@@ -1,13 +1,13 @@
 package janus.application;
 
 import janus.ImageURIs;
-import janus.Janus;
 import janus.TabNames;
 import janus.application.actions.BuildTBoxAction;
 import janus.application.actions.DumpKnowledgeBaseAction;
 import janus.application.actions.RunAction;
 import janus.application.actions.ShowAtomsAction;
 import janus.application.actions.ShowDocumentAction;
+import janus.application.components.ClosableTabbedPane;
 import janus.application.dbscheme.DBTree;
 import janus.application.description.DescrTree;
 import janus.application.ontdata.IndividualList;
@@ -17,8 +17,6 @@ import janus.application.ontscheme.OPTree;
 import janus.application.query.QueryArea;
 import janus.application.query.QueryTypes;
 import janus.application.query.ResultSetPane;
-import janus.ontology.RenderingType;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -29,7 +27,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 
 class UIBuilder {
@@ -143,7 +140,7 @@ class UIBuilder {
 	}
 	
 	private static JTabbedPane buildDocumentPane() {
-		JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP);
+		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
 		UIRegistry.registerDocumentPane(tp);
 		

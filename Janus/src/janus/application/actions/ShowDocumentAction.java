@@ -27,9 +27,18 @@ public class ShowDocumentAction extends AbstractAction {
 			JTabbedPane documentPane = UIRegistry.getDocumentPane();
 			
 			if (dialog.whichButtonIsSelected().equals(DocTypeSelectionDialog.RDF_XML)) {
-				documentPane.addTab(TabNames.RDF_XML, buildOWLRenderingPane(RenderingType.RDF_XML));
+				
+				if (documentPane.indexOfTab(TabNames.RDF_XML) == -1)
+					documentPane.addTab(TabNames.RDF_XML, buildOWLRenderingPane(RenderingType.RDF_XML));
+				
+				documentPane.setSelectedIndex(documentPane.indexOfTab(TabNames.RDF_XML));
+				
 			} else {
-				//tp.addTab(TabNames.FUNCTIONAL_SYNTAX, buildOWLRenderingPane(RenderingType.FUNCTIONAL_SYNTAX));
+				
+				if (documentPane.indexOfTab(TabNames.FUNCTIONAL_SYNTAX) == -1)
+					documentPane.addTab(TabNames.FUNCTIONAL_SYNTAX, buildOWLRenderingPane(RenderingType.FUNCTIONAL_SYNTAX));
+				
+				documentPane.setSelectedIndex(documentPane.indexOfTab(TabNames.FUNCTIONAL_SYNTAX));
 			}
 		}
 	}
