@@ -4,8 +4,6 @@ import janus.Janus;
 import janus.application.UIRegistry;
 import janus.application.ontscheme.ClsTree;
 import janus.mapping.metadata.ClassTypes;
-import janus.query.SQLGenerator;
-
 import java.awt.event.ActionEvent;
 import java.net.URI;
 import java.util.List;
@@ -65,10 +63,10 @@ public class ShowMembersAction extends AbstractAction {
 		String column = Janus.mappingMetadata.getMappedColumnNameOfClass(cls);
 		
 		if (Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
-			return Janus.sqlGenerator.getQueryI_I(column, table);
+			return Janus.sqlGenerator.getQueryToGetIndividualsOfSinglePKColumnClass(column, table);
 		else if (Janus.cachedDBMetadata.isNotNull(table, column))
-			return Janus.sqlGenerator.getQueryI_III(column, table);
+			return Janus.sqlGenerator.getQueryToGetIndividualsOfNonNullableColumnClass(column, table);
 		else
-			return Janus.sqlGenerator.getQueryI_IV(column, table);
+			return Janus.sqlGenerator.getQueryToGetIndividualsOfNullableColumnClass(column, table);
 	}
 }
