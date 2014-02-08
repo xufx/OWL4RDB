@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class DisplayTabbedPane extends JTabbedPane {
-	public DisplayTabbedPane(int tabPlacement) {
+public class ClosableTabbedPane extends JTabbedPane {
+	public ClosableTabbedPane(int tabPlacement) {
 		super(tabPlacement, JTabbedPane.WRAP_TAB_LAYOUT);
 	}
 	

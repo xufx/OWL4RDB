@@ -7,6 +7,7 @@ import janus.application.actions.BuildTBoxAction;
 import janus.application.actions.DumpKnowledgeBaseAction;
 import janus.application.actions.RunAction;
 import janus.application.actions.ShowAtomsAction;
+import janus.application.actions.ShowDocumentAction;
 import janus.application.dbscheme.DBTree;
 import janus.application.description.DescrTree;
 import janus.application.ontdata.IndividualList;
@@ -68,7 +69,7 @@ class UIBuilder {
 		showAtoms.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_ATOMS));
 		showAtoms.setToolTipText("Show Atoms");
 		
-		JButton showDoc = toolBar.add(new ShowAtomsAction());
+		JButton showDoc = toolBar.add(new ShowDocumentAction());
 		showDoc.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_DOC));
 		showDoc.setToolTipText("Show Document");
 		
@@ -144,17 +145,9 @@ class UIBuilder {
 	private static JTabbedPane buildDocumentPane() {
 		JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP);
 		
-		//tp.addTab(TabNames.FUNCTIONAL_SYNTAX, buildOWLRenderingPane(RenderingType.FUNCTIONAL_SYNTAX));
-		//tp.addTab(TabNames.RDF_XML, buildOWLRenderingPane(RenderingType.RDF_XML));
+		UIRegistry.registerDocumentPane(tp);
 		
 		return tp;
-	}
-	
-	private static JScrollPane buildOWLRenderingPane(RenderingType renderingType) {
-		JScrollPane sp = new JScrollPane();
-		sp.setViewportView(new JTextArea(Janus.ontBridge.dumpTBoxOntology(renderingType)));
-		
-		return sp;
 	}
 	
 	private static JScrollPane buildSQLResultSetPane() {

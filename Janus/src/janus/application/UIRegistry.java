@@ -15,26 +15,63 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 public class UIRegistry {
-	private static JFrame frame;
-	private static JTabbedPane queryPane;
-	private static JScrollPane queryResultPane;
+	private static JScrollPane classPane;
+	private static JScrollPane dataPropertyPane;
 	private static JScrollPane dbSchemePane;
 	private static JScrollPane descriptionPane;
-	private static JScrollPane dataPropertyPane;
-	private static JScrollPane objectPropertyPane;
-	private static JScrollPane classPane;
+	private static JTabbedPane documentPane;
+	private static JFrame frame;
 	private static JScrollPane individualPane;
+	private static JScrollPane objectPropertyPane;
+	private static JTabbedPane queryPane;
+	private static JScrollPane queryResultPane;
 	
-	static void registerWindow(JFrame frame) {
-		UIRegistry.frame = frame;
+	public static JTabbedPane getDocumentPane() {
+		return documentPane;
 	}
 	
-	static void registerQueryPane(JTabbedPane queryPane) {
-		UIRegistry.queryPane = queryPane;
+	public static ClsTree getClsTreePane() {
+		return (ClsTree)classPane;
 	}
 	
-	static void registerQueryResultPane(JScrollPane queryResultPane) {
-		UIRegistry.queryResultPane = queryResultPane;
+	static DPTree getDataPropTree() {
+		return (DPTree)dataPropertyPane;
+	}
+	
+	static DBTree getDBTree() {
+		return (DBTree)dbSchemePane;
+	}
+	
+	static DescrTree getDescriptionTree() {
+		return (DescrTree)descriptionPane;
+	}
+	
+	public static Window getDialogOwner() { return frame; }
+	
+	static OPTree getObjPropTree() {
+		return (OPTree)objectPropertyPane;
+	}
+	
+	public static Showable getQueryResultPane() {
+		return (Showable)queryResultPane;
+	}
+	
+	public static Submittable getSelectedQueryPane() {
+		return (Submittable)queryPane.getSelectedComponent();
+	}
+	
+	static JFrame getWindow() { return frame; }
+	
+	static void registerDocumentPane(JTabbedPane documentPane) {
+		UIRegistry.documentPane = documentPane;
+	}
+	
+	static void registerClassPane(JScrollPane classPane) {
+		UIRegistry.classPane = classPane;
+	}
+	
+	static void registerDataPropertyPane(JScrollPane dataPropertyPane) {
+		UIRegistry.dataPropertyPane = dataPropertyPane;
 	}
 	
 	static void registerDBSchemePane(JScrollPane dbSchemePane) {
@@ -45,51 +82,23 @@ public class UIRegistry {
 		UIRegistry.descriptionPane = descriptionPane;
 	}
 	
-	static void registerDataPropertyPane(JScrollPane dataPropertyPane) {
-		UIRegistry.dataPropertyPane = dataPropertyPane;
+	static void registerIndividualPane(JScrollPane individualPane) {
+		UIRegistry.individualPane = individualPane;
 	}
 	
 	static void registerObjectPropertyPane(JScrollPane objectPropertyPane) {
 		UIRegistry.objectPropertyPane = objectPropertyPane;
 	}
 	
-	static void registerClassPane(JScrollPane classPane) {
-		UIRegistry.classPane = classPane;
+	static void registerQueryPane(JTabbedPane queryPane) {
+		UIRegistry.queryPane = queryPane;
 	}
 	
-	static void registerIndividualPane(JScrollPane individualPane) {
-		UIRegistry.individualPane = individualPane;
+	static void registerQueryResultPane(JScrollPane queryResultPane) {
+		UIRegistry.queryResultPane = queryResultPane;
 	}
 	
-	public static Window getDialogOwner() { return frame; }
-	
-	static JFrame getWindow() { return frame; }
-	
-	public static Submittable getSelectedQueryPane() {
-		return (Submittable)queryPane.getSelectedComponent();
-	}
-	
-	public static Showable getQueryResultPane() {
-		return (Showable)queryResultPane;
-	}
-	
-	static DPTree getDataPropTree() {
-		return (DPTree)dataPropertyPane;
-	}
-	
-	static OPTree getObjPropTree() {
-		return (OPTree)objectPropertyPane;
-	}
-	
-	public static ClsTree getClsTreePane() {
-		return (ClsTree)classPane;
-	}
-	
-	static DBTree getDBTree() {
-		return (DBTree)dbSchemePane;
-	}
-	
-	static DescrTree getDescriptionTree() {
-		return (DescrTree)descriptionPane;
+	static void registerWindow(JFrame frame) {
+		UIRegistry.frame = frame;
 	}
 }
