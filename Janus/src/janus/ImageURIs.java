@@ -8,6 +8,7 @@ public final class ImageURIs {
 	public static final String TOOLBAR_DUMP = "images/toolbar.dump.png";
 	public static final String TOOLBAR_GENERATE_TBOX = "images/toolbar.generate_tbox.png";
 	public static final String TOOLBAR_RUN = "images/toolbar.run.png";
+	public static final String TOOLBAR_SHOW_DOC = "images/toolbar.show_doc.png";
 	public static final String TOOLBAR_SHOW_ATOMS = "images/toolbar.show_atoms.png";
 	
 	public static final String DB_CATALOG = "images/db.catalog.png";

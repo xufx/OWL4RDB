@@ -2,8 +2,8 @@ package janus;
 
 import java.io.File;
 
-import janus.application.DBLoginDialog;
 import janus.application.JanusWindow;
+import janus.application.dialog.DBLoginDialog;
 import janus.database.DBBridge;
 import janus.database.DBBridgeFactory;
 import janus.database.metadata.CachedDBMetadataFactory;

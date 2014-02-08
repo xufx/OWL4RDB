@@ -23,7 +23,9 @@ public class ShowMembersAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		ClsTree tree = UIRegistry.getClsTreePane();
 		
-		String query = getQuery(tree.getSelectedClass());System.out.println(query);
+		String query = getQuery(tree.getSelectedClass());
+		
+		
 	}
 	
 	private String getQuery(URI cls) {

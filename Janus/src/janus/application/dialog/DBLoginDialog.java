@@ -1,4 +1,4 @@
-package janus.application;
+package janus.application.dialog;
 
 import janus.database.DBMSTypes;
 

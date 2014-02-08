@@ -7,7 +7,6 @@ import janus.application.actions.BuildTBoxAction;
 import janus.application.actions.DumpKnowledgeBaseAction;
 import janus.application.actions.RunAction;
 import janus.application.actions.ShowAtomsAction;
-import janus.application.components.DisplayTabbedPane;
 import janus.application.dbscheme.DBTree;
 import janus.application.description.DescrTree;
 import janus.application.ontdata.IndividualList;
@@ -31,7 +30,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 
 class UIBuilder {
 	static void buildUI(JFrame window) {
@@ -56,27 +54,23 @@ class UIBuilder {
 		
 		JButton translate = toolBar.add(new BuildTBoxAction());
 		translate.setIcon(new ImageIcon(ImageURIs.TOOLBAR_GENERATE_TBOX));
-		translate.setText("BUILD");
-		translate.setVerticalTextPosition(SwingConstants.BOTTOM);
-		translate.setHorizontalTextPosition(SwingConstants.CENTER);
+		translate.setToolTipText("Build TBOX");
 		
 		JButton run = toolBar.add(new RunAction());
 		run.setIcon(new ImageIcon(ImageURIs.TOOLBAR_RUN));
-		run.setText("RUN");
-		run.setVerticalTextPosition(SwingConstants.BOTTOM);
-		run.setHorizontalTextPosition(SwingConstants.CENTER);
+		run.setToolTipText("Run Query");
 		
 		JButton dump = toolBar.add(new DumpKnowledgeBaseAction());
 		dump.setIcon(new ImageIcon(ImageURIs.TOOLBAR_DUMP));
-		dump.setText("DUMP");
-		dump.setVerticalTextPosition(SwingConstants.BOTTOM);
-		dump.setHorizontalTextPosition(SwingConstants.CENTER);
+		dump.setToolTipText("Dump DB into OWL");
 		
 		JButton showAtoms = toolBar.add(new ShowAtomsAction());
 		showAtoms.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_ATOMS));
-		showAtoms.setText("SHOW");
-		showAtoms.setVerticalTextPosition(SwingConstants.BOTTOM);
-		showAtoms.setHorizontalTextPosition(SwingConstants.CENTER);
+		showAtoms.setToolTipText("Show Atoms");
+		
+		JButton showDoc = toolBar.add(new ShowAtomsAction());
+		showDoc.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_DOC));
+		showDoc.setToolTipText("Show Document");
 		
 		return toolBar;
 	}
@@ -96,10 +90,10 @@ class UIBuilder {
 		rightSP.setResizeWeight(0.5);
 		rightSP.setOneTouchExpandable(true);
 		
-		DisplayTabbedPane displayTab = new DisplayTabbedPane(JTabbedPane.TOP);
-		displayTab.addTab(TabNames.LOADED_ONTOLOGY_SOURCE, buildOntologySourcePane());
+		JTabbedPane displayTab = new JTabbedPane(JTabbedPane.TOP);
+		displayTab.addTab(TabNames.DOCUMENT, buildDocumentPane());
 		displayTab.addTab(TabNames.INDIVIDUALS, buildIndividualsPane());
-		displayTab.addTab(TabNames.QUERY, buildQueryPane(), true);
+		displayTab.addTab(TabNames.QUERY, buildQueryPane());
 		
 		rightSP.setLeftComponent(displayTab);
 		
@@ -109,6 +103,8 @@ class UIBuilder {
 		rightSP.setRightComponent(descrTab);
 		
 		baseSP.setRightComponent(rightSP);
+		
+		baseSP.setDividerLocation((int)(UIRegistry.getWindow().getWidth() / 4));
 		
 		return baseSP;
 	}
@@ -145,11 +141,11 @@ class UIBuilder {
 		return sp;
 	}
 	
-	private static JTabbedPane buildOntologySourcePane() {
+	private static JTabbedPane buildDocumentPane() {
 		JTabbedPane tp = new JTabbedPane(JTabbedPane.TOP);
 		
-		tp.addTab(TabNames.FUNCTIONAL_SYNTAX, buildOWLRenderingPane(RenderingType.FUNCTIONAL_SYNTAX));
-		tp.addTab(TabNames.RDF_XML, buildOWLRenderingPane(RenderingType.RDF_XML));
+		//tp.addTab(TabNames.FUNCTIONAL_SYNTAX, buildOWLRenderingPane(RenderingType.FUNCTIONAL_SYNTAX));
+		//tp.addTab(TabNames.RDF_XML, buildOWLRenderingPane(RenderingType.RDF_XML));
 		
 		return tp;
 	}
