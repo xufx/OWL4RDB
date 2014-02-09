@@ -6,17 +6,31 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.ListCellRenderer;
 
 @SuppressWarnings("serial")
-public class IndividualList extends JScrollPane {
+public class IndividualPane extends JSplitPane {
 	private JList list;
 	
-	public IndividualList() {
+	public IndividualPane() {
+		super(JSplitPane.VERTICAL_SPLIT, true);
+		setResizeWeight(0.5);
+		setOneTouchExpandable(true);
+		
 		buildUI();
 	}
 	
 	private void buildUI() {
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		list = new JList();
 		list.setDragEnabled(true);
 		

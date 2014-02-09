@@ -81,23 +81,7 @@ public class Janus {
 		ontBridge = OntBridgeFactory.getOntBridge(ontFile, ReasonerType.PELLET_REASONER);
 		
 		long end = System.currentTimeMillis();
-		System.out.println( "로딩 및 추론 시간 : " + ( end - start));
-		
-		//OntBridge ontBridge = OntBridgeFactory.getOntBridge("http://www.co-ode.org/ontologies/pizza/2007/02/12/pizza.owl");
-		//OntBridge ontBridge = OntBridgeFactory.getOntBridge("http://cosmos.ssu.ac.kr/janus/schooling.owl");
-		//OntBridge ontBridge = OntBridgeFactory.getOntBridge("http://protege.cim3.net/file/pub/ontologies/travel/travel.owl");
-		//OntBridge ontBridge = OntBridgeFactory.getOntBridge("http://protege.cim3.net/file/pub/ontologies/wine/wine.owl", ReasonerType.PELLET_REASONER);
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/tambis/tambis-full.owl");
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/shuttle/shuttle-crew-ont.owl");
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/people.pets/people+pets.owl");
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/not.galen/not-galen.owl");
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/koala/koala.owl"); //DIFF
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/ka/ka.owl"); //DIFF
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/generations/generations.owl"); //DIFF
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/family.swrl.owl/family.swrl.owl");  //ERROR
-		//OntBridge ontBridge = OntBridge.getInstance("http://protege.cim3.net/file/pub/ontologies/camera/camera.owl"); //OK
-		
-		//RuleBridge ruleBridge = RuleBridgeFactory.getRuleBridge("http://protege.stanford.edu/plugins/owl/testdata/importSWRL.owl");
+		System.out.println( "loading and reasoning time : " + ( end - start));
 
 		Janus.mappingMetadata = MappingMetadataFactory.generateMappingMetaData();
 		

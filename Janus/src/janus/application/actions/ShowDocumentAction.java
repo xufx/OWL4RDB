@@ -24,6 +24,9 @@ public class ShowDocumentAction extends AbstractAction {
 		
 		if(dialog.isNormalExit()) {
 			
+			JTabbedPane displayPane = UIRegistry.getDisplayPane();
+			displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.DOCUMENT));
+			
 			JTabbedPane documentPane = UIRegistry.getDocumentPane();
 			
 			if (dialog.whichButtonIsSelected().equals(DocTypeSelectionDialog.RDF_XML)) {

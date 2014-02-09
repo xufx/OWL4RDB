@@ -1,9 +1,12 @@
 package janus.application.actions;
 
 import janus.Janus;
+import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.ontscheme.ClsTree;
 import janus.mapping.metadata.ClassTypes;
+import janus.ontology.RenderingType;
+
 import java.awt.event.ActionEvent;
 import java.net.URI;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class ShowMembersAction extends AbstractAction {
@@ -23,9 +27,27 @@ public class ShowMembersAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		ClsTree tree = UIRegistry.getClsTreePane();
 		
-		String query = getQuery(tree.getSelectedClass());
+		URI selectedClass = tree.getSelectedClass();
 		
+		String query = getQuery(selectedClass);
 		
+		JTabbedPane displayPane = UIRegistry.getDisplayPane();
+		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.INDIVIDUALS));
+		
+		JTabbedPane individualsPane = UIRegistry.getIndividualsPane();
+		
+		if (!alreadyExists(individualsPane, selectedClass))
+			individualsPane.addTab(selectedClass.getFragment(), buildOWLRenderingPane(RenderingType.RDF_XML));
+	}
+	
+	private boolean alreadyExists(JTabbedPane individualsPane, URI cls) {
+		int tabCount = individualsPane.getTabCount();
+		
+		for (int i = 0; i < tabCount; i++)
+			if (individualsPane.getToolTipTextAt(i).equals(cls.toString()))
+				return true;
+		
+		return false;
 	}
 	
 	private String getQuery(URI cls) {

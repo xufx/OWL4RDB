@@ -19,12 +19,22 @@ public class UIRegistry {
 	private static JScrollPane dataPropertyPane;
 	private static JScrollPane dbSchemePane;
 	private static JScrollPane descriptionPane;
+	private static JTabbedPane displayPane;
 	private static JTabbedPane documentPane;
 	private static JFrame frame;
-	private static JScrollPane individualPane;
+	private static JTabbedPane individualsPane;
 	private static JScrollPane objectPropertyPane;
 	private static JTabbedPane queryPane;
 	private static JScrollPane queryResultPane;
+	
+	
+	public static JTabbedPane getIndividualsPane() {
+		return individualsPane;
+	}
+	
+	public static JTabbedPane getDisplayPane() {
+		return displayPane;
+	}
 	
 	public static JTabbedPane getDocumentPane() {
 		return documentPane;
@@ -62,6 +72,10 @@ public class UIRegistry {
 	
 	static JFrame getWindow() { return frame; }
 	
+	static void registerDisplayPane(JTabbedPane displayPane) {
+		UIRegistry.displayPane = displayPane;
+	}
+	
 	static void registerDocumentPane(JTabbedPane documentPane) {
 		UIRegistry.documentPane = documentPane;
 	}
@@ -82,8 +96,8 @@ public class UIRegistry {
 		UIRegistry.descriptionPane = descriptionPane;
 	}
 	
-	static void registerIndividualPane(JScrollPane individualPane) {
-		UIRegistry.individualPane = individualPane;
+	static void registerIndividualsPane(JTabbedPane individualsPane) {
+		UIRegistry.individualsPane = individualsPane;
 	}
 	
 	static void registerObjectPropertyPane(JScrollPane objectPropertyPane) {

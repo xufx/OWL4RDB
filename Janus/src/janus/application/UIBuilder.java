@@ -10,7 +10,6 @@ import janus.application.actions.ShowDocumentAction;
 import janus.application.components.ClosableTabbedPane;
 import janus.application.dbscheme.DBTree;
 import janus.application.description.DescrTree;
-import janus.application.ontdata.IndividualList;
 import janus.application.ontscheme.ClsTree;
 import janus.application.ontscheme.DPTree;
 import janus.application.ontscheme.OPTree;
@@ -88,12 +87,7 @@ class UIBuilder {
 		rightSP.setResizeWeight(0.5);
 		rightSP.setOneTouchExpandable(true);
 		
-		JTabbedPane displayTab = new JTabbedPane(JTabbedPane.TOP);
-		displayTab.addTab(TabNames.DOCUMENT, buildDocumentPane());
-		displayTab.addTab(TabNames.INDIVIDUALS, buildIndividualsPane());
-		displayTab.addTab(TabNames.QUERY, buildQueryPane());
-		
-		rightSP.setLeftComponent(displayTab);
+		rightSP.setLeftComponent(buildDisplayPane());
 		
 		JTabbedPane descrTab = new JTabbedPane(JTabbedPane.TOP);
 		descrTab.addTab(TabNames.DESCRIPTION, buildOntDescrPane());
@@ -107,24 +101,23 @@ class UIBuilder {
 		return baseSP;
 	}
 	
-	private static JSplitPane buildIndividualsPane() {
-		JSplitPane sp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true);
-		sp.setResizeWeight(0.5);
-		sp.setOneTouchExpandable(true);
+	private static JTabbedPane buildDisplayPane() {
+		JTabbedPane displayTab = new JTabbedPane(JTabbedPane.TOP);
+		displayTab.addTab(TabNames.DOCUMENT, buildDocumentPane());
+		displayTab.addTab(TabNames.INDIVIDUALS, buildIndividualsPane());
+		displayTab.addTab(TabNames.QUERY, buildQueryPane());
 		
-		sp.setLeftComponent(buildIndividualListPane());
+		UIRegistry.registerDisplayPane(displayTab);
 		
-		//sp.setBottomComponent(buildSQLResultSetPane());
-		
-		return sp;
+		return displayTab;
 	}
 	
-	private static JScrollPane buildIndividualListPane() {
-		JScrollPane sp = new IndividualList();
+	private static JTabbedPane buildIndividualsPane() {
+		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
-		UIRegistry.registerIndividualPane(sp);
+		UIRegistry.registerIndividualsPane(tp);
 		
-		return sp;
+		return tp;
 	}
 	
 	private static JSplitPane buildQueryPane() {
