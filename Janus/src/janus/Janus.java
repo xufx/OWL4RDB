@@ -61,6 +61,7 @@ public class Janus {
 											  "Janus Error", JOptionPane.ERROR_MESSAGE);
 			else 
 				break;
+			
 		} while(true);
 		
 		sqlGenerator = SQLGeneratorFactory.getSQLGenerator(loginDialog.getDBMSType());
