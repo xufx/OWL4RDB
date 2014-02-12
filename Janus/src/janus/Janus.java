@@ -1,7 +1,6 @@
 package janus;
 
 import java.io.File;
-
 import janus.application.JanusWindow;
 import janus.application.dialog.DBLoginDialog;
 import janus.database.DBBridge;

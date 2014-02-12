@@ -188,6 +188,22 @@ public class MappingMetadata {
 		return LiteralMetadata.getMappedLiteral(table, column, value);
 	}
 	
+	/*public String getMappedTableNameOfIndividual(URI individual) {
+		return IndividualMetadata.getMappedTableNameOfIndividual(individual);
+	}
+	
+	public String getMappedColumnNameOfIndividual(URI individual) {
+		return IndividualMetadata.getMappedColumnNameOfIndividual(individual);
+	}*/
+	
+	public DBField getMappedDBFieldOfFieldIndividual(URI individual) {
+		return IndividualMetadata.getMappedDBFieldOfFieldIndividual(individual);
+	}
+	
+	public IndividualTypes getIndividualType(URI individual) {
+		return IndividualMetadata.getIndividualType(individual);
+	}
+	
 	URI getOntologyID() {
 		return ontologyID;
 	}

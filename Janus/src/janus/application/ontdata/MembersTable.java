@@ -3,6 +3,7 @@ package janus.application.ontdata;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -19,62 +20,77 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 @SuppressWarnings("serial")
-public class IndividualList extends JScrollPane {
-	JTable table;
+class MembersTable extends JScrollPane {
+	IndividualListTable table;
 	
-	IndividualList(URI cls) {
-		table = new IndividualListTable(new IndividualListTableModel(cls));
-		table.setDefaultRenderer(Object.class, new IndividualListTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
+	MembersTable(URI cls) {
+		table = new IndividualListTable(new MembersTableModel(cls));
+		table.setDefaultRenderer(Object.class, new MembersTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
 		table.setTableHeader(null);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
-		table.setFillsViewportHeight(true);
 		
 		setViewportView(table);
+	}
+	
+	void addMembersTableSelectionListener(ListSelectionListener x) {
+		table.getSelectionModel().addListSelectionListener(x);
+	}
+	
+	JTable getSelectionSource() {
+		return table;
 	}
 }
 
 @SuppressWarnings("serial")
 class IndividualListTable extends JTable {
+	private URI ontologyURI;
 	
 	IndividualListTable(TableModel dm) {
 		super(dm);
+		
+		ontologyURI = Janus.ontBridge.getOntologyID();
 	}
-
-	public void valueChanged(ListSelectionEvent e) {
-		super.valueChanged(e);
-        System.out.println(getValueAt(getSelectedRow(), getSelectedColumn()));
-    }
-
+	
 	@Override
 	public String getToolTipText(MouseEvent event) {
 		Point p = event.getPoint();
 		int rowIndex = rowAtPoint(p);
         int colIndex = columnAtPoint(p);
+        
+        return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+	}
+	
+	private URI getIndividual(String individualFragment) {
+		String individualString = ontologyURI.getScheme() + ":" + ontologyURI.getSchemeSpecificPart() + "#" + individualFragment;
 		
-        getValueAt(rowIndex, colIndex);
+		URI individual = null;
+		try {
+			individual =  new URI(individualString);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 		
-		// TODO Auto-generated method stub
-		return super.getToolTipText(event);
+		return individual;
 	}
 }
 
 @SuppressWarnings("serial")
-class IndividualListTableModel extends AbstractTableModel {
-
+class MembersTableModel extends AbstractTableModel {
+	
 	private int columnCount;
 	private int rowCount;
 	private CachedRecord cache;
 	
 	private SQLResultSet resultSet;
 
-	IndividualListTableModel(URI cls) {
+	MembersTableModel(URI cls) {
 		String query = getQuery(cls);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
@@ -150,7 +166,7 @@ class IndividualListTableModel extends AbstractTableModel {
 	}
 
 	private Record getRecord(int rowIndex) {
-		 return new Record(resultSet.getResultSetRowAt(rowIndex + 1));
+		return new Record(resultSet.getResultSetRowAt(rowIndex + 1));
 	}
 
 	private class Record {
@@ -176,11 +192,11 @@ class IndividualListTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class IndividualListTableRenderer extends DefaultTableCellRenderer {
+class MembersTableRenderer extends DefaultTableCellRenderer {
 
 	private Icon individualIcon;
 	
-	IndividualListTableRenderer(Icon individualIcon) {
+	MembersTableRenderer(Icon individualIcon) {
 		this.individualIcon = individualIcon;
 	}
 	

@@ -7,8 +7,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class IndividualMetadata {
+	
 	static String getMappedIndividualFragment(String table, List<DBField> pkFields) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
@@ -74,5 +76,66 @@ public class IndividualMetadata {
 									+ OntMapper.AND + OntMapper.VALUE + OntMapper.IS + value;
 		
 		return individualFragment;
+	}
+	
+	/*static String getMappedTableNameOfIndividual(URI individual) {
+		String fragment = individual.getFragment();
+		
+		String[] tokens = fragment.split("&");
+		
+		for (String token: tokens) {
+			String[] pair = token.split("=");
+			if (pair[0].equals(OntMapper.TABLE_NAME)) {
+				return pair[1];
+			}
+		}
+		
+		return null;
+	}
+	
+	static String getMappedColumnNameOfIndividual(URI individual) {
+		String fragment = individual.getFragment();
+		
+		String[] tokens = fragment.split("&");
+		
+		for (String token: tokens) {
+			String[] pair = token.split("=");
+			if (pair[0].equals(OntMapper.COLUMN_NAME)) {
+				return pair[1];
+			}
+		}
+		
+		return null;
+	}*/
+	
+	static DBField getMappedDBFieldOfFieldIndividual(URI individual) {
+		String tableName = null;
+		String columnName = null;
+		String value = null;
+		
+		String fragment = individual.getFragment();
+		
+		String[] tokens = fragment.split("&");
+		
+		for (String token: tokens) {
+			String[] pair = token.split("=");
+			if (pair[0].equals(OntMapper.TABLE_NAME))
+				tableName =  pair[1];
+			if (pair[0].equals(OntMapper.COLUMN_NAME))
+				columnName =  pair[1];
+			if (pair[0].equals(OntMapper.VALUE))
+				value = pair[1];
+		}
+		
+		return new DBField(tableName, columnName, value);
+	}
+	
+	static IndividualTypes getIndividualType(URI individual) {
+		if (Pattern.matches(IndividualTypes.FIELD_INDIVIDUAL.value(), individual.toString()))
+			return IndividualTypes.FIELD_INDIVIDUAL;
+		else if (Pattern.matches(IndividualTypes.RECORD_INDIVIDUAL.value(), individual.toString()))
+			return IndividualTypes.RECORD_INDIVIDUAL;
+		else
+			return null;
 	}
 }
