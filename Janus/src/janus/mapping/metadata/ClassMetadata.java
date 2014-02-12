@@ -7,6 +7,8 @@ class ClassMetadata implements Comparable<ClassMetadata> {
 
 	private String mappedTable;
 	private String mappedColumn;
+	
+	private String superClassName;
 
 	ClassMetadata(String className, String mappedTable, String mappedColumn) {
 		this.className = className;
@@ -23,22 +25,27 @@ class ClassMetadata implements Comparable<ClassMetadata> {
 		classType = ClassTypes.TABLE_CLASS;
 	}
 	
-	public void setSuperClassName(String superClassName) {
+	void setSuperClassName(String superClassName) {
+		this.superClassName = superClassName;
 	}
 	
-	public String getClassName() {
+	String getSuperClassName() {
+		return superClassName;
+	}
+	
+	String getClassName() {
 		return className;
 	}
 	
-	public String getMappedTableName() {
+	String getMappedTableName() {
 		return mappedTable;
 	}
 	
-	public String getMappedColumnName() {
+	String getMappedColumnName() {
 		return mappedColumn;
 	}
 	
-	public ClassTypes getClassType() {
+	ClassTypes getClassType() {
 		return classType;
 	}
 

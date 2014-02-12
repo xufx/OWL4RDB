@@ -29,7 +29,7 @@ public class MappingMetadata {
 		properties.add(propertyMetaData);
 	}
 	
-	public String getMappedTableNameOfClass(URI classURI) {
+	public String getMappedTableNameToClass(URI classURI) {
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))
@@ -39,7 +39,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedTableNameOfProperty(URI propertyURI) {
+	public String getMappedTableNameToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))
@@ -49,7 +49,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedColumnNameOfClass(URI classURI) {
+	public String getMappedColumnNameToClass(URI classURI) {
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))
@@ -59,7 +59,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public String getMappedColumnNameOfProperty(URI propertyURI) {
+	public String getMappedColumnNameToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))
@@ -83,14 +83,7 @@ public class MappingMetadata {
 	}
 	
 	public URI getMappedDataProperty(String table, String column) {
-		URI uri = null;
-		try {
-			uri = new URI(ontologyID + "#" + getMappedDataPropertyFragment(table, column));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return uri;
+		return getURIOfFragment(getMappedDataPropertyFragment(table, column));
 	}
 	
 	public String getMappedDataPropertyFragment(String table, String column) {
@@ -104,15 +97,7 @@ public class MappingMetadata {
 	}
 	
 	public URI getMappedObjectProperty(String table, String column) {
-		URI uri = null;
-				
-		try {
-			uri = new URI(ontologyID + "#" + getMappedObjectPropertyFragment(table, column));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return uri;
+		return getURIOfFragment(getMappedObjectPropertyFragment(table, column));
 	}
 	
 	public String getMappedObjectPropertyFragment(String table, String column) {
@@ -128,15 +113,7 @@ public class MappingMetadata {
 	}
 	
 	public URI getMappedClass(String table) {
-		URI uri = null;
-		
-		try {
-			uri = new URI(ontologyID + "#" + getMappedClassFragment(table));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return uri;
+		return getURIOfFragment(getMappedClassFragment(table));
 	}
 	
 	public String getMappedClassFragment(String table) {
@@ -149,15 +126,7 @@ public class MappingMetadata {
 	}
 	
 	public URI getMappedClass(String table, String column) {
-		URI uri = null;
-		
-		try {
-			uri = new URI(ontologyID + "#" + getMappedClassFragment(table, column));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return uri;
+		return getURIOfFragment(getMappedClassFragment(table, column));
 	}
 	
 	public String getMappedClassFragment(String table, String column) {
@@ -190,16 +159,16 @@ public class MappingMetadata {
 		return LiteralMetadata.getMappedLiteral(table, column, value);
 	}
 	
-	/*public String getMappedTableNameOfIndividual(URI individual) {
-		return IndividualMetadata.getMappedTableNameOfIndividual(individual);
+	public String getMappedTableNameToRecordIndividual(URI individual) {
+		return IndividualMetadata.getMappedTableNameToRecordIndividual(individual);
 	}
 	
-	public String getMappedColumnNameOfIndividual(URI individual) {
-		return IndividualMetadata.getMappedColumnNameOfIndividual(individual);
-	}*/
+	public DBField getMappedDBFieldToFieldIndividual(URI individual) {
+		return IndividualMetadata.getMappedDBFieldToFieldIndividual(individual);
+	}
 	
-	public DBField getMappedDBFieldOfFieldIndividual(URI individual) {
-		return IndividualMetadata.getMappedDBFieldOfFieldIndividual(individual);
+	public List<DBField> getMappedDBFieldsToRecordIndividual(URI individual) {
+		return IndividualMetadata.getMappedDBFieldsToRecordIndividual(individual);
 	}
 	
 	public IndividualTypes getIndividualType(URI individual) {
@@ -208,6 +177,21 @@ public class MappingMetadata {
 	
 	public URI getIndividual(String individualFragment) {
 		return IndividualMetadata.getIndividual(individualFragment);
+	}
+	
+	public URI getClassURI(String classFragment) {
+		return getURIOfFragment(classFragment);
+	}
+	
+	private URI getURIOfFragment(String fragment) {
+		URI uri = null;
+		try {
+			uri =  new URI(ontologyID + "#" + fragment);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return uri;
 	}
 	
 	URI getOntologyID() {

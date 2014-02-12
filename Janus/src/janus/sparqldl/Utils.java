@@ -50,8 +50,8 @@ public class Utils {
 					}
 					
 					for (URI familyClass: familyClasses) {
-						String mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
-						String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
+						String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(familyClass);
+						String mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(familyClass);
 						
 						URI mappedDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 						

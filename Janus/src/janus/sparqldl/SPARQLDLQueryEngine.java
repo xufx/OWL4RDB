@@ -685,7 +685,7 @@ public class SPARQLDLQueryEngine {
 							domainClass = domain;
 						
 						if (sClassURI.equals(domainClass)) {
-							String column = Janus.mappingMetadata.getMappedColumnNameOfProperty(pURI);
+							String column = Janus.mappingMetadata.getMappedColumnNameToProperty(pURI);
 							
 							URI oIndividualURI = sIndividual.getObjectIndividual(column);
 							
@@ -709,7 +709,7 @@ public class SPARQLDLQueryEngine {
 							Individual domainIndividual = new Individual(domainIndividualURI);
 							
 							if (domainIndividual.isExistentIndividual()) {
-								String column = Janus.mappingMetadata.getMappedColumnNameOfProperty(pURI);
+								String column = Janus.mappingMetadata.getMappedColumnNameToProperty(pURI);
 								
 								URI oIndividualURI = domainIndividual.getObjectIndividual(column);
 								
@@ -749,8 +749,8 @@ public class SPARQLDLQueryEngine {
 						
 						Set<LiteralSet> literalSets = new ConcurrentSkipListSet<LiteralSet>();
 						
-						String pMappedTable = Janus.mappingMetadata.getMappedTableNameOfProperty(pURI);
-						String pMappedColumn = Janus.mappingMetadata.getMappedColumnNameOfProperty(pURI);
+						String pMappedTable = Janus.mappingMetadata.getMappedTableNameToProperty(pURI);
+						String pMappedColumn = Janus.mappingMetadata.getMappedColumnNameToProperty(pURI);
 						URI domainClassURI = Janus.mappingMetadata.getMappedClass(pMappedTable, pMappedColumn);
 						
 						if (sIndividual.getType().equals(IndividualTypes.FROM_CELL)) {
@@ -2528,8 +2528,8 @@ public class SPARQLDLQueryEngine {
 							
 							Set<LiteralSet> literalSets = new ConcurrentSkipListSet<LiteralSet>();
 							
-							String mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(assertedDomainURI);
-							String mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(assertedDomainURI);
+							String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(assertedDomainURI);
+							String mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(assertedDomainURI);
 							
 							URI mappedDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 							
@@ -2537,8 +2537,8 @@ public class SPARQLDLQueryEngine {
 							literalSets.add(literalSet);
 							
 							for (URI familyClass: familyClasses) {
-								mappedTable = Janus.mappingMetadata.getMappedTableNameOfClass(familyClass);
-								mappedColumn = Janus.mappingMetadata.getMappedColumnNameOfClass(familyClass);
+								mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(familyClass);
+								mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(familyClass);
 								
 								mappedDataProperty = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 								

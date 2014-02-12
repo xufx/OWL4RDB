@@ -6,8 +6,8 @@ import janus.mapping.OntMapper;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 public class IndividualMetadata {
@@ -15,7 +15,7 @@ public class IndividualMetadata {
 	static String getMappedIndividualFragment(String table, List<DBField> pkFields) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
-		List<DBField> pkRootFields = new ArrayList<DBField>();
+		List<DBField> pkRootFields = new Vector<DBField>();
 		
 		for (DBField pkField: pkFields) {
 			String srcColumn = pkField.getColumnName();
@@ -79,7 +79,7 @@ public class IndividualMetadata {
 		return individualFragment;
 	}
 	
-	/*static String getMappedTableNameOfIndividual(URI individual) {
+	static String getMappedTableNameToRecordIndividual(URI individual) {
 		String fragment = individual.getFragment();
 		
 		String[] tokens = fragment.split("&");
@@ -94,22 +94,37 @@ public class IndividualMetadata {
 		return null;
 	}
 	
-	static String getMappedColumnNameOfIndividual(URI individual) {
+	static List<DBField> getMappedDBFieldsToRecordIndividual(URI individual) {
+		List<DBField> fields = new Vector<DBField>();
+		
+		String tableName = null;
+		List<String> columnNames = new Vector<String>();
+		List<String> values = new Vector<String>();
+		
 		String fragment = individual.getFragment();
 		
 		String[] tokens = fragment.split("&");
 		
+		if ((tokens.length % 2) != 1) 
+			System.out.println("Error While Parsing Individual.");
+		
 		for (String token: tokens) {
 			String[] pair = token.split("=");
-			if (pair[0].equals(OntMapper.COLUMN_NAME)) {
-				return pair[1];
-			}
+			if (pair[0].equals(OntMapper.TABLE_NAME))
+				tableName =  pair[1];
+			if (pair[0].equals(OntMapper.PK_COLUMN_NAME))
+				columnNames.add(pair[1]);
+			if (pair[0].equals(OntMapper.VALUE))
+				values.add(pair[1]);
 		}
 		
-		return null;
-	}*/
+		for (int i = 0; i < (tokens.length)/2; i++)
+			fields.add(new DBField(tableName, columnNames.get(i), values.get(i)));
+		
+		return fields;
+	}
 	
-	static DBField getMappedDBFieldOfFieldIndividual(URI individual) {
+	static DBField getMappedDBFieldToFieldIndividual(URI individual) {
 		String tableName = null;
 		String columnName = null;
 		String value = null;
@@ -117,6 +132,9 @@ public class IndividualMetadata {
 		String fragment = individual.getFragment();
 		
 		String[] tokens = fragment.split("&");
+		
+		if (tokens.length != 3) 
+			System.out.println("Error While Parsing Individual.");
 		
 		for (String token: tokens) {
 			String[] pair = token.split("=");

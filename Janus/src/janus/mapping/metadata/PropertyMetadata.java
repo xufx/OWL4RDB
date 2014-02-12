@@ -21,43 +21,43 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 		this.propertyType = propertyType;
 	}
 	
-	public String getMappedTable() {
+	String getMappedTable() {
 		return mappedTable;
 	}
 	
-	public String getMappedColumn() {
+	String getMappedColumn() {
 		return mappedColumn;
 	}
 	
-	public String getDomain() {
+	String getDomain() {
 		return domain;
 	}
 
-	public void setDomain(String domain) {
+	void setDomain(String domain) {
 		this.domain = domain;
 	}
 	
-	public String getRange() {
+	String getRange() {
 		return range;
 	}
 
-	public void setRange(String range) {
+	void setRange(String range) {
 		this.range = range;
 	}
 	
-	public String getSuperProperty() {
+	String getSuperProperty() {
 		return superProperty;
 	}
 
-	public void setSuperProperty(String superProperty) {
+	void setSuperProperty(String superProperty) {
 		this.superProperty = superProperty;
 	}
 	
-	public String getPropertyName() {
+	String getPropertyName() {
 		return propertyName;
 	}
 	
-	public PropertyTypes getPropertyType() {
+	PropertyTypes getPropertyType() {
 		return propertyType;
 	}
 
