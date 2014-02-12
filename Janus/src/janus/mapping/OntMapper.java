@@ -1,7 +1,6 @@
 package janus.mapping;
 
 import janus.Janus;
-import janus.mapping.metadata.DBField;
 
 import java.io.File;
 import java.io.PrintWriter;

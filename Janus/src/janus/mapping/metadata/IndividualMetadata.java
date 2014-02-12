@@ -1,6 +1,7 @@
 package janus.mapping.metadata;
 
 import janus.Janus;
+import janus.mapping.DBField;
 import janus.mapping.OntMapper;
 
 import java.net.URI;
@@ -137,5 +138,20 @@ public class IndividualMetadata {
 			return IndividualTypes.RECORD_INDIVIDUAL;
 		else
 			return null;
+	}
+	
+	static URI getIndividual(String individualFragment) {
+		URI ontology = Janus.ontBridge.getOntologyID();
+		
+		String individualString = ontology.getScheme() + ":" + ontology.getSchemeSpecificPart() + "#" + individualFragment;
+		
+		URI individual = null;
+		try {
+			individual =  new URI(individualString);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		
+		return individual;
 	}
 }

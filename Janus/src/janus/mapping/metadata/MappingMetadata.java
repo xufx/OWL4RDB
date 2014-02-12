@@ -1,5 +1,7 @@
 package janus.mapping.metadata;
 
+import janus.mapping.DBField;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -202,6 +204,10 @@ public class MappingMetadata {
 	
 	public IndividualTypes getIndividualType(URI individual) {
 		return IndividualMetadata.getIndividualType(individual);
+	}
+	
+	public URI getIndividual(String individualFragment) {
+		return IndividualMetadata.getIndividual(individualFragment);
 	}
 	
 	URI getOntologyID() {

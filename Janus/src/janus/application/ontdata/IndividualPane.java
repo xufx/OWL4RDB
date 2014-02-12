@@ -7,14 +7,14 @@ import java.net.URI;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
-public class IndividualPane extends JSplitPane {
+public class IndividualPane extends JSplitPane implements ListSelectionListener {
 	private URI cls;
 	
+	private MembersTable membersTable;
 	private JTabbedPane types;
 	private JTabbedPane opAssertions;
 	private JTabbedPane dpAssertions;
@@ -41,7 +41,7 @@ public class IndividualPane extends JSplitPane {
 		rightSP.setOneTouchExpandable(true);
 		
 		types = new JTabbedPane();
-		types.addTab(TabNames.TYPES, new TypeList());
+		types.addTab(TabNames.TYPES, null);
 		
 		rightSP.setTopComponent(types);
 		
@@ -65,25 +65,14 @@ public class IndividualPane extends JSplitPane {
 	}
 	
 	private JScrollPane buildMembersPane() {
-		MembersTable table = new MembersTable(cls);
-		table.addMembersTableSelectionListener(new MembersTableSelectionListener(table.getSelectionSource()));
+		membersTable = new MembersTable(cls);
+		membersTable.addMembersTableSelectionListener(this);
 		
-		return table;
+		return membersTable;
 	}
-}
-
-class MembersTableSelectionListener implements ListSelectionListener {
-	private JTable table;
 	
-	MembersTableSelectionListener(JTable table) {
-		this.table = table;
-	}
-
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		System.out.println(table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()));
-		
+		new TypesTable(membersTable.getSelectedMember());
 	}
-	
 }
-

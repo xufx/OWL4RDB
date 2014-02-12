@@ -8,12 +8,12 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		return new MariaDBSQLGenerator();
 	}
 	
-	public String getQueryToGetIndividualsOfSinglePKColumnClass(String aPK, String table) {
+	protected String getQueryToGetIndividualsOfSinglePKColumnClass(String aPK, String table) {
 		return "SELECT " + getConcatCallStatement(table, aPK)
 				+ " FROM " + table;
 	}
 	
-	public String getQueryToGetIndividualsOfTableClass(List<String> pk, String table) {
+	protected String getQueryToGetIndividualsOfTableClass(List<String> pk, String table) {
 		StringBuffer query = new StringBuffer("SELECT ");
 		
 		query.append(getConcatCallStatement(table, pk));
@@ -23,12 +23,12 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		return query.toString();
 	}
 	
-	public String getQueryToGetIndividualsOfNonNullableColumnClass(String keyColumn, String table) {
+	protected String getQueryToGetIndividualsOfNonNullableColumnClass(String keyColumn, String table) {
 		return "SELECT DISTINCT " + getConcatCallStatement(table, keyColumn)
 				+ " FROM " + table;
 	}
 	
-	public String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table) {
+	protected String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table) {
 		return "SELECT DISTINCT " + getConcatCallStatement(table, keyColumn)
 				+ " FROM " + table
 				+ " WHERE " + keyColumn + " IS NOT NULL";
