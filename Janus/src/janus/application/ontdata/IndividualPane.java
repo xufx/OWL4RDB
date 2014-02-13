@@ -74,5 +74,7 @@ public class IndividualPane extends JSplitPane implements ListSelectionListener 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(membersTable.getSelectedMember()));
+		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(membersTable.getSelectedMember()));
+		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(membersTable.getSelectedMember()));
 	}
 }

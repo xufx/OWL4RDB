@@ -140,19 +140,19 @@ public class MappingMetadata {
 	}
 	
 	public URI getMappedIndividual(String table, String column, String value) {
-		return IndividualMetadata.getMappedIndividual(table, column, value);
+		return IndividualMetadata.getMappedFieldIndividual(table, column, value);
 	}
 	
 	public String getMappedIndividualFragment(String table, String column, String value) {
-		return IndividualMetadata.getMappedIndividualFragment(table, column, value);
+		return IndividualMetadata.getMappedFieldIndividualFragment(table, column, value);
 	}
 	
 	public URI getMappedIndividual(String table, List<DBField> pkFields) {
-		return IndividualMetadata.getMappedIndividual(table, pkFields);
+		return IndividualMetadata.getMappedRecordIndividual(table, pkFields);
 	}
 	
 	public String getMappedIndividualFragment(String table, List<DBField> pkFields) {
-		return IndividualMetadata.getMappedIndividualFragment(table, pkFields);
+		return IndividualMetadata.getMappedRecordIndividualFragment(table, pkFields);
 	}
 	
 	public String getMappedLiteral(String table, String column, String value) {
@@ -181,6 +181,14 @@ public class MappingMetadata {
 	
 	public URI getClassURI(String classFragment) {
 		return getURIOfFragment(classFragment);
+	}
+	
+	public URI getObjectProperty(String opFragment) {
+		return getURIOfFragment(opFragment);
+	}
+	
+	public URI getDataProperty(String dpFragment) {
+		return getURIOfFragment(dpFragment);
 	}
 	
 	private URI getURIOfFragment(String fragment) {

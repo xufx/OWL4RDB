@@ -802,7 +802,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		Set<URI> familyClasses = null;
 		
 		if (Janus.mappingMetadata.getClassType(classURI).equals(ClassTypes.COLUMN_CLASS)) {
-			String rootColumn = Janus.cachedDBMetadata.getRootColumn(mappedTable, mappedColumn);
+			String rootColumn = Janus.cachedDBMetadata.getRootTableDotColumn(mappedTable, mappedColumn);
 			
 			try {
 				URI rootClassURI = new URI(Janus.ontBridge.getOntologyID() + "#" + rootColumn);

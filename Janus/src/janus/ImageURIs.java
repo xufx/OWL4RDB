@@ -25,6 +25,7 @@ public final class ImageURIs {
 	public static final String ONT_ANON_DATA_PROP = "images/ont.anonymous_data_property.png";
 	public static final String ONT_DATA_RANGE_BUT_DATA_TYPE = "images/ont.data_range_but_data_type.png";
 	public static final String ONT_INDIVIDUAL = "images/ont.individual.png";
+	public static final String ONT_LITERAL = "images/ont.literal.png";
 	public static final String ONT_KEYS = "images/ont.keys.png";
 	
 	public static final String DESCR_DATA_TYPE = "images/descr.data_type.png";

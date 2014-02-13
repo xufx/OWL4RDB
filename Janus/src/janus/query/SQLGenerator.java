@@ -32,6 +32,14 @@ public abstract class SQLGenerator {
 	 */
 	protected abstract String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table);
 	
+	protected abstract String getQueryToGetResultSetOf2X0();
+	
+	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields);
+	
+	protected abstract String getQueryToGetDPAssertionOfRecord(URI dp, String dpColumn, String table, List<DBField> PKFields);
+	
+	protected abstract String getQueryToGetDPAssertionOfField(URI dp, String dpColumn, String table, String value);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -183,6 +191,124 @@ public abstract class SQLGenerator {
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetTypesOfFieldIndividual(individual);
 		
+		return query;
+	}
+	
+	//object property assertions 
+	public String getQueryToGetOPAssertionsOfSubject(URI individual) {
+		String query = null;
+		
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
+			query = getQueryToGetOPAssertionsOfRecordIndividual(individual);
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
+			query = getQueryToGetResultSetOf2X0();
+		
+		return query;
+	}
+	
+	// the parameter individual is subject.
+	private String getQueryToGetOPAssertionsOfRecordIndividual(URI individual) {
+		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
+		
+		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
+		
+		List<String> queries = new Vector<String>();
+		
+		URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
+		
+		Set<URI> familyClsses = Janus.ontBridge.getAllFamilyClasses(mappedClass);
+		
+		for (URI cls: familyClsses) {
+			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
+			
+			List<DBField> familyFields = new Vector<DBField>();
+			
+			for (DBField field: fields) {
+				String matchedPKColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(field.getTableName(), field.getColumnName(), mappedTable);
+				familyFields.add(new DBField(mappedTable, matchedPKColumn, field.getValue()));
+			}
+			
+			Set<String> keyColumns = Janus.cachedDBMetadata.getKeyColumns(mappedTable);
+			
+			for (String keyColumn: keyColumns) {
+				URI mappedOP = Janus.mappingMetadata.getMappedObjectProperty(mappedTable, keyColumn);
+				
+				queries.add(getQueryToGetOPAssertionOfRecord(mappedOP, keyColumn, mappedTable, familyFields));
+			}
+		}
+		
+		return getUnionQuery(queries);
+	}
+	
+	// the parameter individual is subject.
+	private String getQueryToGetDPAssertionsOfRecordIndividual(URI individual) {
+		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
+
+		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
+
+		List<String> queries = new Vector<String>();
+
+		URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
+
+		Set<URI> familyClsses = Janus.ontBridge.getAllFamilyClasses(mappedClass);
+
+		for (URI cls: familyClsses) {
+			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
+
+			List<DBField> familyFields = new Vector<DBField>();
+
+			for (DBField field: fields) {
+				String matchedPKColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(field.getTableName(), field.getColumnName(), mappedTable);
+				familyFields.add(new DBField(mappedTable, matchedPKColumn, field.getValue()));
+			}
+
+			Set<String> nonKeyColumns = Janus.cachedDBMetadata.getNonKeyColumns(mappedTable);
+
+			for (String nonKeyColumn: nonKeyColumns) {
+				URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(mappedTable, nonKeyColumn);
+
+				queries.add(getQueryToGetDPAssertionOfRecord(mappedDP, nonKeyColumn, mappedTable, familyFields));
+			}
+		}
+
+		return getUnionQuery(queries);
+	}
+	
+	// the parameter individual is subject.
+	private String getQueryToGetDPAssertionsOfFieldIndividual(URI individual) {
+		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
+		
+		String table = field.getTableName();
+		String column = field.getColumnName();
+		String value = field.getValue();
+
+		List<String> queries = new Vector<String>();
+
+		URI mappedClass = Janus.mappingMetadata.getMappedClass(table, column);
+
+		Set<URI> familyClsses = Janus.ontBridge.getAllFamilyClasses(mappedClass);
+
+		for (URI cls: familyClsses) {
+			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
+			String mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
+			
+			URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
+
+			queries.add(getQueryToGetDPAssertionOfField(mappedDP, mappedColumn, mappedTable, value));
+		}
+
+		return getUnionQuery(queries);
+	}
+	
+	//data property assertions 
+	public String getQueryToGetDPAssertionsOfSubject(URI individual) {
+		String query = null;
+
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
+			query = getQueryToGetDPAssertionsOfRecordIndividual(individual);
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
+			query = getQueryToGetDPAssertionsOfFieldIndividual(individual);
+
 		return query;
 	}
 }

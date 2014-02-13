@@ -137,8 +137,8 @@ public class SQLResultSet {
 			str = str.replaceAll("©¡", "&aelig;");
 		if (str.contains("©¬"))
 			str = str.replaceAll("©¬", "&szlig;");
-		if (str.contains("\""))
-			str = str.replaceAll("\"", "&quot;");
+		//if (str.contains("\""))
+			//str = str.replaceAll("\"", "&quot;");
 		if (str.contains("¡¯"))
 			str = str.replaceAll("¡¯", "&rsquo;");
 		

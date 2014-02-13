@@ -22,7 +22,7 @@ public class CachedDBMetadata {
 		return null;
 	}
 	
-	public String getRootColumn(String tableName, String columnName) {
+	public String getRootTableDotColumn(String tableName, String columnName) {
 		String superColumn = getSuperColumn(tableName, columnName);
 		
 		while (superColumn != null) {
@@ -34,6 +34,20 @@ public class CachedDBMetadata {
 		}
 		
 		return tableName + "." + columnName;
+	}
+	
+	public Column getRootColumn(String tableName, String columnName) {
+		String superColumn = getSuperColumn(tableName, columnName);
+		
+		while (superColumn != null) {
+			String[] tableDotColumn = superColumn.split("\\.");
+			tableName = tableDotColumn[0];
+			columnName = tableDotColumn[1];
+			
+			superColumn = getSuperColumn(tableName, columnName);
+		}
+		
+		return new Column(tableName, columnName);
 	}
 	
 	public boolean isForeignKey(String tableName, String columnName) {
@@ -52,7 +66,7 @@ public class CachedDBMetadata {
 	}
 	
 	public boolean isRootColumn(String tableName, String columnName) {
-		String rootColumn = getRootColumn(tableName, columnName);
+		String rootColumn = getRootTableDotColumn(tableName, columnName);
 		String myColumn = tableName + "." + columnName;
 		
 		if (rootColumn.equals(myColumn))

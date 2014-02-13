@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class IndividualMetadata {
 	
-	static String getMappedIndividualFragment(String table, List<DBField> pkFields) {
+	static String getMappedRecordIndividualFragment(String table, List<DBField> pkFields) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
 		List<DBField> pkRootFields = new Vector<DBField>();
@@ -41,11 +41,11 @@ public class IndividualMetadata {
 		return individualFragment;
 	}
 	
-	static URI getMappedIndividual(String table, List<DBField> pkFields) {
+	static URI getMappedRecordIndividual(String table, List<DBField> pkFields) {
 		URI uri = null; 
 		
 		try {
-			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedIndividualFragment(table, pkFields));
+			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedRecordIndividualFragment(table, pkFields));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -53,11 +53,11 @@ public class IndividualMetadata {
 		return uri;
 	}
 	
-	static URI getMappedIndividual(String table, String column, String value) {
+	static URI getMappedFieldIndividual(String table, String column, String value) {
 		URI uri = null; 
 		
 		try {
-			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedIndividualFragment(table, column, value));
+			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedFieldIndividualFragment(table, column, value));
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -65,8 +65,8 @@ public class IndividualMetadata {
 		return uri;
 	}
 	
-	static String getMappedIndividualFragment(String table, String column, String value) {
-		String rootColumn = Janus.cachedDBMetadata.getRootColumn(table, column);
+	static String getMappedFieldIndividualFragment(String table, String column, String value) {
+		String rootColumn = Janus.cachedDBMetadata.getRootTableDotColumn(table, column);
 
 		String[] tableDotColumn = rootColumn.split("\\.");
 		String rootTableName = tableDotColumn[0];

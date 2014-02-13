@@ -1,5 +1,6 @@
 package janus.application.ontdata;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.URI;
@@ -10,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
@@ -19,47 +21,50 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class TypesTable extends JScrollPane {
+class DPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	TypesTable(URI individual) {
-		table = new JTable(new TypesTableModel(individual)) {
+	DPAssertionsTable(URI individual) {
+		table = new JTable(new DPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        if (rowIndex == 0)
-		        	return Janus.ontBridge.getOWLThingURI().toString();
-		        else
-		        	return getType((String)getValueAt(rowIndex, colIndex)).toString();
+		        String value = getValueAt(rowIndex, colIndex).toString();
+		        if (colIndex == 0)
+		        	return getDataProperty(value).toString();
+		        
+		        return super.getToolTipText();
 			}
 		};
-		table.setDefaultRenderer(Object.class, new TypesTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_CLS)));
-		table.setTableHeader(null);
+		table.setDefaultRenderer(Object.class, 
+				new DPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), 
+											  new ImageIcon(ImageURIs.ONT_LITERAL)));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
+		table.getTableHeader().setReorderingAllowed(false);
 		
 		setViewportView(table);
 	}
 	
-	private URI getType(String classFragment) {
-		return Janus.mappingMetadata.getClassURI(classFragment);
+	private URI getDataProperty(String dpFragment) {
+		return Janus.mappingMetadata.getDataProperty(dpFragment);
 	}
 }
 
 @SuppressWarnings("serial")
-class TypesTableModel extends AbstractTableModel {
-	
+class DPAssertionsTableModel extends AbstractTableModel {
+
 	private int columnCount;
 	private int rowCount;
 	private CachedRecord cache;
 	
 	private SQLResultSet resultSet;
 
-	TypesTableModel(URI individual) {
-		String query = Janus.sqlGenerator.getQueryToGetTypesOfIndividual(individual);
+	DPAssertionsTableModel(URI individual) {
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSubject(individual);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -67,6 +72,18 @@ class TypesTableModel extends AbstractTableModel {
 		columnCount = resultSet.getResultSetColumnCount();
 		
 		cache = new CachedRecord();
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		String columnName = super.getColumnName(column);
+		
+		if (column == 0)
+			columnName = "Predicate";
+		else if (column == 1)
+			columnName = "Object";
+		
+		return columnName;
 	}
 
 	public int getRowCount() {
@@ -116,17 +133,26 @@ class TypesTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class TypesTableRenderer extends DefaultTableCellRenderer {
+class DPAssertionsTableRenderer extends DefaultTableCellRenderer {
 
-	private Icon classIcon;
+	private Icon dpIcon;
+	private Icon litIcon;
 	
-	TypesTableRenderer(Icon classIcon) {
-		this.classIcon = classIcon;
+	DPAssertionsTableRenderer(Icon dpIcon, Icon litIcon) {
+		this.dpIcon = dpIcon;
+		this.litIcon = litIcon;
 	}
 	
 	@Override
-	protected void setValue(Object value) {
-		super.setValue(value);
-		setIcon(classIcon);
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		
+		if (column == 0)
+			setIcon(dpIcon);
+		else if (column == 1)
+			setIcon(litIcon);
+		
+		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 	}
 }

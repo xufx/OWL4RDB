@@ -286,7 +286,7 @@ class Individual {
 		Set<URI> familyClasses = null;
 		
 		if (type.equals(IndividualTypes.FROM_CELL)) {
-			String rootColumn = Janus.cachedDBMetadata.getRootColumn(mappedTableName, hasKeyColumnNames[0]);
+			String rootColumn = Janus.cachedDBMetadata.getRootTableDotColumn(mappedTableName, hasKeyColumnNames[0]);
 			
 			try {
 				URI rootClassURI = new URI(Janus.ontBridge.getOntologyID() + "#" + rootColumn);

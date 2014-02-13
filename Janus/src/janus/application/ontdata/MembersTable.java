@@ -6,9 +6,11 @@ import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
@@ -24,6 +26,7 @@ class MembersTable extends JScrollPane {
 	
 	MembersTable(URI cls) {
 		table = new JTable(new MembersTableModel(cls)) {
+
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
