@@ -47,17 +47,16 @@ public class SQLResultSet {
 
 			for (int i = 1 ; i <= cnt; i++) {
 				switch (rsmd.getColumnType(i)) {
+					
 					case Types.CHAR:
 					case Types.VARCHAR:
 					case Types.LONGVARCHAR:
+						
 						String str = rs.getString(i);
-						if (str == null)
-							v.add(null);
-						else {
-							str = replaceGlyph(str);
-							v.add(str);
-						}
+						v.add(str);
+						
 						break;
+					
 					case Types.NUMERIC:
 					case Types.DECIMAL:
 						v.add(rs.getBigDecimal(i).toString());
@@ -130,18 +129,5 @@ public class SQLResultSet {
 		} catch(SQLException e) { e.printStackTrace(); }
 		
 		return name;
-	}
-	
-	private String replaceGlyph(String str) {
-		if (str.contains("©¡"))
-			str = str.replaceAll("©¡", "&aelig;");
-		if (str.contains("©¬"))
-			str = str.replaceAll("©¬", "&szlig;");
-		//if (str.contains("\""))
-			//str = str.replaceAll("\"", "&quot;");
-		if (str.contains("¡¯"))
-			str = str.replaceAll("¡¯", "&rsquo;");
-		
-		return str;
 	}
 }

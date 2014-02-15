@@ -270,8 +270,14 @@ public abstract class SQLGenerator {
 				queries.add(getQueryToGetDPAssertionOfRecord(mappedDP, nonKeyColumn, mappedTable, familyFields));
 			}
 		}
-
-		return getUnionQuery(queries);
+		
+		int queryCount = queries.size();
+		if (queryCount == 0)
+			return getQueryToGetResultSetOf2X0();
+		else if (queryCount == 1)
+			return queries.get(0);
+		else
+			return getUnionQuery(queries);
 	}
 	
 	// the parameter individual is subject.

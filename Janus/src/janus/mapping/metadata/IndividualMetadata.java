@@ -4,8 +4,11 @@ import janus.Janus;
 import janus.mapping.DBField;
 import janus.mapping.OntMapper;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Vector;
 import java.util.regex.Pattern;
@@ -42,27 +45,23 @@ public class IndividualMetadata {
 	}
 	
 	static URI getMappedRecordIndividual(String table, List<DBField> pkFields) {
-		URI uri = null; 
+		String fragment = getMappedRecordIndividualFragment(table, pkFields);
 		
 		try {
-			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedRecordIndividualFragment(table, pkFields));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			return URI.create(getIndividualStringOfFragment(fragment));
+		} catch (IllegalArgumentException e) {
+			return getEncodedIndividual(fragment);
 		}
-		
-		return uri;
 	}
 	
 	static URI getMappedFieldIndividual(String table, String column, String value) {
-		URI uri = null; 
+		String fragment = getMappedFieldIndividualFragment(table, column, value);
 		
 		try {
-			uri = new URI(Janus.mappingMetadata.getOntologyID() + "#" + getMappedFieldIndividualFragment(table, column, value));
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			return URI.create(getIndividualStringOfFragment(fragment));
+		} catch (IllegalArgumentException e) {
+			return getEncodedIndividual(fragment);
 		}
-		
-		return uri;
 	}
 	
 	static String getMappedFieldIndividualFragment(String table, String column, String value) {
@@ -101,12 +100,16 @@ public class IndividualMetadata {
 		List<String> columnNames = new Vector<String>();
 		List<String> values = new Vector<String>();
 		
-		String fragment = individual.getFragment();
+		String fragment = getDecodedIndividualFragment(individual.getRawFragment());
 		
 		String[] tokens = fragment.split("&");
 		
-		if ((tokens.length % 2) != 1) 
-			System.out.println("Error While Parsing Individual.");
+		try {
+			if (tokens.length < 3 || ((tokens.length % 2) != 1))
+				throw new IndividualParsingException();
+		} catch (IndividualParsingException e) {
+				e.printStackTrace();
+		}
 		
 		for (String token: tokens) {
 			String[] pair = token.split("=");
@@ -129,12 +132,16 @@ public class IndividualMetadata {
 		String columnName = null;
 		String value = null;
 		
-		String fragment = individual.getFragment();
+		String fragment = getDecodedIndividualFragment(individual.getRawFragment());
 		
 		String[] tokens = fragment.split("&");
 		
-		if (tokens.length != 3) 
-			System.out.println("Error While Parsing Individual.");
+		try {
+			if (tokens.length != 3)
+				throw new IndividualParsingException();
+		} catch (IndividualParsingException e) {
+				e.printStackTrace();
+		}
 		
 		for (String token: tokens) {
 			String[] pair = token.split("=");
@@ -154,22 +161,58 @@ public class IndividualMetadata {
 			return IndividualTypes.FIELD_INDIVIDUAL;
 		else if (Pattern.matches(IndividualTypes.RECORD_INDIVIDUAL.value(), individual.toString()))
 			return IndividualTypes.RECORD_INDIVIDUAL;
-		else
-			return null;
+		
+		return null;
 	}
 	
+	/*private static IndividualTypes getIndividualTypeWithDecodedFragment(URI individual) {
+		
+		String rawFragment = individual.getRawFragment();
+		String decodedFragment = getDecodedIndividualFragment(rawFragment);
+		String individualString = getIndividualStringOfFragment(decodedFragment);
+			
+		if (Pattern.matches(IndividualTypes.FIELD_INDIVIDUAL.value(), individualString))
+			return IndividualTypes.FIELD_INDIVIDUAL;
+		else if (Pattern.matches(IndividualTypes.RECORD_INDIVIDUAL.value(), individualString))
+			return IndividualTypes.RECORD_INDIVIDUAL;
+		
+		return null;
+	}*/
+	
 	static URI getIndividual(String individualFragment) {
-		URI ontology = Janus.ontBridge.getOntologyID();
-		
-		String individualString = ontology.getScheme() + ":" + ontology.getSchemeSpecificPart() + "#" + individualFragment;
-		
-		URI individual = null;
 		try {
-			individual =  new URI(individualString);
+			return  new URI(getIndividualStringOfFragment(individualFragment));
 		} catch (URISyntaxException e) {
+			return getEncodedIndividual(individualFragment);
+		}
+	}
+	
+	private static URI getEncodedIndividual(String individualFragment) {
+		return URI.create(getIndividualStringOfFragment(getEncodedIndividualFragment(individualFragment)));
+		
+	}
+	
+	private static String getIndividualStringOfFragment(String fragment) {
+		return Janus.ontBridge.getOntologyID() + "#" + fragment;
+	}
+	
+	private static String getEncodedIndividualFragment(String fragment) {
+		try {
+			return URLEncoder.encode(fragment, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		
-		return individual;
+		return null;
+	}
+	
+	private static String getDecodedIndividualFragment(String encodedFragment) {
+		try {
+			return URLDecoder.decode(encodedFragment, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

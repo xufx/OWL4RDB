@@ -3,7 +3,6 @@ package janus.mapping.metadata;
 import janus.mapping.DBField;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -192,14 +191,7 @@ public class MappingMetadata {
 	}
 	
 	private URI getURIOfFragment(String fragment) {
-		URI uri = null;
-		try {
-			uri =  new URI(ontologyID + "#" + fragment);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		}
-		
-		return uri;
+		return URI.create(ontologyID + "#" + fragment);
 	}
 	
 	URI getOntologyID() {
