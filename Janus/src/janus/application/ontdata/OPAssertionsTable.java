@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.metadata.IndividualTypes;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -23,8 +24,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 class OPAssertionsTable extends JScrollPane {
 	private JTable table;
+	private IndividualTypes individualType;
 	
 	OPAssertionsTable(URI individual) {
+		individualType = Janus.mappingMetadata.getIndividualType(individual);
+		
 		table = new JTable(new OPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {
@@ -33,17 +37,26 @@ class OPAssertionsTable extends JScrollPane {
 		        int colIndex = columnAtPoint(p);
 		        
 		        String value = getValueAt(rowIndex, colIndex).toString();
-		        if (colIndex == 0)
-		        	return getObjectProperty(value).toString();
-		        else if (colIndex == 1)
-		        	return getIndividual(value).toString();
+		        
+		        if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+		        	if (colIndex == 0)
+		        		return getObjectProperty(value).toString();
+		        	else if (colIndex == 1)
+		        		return getIndividual(value).toString();
+		        } else {
+		        	if (colIndex == 0)
+		        		return getIndividual(value).toString();
+		        	else if (colIndex == 1)
+		        		return getObjectProperty(value).toString();
+		        }
 		        
 		        return super.getToolTipText();
 			}
 		};
 		table.setDefaultRenderer(Object.class, 
 				new OPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP), 
-											  new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
+											  new ImageIcon(ImageURIs.ONT_INDIVIDUAL),
+											  individualType));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
 		table.getTableHeader().setReorderingAllowed(false);
@@ -62,6 +75,7 @@ class OPAssertionsTable extends JScrollPane {
 
 @SuppressWarnings("serial")
 class OPAssertionsTableModel extends AbstractTableModel {
+	private IndividualTypes individualType;
 
 	private int columnCount;
 	private int rowCount;
@@ -70,7 +84,9 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	OPAssertionsTableModel(URI individual) {
-		String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfSubject(individual);
+		individualType = Janus.mappingMetadata.getIndividualType(individual);
+		
+		String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfIndividual(individual);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -84,10 +100,17 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		String columnName = super.getColumnName(column);
 		
-		if (column == 0)
-			columnName = "Predicate";
-		else if (column == 1)
-			columnName = "Object";
+		if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+			if (column == 0)
+				columnName = "Predicate";
+			else if (column == 1)
+				columnName = "Object";
+		} else {
+			if (column == 0)
+				columnName = "Subject";
+			else if (column == 1)
+				columnName = "Predicate";
+		}
 		
 		return columnName;
 	}
@@ -140,11 +163,14 @@ class OPAssertionsTableModel extends AbstractTableModel {
 
 @SuppressWarnings("serial")
 class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
-
+	private IndividualTypes individualType;
+	
 	private Icon opIcon;
 	private Icon indIcon;
 	
-	OPAssertionsTableRenderer(Icon opIcon, Icon indIcon) {
+	OPAssertionsTableRenderer(Icon opIcon, Icon indIcon, IndividualTypes individualType) {
+		this.individualType = individualType;
+		
 		this.opIcon = opIcon;
 		this.indIcon = indIcon;
 	}
@@ -153,10 +179,17 @@ class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		
-		if (column == 0)
-			setIcon(opIcon);
-		else if (column == 1)
-			setIcon(indIcon);
+		if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+			if (column == 0)
+				setIcon(opIcon);
+			else if (column == 1)
+				setIcon(indIcon);
+		} else {
+			if (column == 0)
+				setIcon(indIcon);
+			else if (column == 1)
+				setIcon(opIcon);
+		}
 		
 		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 				row, column);

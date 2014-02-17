@@ -396,11 +396,7 @@ public abstract class DBBridge {
 							v.add(new String(bytes));
 						break;
 					case Types.DATE:
-						v.add(rs.getDate(i).toString());
-						break;
 					case Types.TIME:
-						v.add(rs.getTime(i).toString());
-						break;
 					case Types.TIMESTAMP:
 						Timestamp timestamp = rs.getTimestamp(i);
 						if (timestamp == null)

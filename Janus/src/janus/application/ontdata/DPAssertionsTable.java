@@ -35,6 +35,8 @@ class DPAssertionsTable extends JScrollPane {
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        if (colIndex == 0)
 		        	return getDataProperty(value).toString();
+		        else if (colIndex == 1)
+		        	return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
 		        
 		        return super.getToolTipText();
 			}
@@ -47,6 +49,10 @@ class DPAssertionsTable extends JScrollPane {
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		setViewportView(table);
+	}
+	
+	private String getToolTipTextForLiteral(String literal, int width) {
+		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
 	}
 	
 	private URI getDataProperty(String dpFragment) {

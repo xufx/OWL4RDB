@@ -40,6 +40,8 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetDPAssertionOfField(URI dp, String dpColumn, String table, String value);
 	
+	protected abstract String getQueryToGetOPAssertionOfField(DBField field);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -78,7 +80,8 @@ public abstract class SQLGenerator {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 		String column = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
 		
-		if (Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
+		if (Janus.cachedDBMetadata.isPrimaryKey(table, column) 
+				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
 			return getQueryToGetIndividualsOfSinglePKColumnClass(column, table);
 		else if (Janus.cachedDBMetadata.isNotNull(table, column))
 			return getQueryToGetIndividualsOfNonNullableColumnClass(column, table);
@@ -195,19 +198,46 @@ public abstract class SQLGenerator {
 	}
 	
 	//object property assertions 
-	public String getQueryToGetOPAssertionsOfSubject(URI individual) {
+	public String getQueryToGetOPAssertionsOfIndividual(URI individual) {
 		String query = null;
 		
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetOPAssertionsOfRecordIndividual(individual);
+			query = getQueryToGetOPAssertionsOfRecordIndividualAsSubject(individual);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetResultSetOf2X0();
+			query = getQueryToGetOPAssertionsOfFieldIndividualAsObject(individual);
 		
 		return query;
 	}
 	
+	// the parameter individual is object.
+	private String getQueryToGetOPAssertionsOfFieldIndividualAsObject(URI individual) {
+		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
+		
+		String table = field.getTableName();
+		String column = field.getColumnName();
+		String value = field.getValue();
+		
+		List<String> queries = new Vector<String>();
+
+		URI mappedClass = Janus.mappingMetadata.getMappedClass(table, column);
+
+		Set<URI> familyClsses = Janus.ontBridge.getAllFamilyClasses(mappedClass);
+		
+		for (URI cls: familyClsses) {
+			String familyTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
+			String familyColumn = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
+						
+			queries.add(getQueryToGetOPAssertionOfField(new DBField(familyTable, familyColumn, value)));
+		}
+		
+		if (queries.size() == 1)
+			return queries.get(0);
+		else
+			return getUnionQuery(queries);
+	}
+	
 	// the parameter individual is subject.
-	private String getQueryToGetOPAssertionsOfRecordIndividual(URI individual) {
+	private String getQueryToGetOPAssertionsOfRecordIndividualAsSubject(URI individual) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
@@ -241,7 +271,7 @@ public abstract class SQLGenerator {
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfRecordIndividual(URI individual) {
+	private String getQueryToGetDPAssertionsOfRecordIndividualAsSubject(URI individual) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
@@ -281,7 +311,7 @@ public abstract class SQLGenerator {
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfFieldIndividual(URI individual) {
+	private String getQueryToGetDPAssertionsOfFieldIndividualAsSubject(URI individual) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
 		
 		String table = field.getTableName();
@@ -311,9 +341,9 @@ public abstract class SQLGenerator {
 		String query = null;
 
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfRecordIndividual(individual);
+			query = getQueryToGetDPAssertionsOfRecordIndividualAsSubject(individual);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfFieldIndividual(individual);
+			query = getQueryToGetDPAssertionsOfFieldIndividualAsSubject(individual);
 
 		return query;
 	}

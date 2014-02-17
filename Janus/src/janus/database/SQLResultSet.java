@@ -93,17 +93,13 @@ public class SQLResultSet {
 							v.add(new String(bytes));
 						break;
 					case Types.DATE:
-						v.add(rs.getDate(i).toString() + "T00:00:00.000");
-						break;
 					case Types.TIME:
-						v.add(rs.getTime(i).toString());
-						break;
-					case Types.TIMESTAMP:
+						case Types.TIMESTAMP:
 						Timestamp timestamp = rs.getTimestamp(i);
 						if (timestamp == null)
 							v.add(null);
 						else
-							v.add(timestamp.toString().replace(" ", "T") + "00");
+							v.add(timestamp.toString());
 						break;
 				}
 			}
