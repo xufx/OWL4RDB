@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
-public class DBLoginDialog extends JDialog {
+public class SessionManager extends JDialog {
 	
 	private JTextField host;
 	private JTextField port;
@@ -27,8 +27,8 @@ public class DBLoginDialog extends JDialog {
 	
 	private boolean NORMAL_EXIT = false;
 
-	public DBLoginDialog(Frame owner) {
-		super(owner, "Connect to Database", true);
+	public SessionManager(Frame owner) {
+		super(owner, "Session Manager", true);
 
 		buildUI();
 	}

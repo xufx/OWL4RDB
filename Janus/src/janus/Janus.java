@@ -2,7 +2,7 @@ package janus;
 
 import java.io.File;
 import janus.application.JanusWindow;
-import janus.application.dialog.DBLoginDialog;
+import janus.application.dialog.SessionManager;
 import janus.database.DBBridge;
 import janus.database.DBBridgeFactory;
 import janus.database.metadata.CachedDBMetadataFactory;
@@ -40,7 +40,7 @@ public class Janus {
 		
 		setLookAndFeel();
 		
-		DBLoginDialog loginDialog = new DBLoginDialog(splash);
+		SessionManager loginDialog = new SessionManager(splash);
 		
 		do {
 			loginDialog.setVisible(true);
