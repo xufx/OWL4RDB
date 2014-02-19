@@ -1,5 +1,7 @@
 package janus.mapping.metadata;
 
+import janus.mapping.ClassTypes;
+
 class ClassMetadata implements Comparable<ClassMetadata> {
 	private String className;
 

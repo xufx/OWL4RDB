@@ -1,7 +1,7 @@
 package janus.sparqldl;
 
 import janus.Janus;
-import janus.mapping.metadata.ClassTypes;
+import janus.mapping.ClassTypes;
 
 import java.net.URI;
 import java.util.List;

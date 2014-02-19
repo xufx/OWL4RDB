@@ -28,9 +28,9 @@ import javax.swing.tree.TreePath;
 public class DBTree extends JScrollPane {
 	private JTree tree;
 	private JPopupMenu popupMenu;
-	private AbstractAction mappedClass;
-	private AbstractAction mappedObjectPropery;
-	private AbstractAction mappedDataPropery;
+	private AbstractAction goToMappedClass;
+	private AbstractAction goToMappedObjectPropery;
+	private AbstractAction goToMappedDataPropery;
 	
 	public DBTree() {
 		buildUI();
@@ -53,14 +53,14 @@ public class DBTree extends JScrollPane {
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
 		
-		mappedClass = new GoToMappedClassAction("Go to Mapped Class");
-		popupMenu.add(mappedClass);
+		goToMappedClass = new GoToMappedClassAction("Go to Mapped Class");
+		popupMenu.add(goToMappedClass);
 		
-		mappedObjectPropery = new GoToMappedObjectPropertyAction("Go to Mapped Object Property");
-		popupMenu.add(mappedObjectPropery);
+		goToMappedObjectPropery = new GoToMappedObjectPropertyAction("Go to Mapped Object Property");
+		popupMenu.add(goToMappedObjectPropery);
 		
-		mappedDataPropery = new GoToMappedDataPropertyAction("Go to Mapped Data Property");
-		popupMenu.add(mappedDataPropery);
+		goToMappedDataPropery = new GoToMappedDataPropertyAction("Go to Mapped Data Property");
+		popupMenu.add(goToMappedDataPropery);
 		
 		return popupMenu;
 	}
@@ -114,22 +114,22 @@ public class DBTree extends JScrollPane {
 		// setting mapped class menu enabled/disabled
 		if (type.equals(DBTreeNodeTypes.CATALOG) 
 				|| type.equals(DBTreeNodeTypes.NON_KEY))
-			mappedClass.setEnabled(false);
+			goToMappedClass.setEnabled(false);
 		else
-			mappedClass.setEnabled(true);
+			goToMappedClass.setEnabled(true);
 		// setting mapped object property menu enabled/disabled
 		if (type.equals(DBTreeNodeTypes.CATALOG) 
 				|| type.equals(DBTreeNodeTypes.TABLE)
 				|| type.equals(DBTreeNodeTypes.NON_KEY))
-			mappedObjectPropery.setEnabled(false);
+			goToMappedObjectPropery.setEnabled(false);
 		else
-			mappedObjectPropery.setEnabled(true);
+			goToMappedObjectPropery.setEnabled(true);
 		// setting mapped data property menu enabled/disabled
 		if (type.equals(DBTreeNodeTypes.CATALOG) 
 				|| type.equals(DBTreeNodeTypes.TABLE))
-			mappedDataPropery.setEnabled(false);
+			goToMappedDataPropery.setEnabled(false);
 		else
-			mappedDataPropery.setEnabled(true);
+			goToMappedDataPropery.setEnabled(true);
 		
 		popupMenu.show(this, x, y);
 	}

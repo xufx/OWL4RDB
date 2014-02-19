@@ -1,6 +1,7 @@
 package janus.mapping.metadata;
 
 import janus.database.DBField;
+import janus.mapping.ClassTypes;
 
 import java.net.URI;
 import java.util.List;

@@ -1,8 +1,9 @@
 package janus.sparqldl;
 
 import janus.Janus;
+import janus.mapping.ClassTypes;
 import janus.mapping.OntMapper;
-import janus.mapping.metadata.ClassTypes;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.URI;

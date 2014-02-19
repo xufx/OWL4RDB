@@ -2,7 +2,7 @@ package janus.query;
 
 import janus.Janus;
 import janus.database.DBField;
-import janus.mapping.metadata.ClassTypes;
+import janus.mapping.ClassTypes;
 import janus.mapping.metadata.IndividualTypes;
 
 import java.net.URI;

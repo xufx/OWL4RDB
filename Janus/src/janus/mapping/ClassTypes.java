@@ -1,4 +1,4 @@
-package janus.mapping.metadata;
+package janus.mapping;
 
 import janus.Janus;
 

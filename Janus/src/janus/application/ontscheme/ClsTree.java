@@ -2,7 +2,10 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
-import janus.application.actions.ShowMembersAction;
+import janus.application.actions.GoToMappedTableAction;
+import janus.application.dbscheme.DBTreeNode;
+import janus.application.dbscheme.DBTreeNodeTypes;
+import janus.mapping.ClassTypes;
 
 import java.net.URI;
 import java.awt.Component;
@@ -10,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.util.Enumeration;
 import java.util.Set;
 
+import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
@@ -26,6 +30,7 @@ import javax.swing.tree.TreePath;
 public class ClsTree extends JScrollPane {
 	private JTree tree;
 	private JPopupMenu popupMenu;
+	private AbstractAction goToMappedTable;
 	
 	public ClsTree() {
 		buildUI();
@@ -47,7 +52,9 @@ public class ClsTree extends JScrollPane {
 	
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
-		popupMenu.add(new ShowMembersAction("Members"));
+		
+		goToMappedTable = new GoToMappedTableAction("Go to Mapped Table");
+		popupMenu.add(goToMappedTable);
 		
 		return popupMenu;
 	}
@@ -71,6 +78,10 @@ public class ClsTree extends JScrollPane {
 	}
 	
 	void showPopupMenu(int x, int y) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
+		//ClassTypes type = ontNode.getType();
+		
 		popupMenu.show(this, x, y);
 	}
 	
