@@ -1,7 +1,7 @@
 package janus.mapping.metadata;
 
 import janus.Janus;
-import janus.mapping.DBField;
+import janus.database.DBField;
 import janus.mapping.OntMapper;
 
 import java.io.UnsupportedEncodingException;

@@ -1,0 +1,12 @@
+?y: http://www.example.com/college#c__department.id__D0
+?y: http://www.example.com/college#c__department.id__D1
+?y: http://www.example.com/college#c__department.id__D2
+?y: http://www.example.com/college#c__department.id__D3
+?y: http://www.example.com/college#c__lecturer.deptid__D1
+?y: http://www.example.com/college#c__lecturer.deptid__D3
+?y: http://www.example.com/college#c__student.deptid__D1
+?y: http://www.example.com/college#c__student.deptid__D2
+?x: http://www.example.com/college#r__1__department__id__D0
+?x: http://www.example.com/college#r__1__department__id__D1
+?x: http://www.example.com/college#r__1__department__id__D2
+?x: http://www.example.com/college#r__1__department__id__D3

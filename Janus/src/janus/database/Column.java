@@ -1,10 +1,10 @@
-package janus.database.metadata;
+package janus.database;
 
 public class Column {
 	private String tableName;
 	private String columnName;
 	
-	Column(String tableName, String columnName) {
+	public Column(String tableName, String columnName) {
 		this.tableName = tableName;
 		this.columnName = columnName;
 	}

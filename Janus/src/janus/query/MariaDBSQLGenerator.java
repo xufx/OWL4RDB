@@ -1,8 +1,8 @@
 package janus.query;
 
 import janus.Janus;
-import janus.database.metadata.Column;
-import janus.mapping.DBField;
+import janus.database.Column;
+import janus.database.DBField;
 import janus.mapping.DatatypeMap;
 import janus.mapping.OntMapper;
 

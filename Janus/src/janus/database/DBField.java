@@ -1,4 +1,4 @@
-package janus.mapping;
+package janus.database;
 
 public class DBField implements Comparable<DBField> {
 	private String tableName;

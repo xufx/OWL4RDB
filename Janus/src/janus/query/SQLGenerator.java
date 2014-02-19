@@ -1,7 +1,7 @@
 package janus.query;
 
 import janus.Janus;
-import janus.mapping.DBField;
+import janus.database.DBField;
 import janus.mapping.metadata.ClassTypes;
 import janus.mapping.metadata.IndividualTypes;
 

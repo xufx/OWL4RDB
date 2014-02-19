@@ -7,6 +7,7 @@ import janus.application.actions.ShowMembersAction;
 import java.net.URI;
 import java.awt.Component;
 import java.awt.event.MouseListener;
+import java.util.Enumeration;
 import java.util.Set;
 
 import javax.swing.Icon;
@@ -84,7 +85,7 @@ public class ClsTree extends JScrollPane {
 		return tree.getPathForLocation(x, y);
 	}
 	
-	void setSelectionPath(TreePath path) {
+	public void setSelectionPath(TreePath path) {
 		tree.setSelectionPath(path);
 	}
 	
@@ -94,6 +95,22 @@ public class ClsTree extends JScrollPane {
 	
 	boolean isSelectionEmpty() {
 		return tree.isSelectionEmpty();
+	}
+	
+	public TreePath getMatchedNode(URI cls) {
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode node = e.nextElement();
+			OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
+	        if (clsNode.getURI().equals(cls))
+	            return new TreePath(node.getPath());
+	    }
+		
+		return null;
 	}
 }
 

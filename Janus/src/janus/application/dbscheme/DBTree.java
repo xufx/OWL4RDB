@@ -99,7 +99,9 @@ public class DBTree extends JScrollPane {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
 		DBTreeNodeTypes type = dbNode.getType();
-		if (type.equals(DBTreeNodeTypes.CATALOG))
+		
+		if (type.equals(DBTreeNodeTypes.CATALOG) 
+				|| type.equals(DBTreeNodeTypes.NON_KEY))
 			mappedClass.setEnabled(false);
 		else
 			mappedClass.setEnabled(true);
@@ -128,6 +130,13 @@ public class DBTree extends JScrollPane {
 	
 	boolean isSelectionEmpty() {
 		return tree.isSelectionEmpty();
+	}
+	
+	public String getSelectedTable() {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
+
+		return dbNode.toString();
 	}
 }
 

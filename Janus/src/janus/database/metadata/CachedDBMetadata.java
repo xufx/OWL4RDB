@@ -1,5 +1,7 @@
 package janus.database.metadata;
 
+import janus.database.Column;
+
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
