@@ -2,7 +2,8 @@ package janus.application.dbscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
-import janus.application.actions.ShowMappedClassAction;
+import janus.application.actions.GoToMappedClassAction;
+import janus.database.Column;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
@@ -47,7 +48,7 @@ public class DBTree extends JScrollPane {
 	
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
-		mappedClass = new ShowMappedClassAction("Mapped Class");
+		mappedClass = new GoToMappedClassAction("Mapped Class");
 		popupMenu.add(mappedClass);
 		
 		return popupMenu;
@@ -137,6 +138,16 @@ public class DBTree extends JScrollPane {
 		DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
 
 		return dbNode.toString();
+	}
+	
+	public Column getSelectedColumn() {
+		DefaultMutableTreeNode columnNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		DefaultMutableTreeNode tableNode = (DefaultMutableTreeNode)columnNode.getParent();
+		
+		DBTreeNode dbColumnNode = (DBTreeNode)columnNode.getUserObject();
+		DBTreeNode dbTableNode = (DBTreeNode)tableNode.getUserObject();
+
+		return new Column(dbTableNode.toString(), dbColumnNode.toString());
 	}
 }
 
