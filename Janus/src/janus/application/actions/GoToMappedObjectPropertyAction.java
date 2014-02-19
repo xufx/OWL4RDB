@@ -30,7 +30,7 @@ public class GoToMappedObjectPropertyAction extends AbstractAction {
 		
 		URI mappedOP = Janus.mappingMetadata.getMappedObjectProperty(column.getTableName(), column.getColumnName());
 		
-		TreePath path = opTree.getMatchedNode(mappedOP);
+		TreePath path = opTree.getTreePathOfObjectProperty(mappedOP);
 		
 		if (path != null) {
 			JTabbedPane schemeTab = UIRegistry.getschemeTab();

@@ -91,7 +91,7 @@ public class DPTree extends JScrollPane {
 		return tree.isSelectionEmpty();
 	}
 	
-	public TreePath getMatchedNode(URI dp) {
+	public TreePath getTreePathOfDataProperty(URI dp) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		
 		@SuppressWarnings("unchecked")

@@ -7,13 +7,13 @@ public enum ClassTypes {
 	OWL_THING(Janus.ontBridge.getOWLThingURI().toString()),
 	TABLE_CLASS(Janus.ontBridge.getOntologyID().toString() + "#" + "[\\w[$]]+");
 	
-	private String value;
+	private String pattern;
 	
-	private ClassTypes(String value) {
-		this.value = value;
+	private ClassTypes(String pattern) {
+		this.pattern = pattern;
 	}
 	
-	public String value() {
-		return value;
+	public String pattern() {
+		return pattern;
 	}
 }

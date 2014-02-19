@@ -70,7 +70,7 @@ public class MappingMetadata {
 	}
 	
 	public ClassTypes getClassType(URI classURI) {
-		if (classURI.toString().equals(ClassTypes.OWL_THING.value()))
+		if (classURI.toString().equals(ClassTypes.OWL_THING.pattern()))
 			return ClassTypes.OWL_THING;
 		
 		String className = classURI.getFragment();

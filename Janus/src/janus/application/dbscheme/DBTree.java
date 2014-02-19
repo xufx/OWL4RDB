@@ -9,6 +9,7 @@ import janus.database.Column;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
 
@@ -145,7 +146,7 @@ public class DBTree extends JScrollPane {
 		return tree.getPathForLocation(x, y);
 	}
 	
-	void setSelectionPath(TreePath path) {
+	public void setSelectionPath(TreePath path) {
 		tree.setSelectionPath(path);
 	}
 	
@@ -172,6 +173,23 @@ public class DBTree extends JScrollPane {
 		DBTreeNode dbTableNode = (DBTreeNode)tableNode.getUserObject();
 
 		return new Column(dbTableNode.toString(), dbColumnNode.toString());
+	}
+	
+	public TreePath getTreePathOfTable(String table) {
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = root.breadthFirstEnumeration();
+		
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode node = e.nextElement();
+			DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
+	        if (dbNode.getType().equals(DBTreeNodeTypes.TABLE)
+	        		&& dbNode.toString().equals(table))
+	            return new TreePath(node.getPath());
+	    }
+		
+		return null;
 	}
 }
 

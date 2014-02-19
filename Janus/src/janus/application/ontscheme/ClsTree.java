@@ -3,8 +3,6 @@ package janus.application.ontscheme;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedTableAction;
-import janus.application.dbscheme.DBTreeNode;
-import janus.application.dbscheme.DBTreeNodeTypes;
 import janus.mapping.ClassTypes;
 
 import java.net.URI;
@@ -80,7 +78,13 @@ public class ClsTree extends JScrollPane {
 	void showPopupMenu(int x, int y) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
-		//ClassTypes type = ontNode.getType();
+		ClassTypes type = Janus.mappingMetadata.getClassType(ontNode.getURI());
+		// setting mapped table menu enabled/disabled
+		if (type.equals(ClassTypes.OWL_THING) 
+				|| type.equals(ClassTypes.COLUMN_CLASS))
+			goToMappedTable.setEnabled(false);
+		else
+			goToMappedTable.setEnabled(true);
 		
 		popupMenu.show(this, x, y);
 	}
@@ -108,7 +112,7 @@ public class ClsTree extends JScrollPane {
 		return tree.isSelectionEmpty();
 	}
 	
-	public TreePath getMatchedNode(URI cls) {
+	public TreePath getTreePathOfClass(URI cls) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		
 		@SuppressWarnings("unchecked")
