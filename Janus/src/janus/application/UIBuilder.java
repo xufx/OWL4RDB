@@ -181,6 +181,8 @@ class UIBuilder {
 		propertiesTab.addTab(TabNames.OBJECT_PROPERTIES, buildOntObjPropertyTreePane());
 		propertiesTab.addTab(TabNames.DATA_PROPERTIES, buildOntDataPropertyTreePane());
 		
+		UIRegistry.registerPropertiesTab(propertiesTab);
+		
 		sp.setBottomComponent(propertiesTab);
 		
 		return sp;

@@ -17,6 +17,7 @@ import javax.swing.JTabbedPane;
 public class UIRegistry {
 	private static JTabbedPane schemeTab;
 	private static JScrollPane classTree;
+	private static JTabbedPane propertiesTab;
 	private static JScrollPane dataPropertyTree;
 	private static JScrollPane dbSchemeTree;
 	private static JScrollPane descriptionTree;
@@ -31,6 +32,10 @@ public class UIRegistry {
 	
 	public static JTabbedPane getIndividualsTab() {
 		return individualsTab;
+	}
+	
+	public static JTabbedPane getPropertiesTab() {
+		return propertiesTab;
 	}
 	
 	public static JTabbedPane getschemeTab() {
@@ -49,7 +54,7 @@ public class UIRegistry {
 		return (ClsTree)classTree;
 	}
 	
-	static DPTree getDPTree() {
+	public static DPTree getDPTree() {
 		return (DPTree)dataPropertyTree;
 	}
 	
@@ -63,7 +68,7 @@ public class UIRegistry {
 	
 	public static Window getDialogOwner() { return frame; }
 	
-	static OPTree getOPTree() {
+	public static OPTree getOPTree() {
 		return (OPTree)objectPropertyTree;
 	}
 	
@@ -115,6 +120,10 @@ public class UIRegistry {
 	
 	static void registerQueryTab(JTabbedPane queryTab) {
 		UIRegistry.queryTab = queryTab;
+	}
+	
+	static void registerPropertiesTab(JTabbedPane propertiesTab) {
+		UIRegistry.propertiesTab = propertiesTab;
 	}
 	
 	static void registerQueryResultTable(JScrollPane queryResultTable) {

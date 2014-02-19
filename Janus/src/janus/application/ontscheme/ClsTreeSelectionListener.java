@@ -16,6 +16,10 @@ public class ClsTreeSelectionListener implements TreeSelectionListener {
 
 	public void valueChanged(TreeSelectionEvent e) {
 		JTree tree = (JTree)e.getSource();
+		
+		if (tree.isSelectionEmpty())
+			return;
+		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
 		

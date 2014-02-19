@@ -7,6 +7,7 @@ import janus.application.actions.ShowMembersAction;
 import java.net.URI;
 import java.awt.Component;
 import java.awt.event.MouseListener;
+import java.util.Enumeration;
 import java.util.Set;
 
 import javax.swing.Icon;
@@ -78,7 +79,7 @@ public class OPTree extends JScrollPane {
 		return tree.getPathForLocation(x, y);
 	}
 	
-	void setSelectionPath(TreePath path) {
+	public void setSelectionPath(TreePath path) {
 		tree.setSelectionPath(path);
 	}
 	
@@ -88,6 +89,22 @@ public class OPTree extends JScrollPane {
 	
 	boolean isSelectionEmpty() {
 		return tree.isSelectionEmpty();
+	}
+	
+	public TreePath getMatchedNode(URI op) {
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = root.depthFirstEnumeration();
+		
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode node = e.nextElement();
+			OntTreeNode opNode = (OntTreeNode)node.getUserObject();
+	        if (opNode.getURI().equals(op))
+	            return new TreePath(node.getPath());
+	    }
+		
+		return null;
 	}
 }
 

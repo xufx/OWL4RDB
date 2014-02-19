@@ -16,6 +16,10 @@ public class OPTreeSelectionListener implements TreeSelectionListener {
 
 	public void valueChanged(TreeSelectionEvent e) {
 		JTree tree = (JTree)e.getSource();
+		
+		if (tree.isSelectionEmpty())
+			return;
+		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode objPropNode = (OntTreeNode)node.getUserObject();
 		
