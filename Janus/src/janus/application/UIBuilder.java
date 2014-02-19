@@ -80,6 +80,7 @@ class UIBuilder {
 		JTabbedPane schemeTab = new JTabbedPane(JTabbedPane.TOP);
 		schemeTab.addTab(TabNames.DATABASE, buildDBTreePane());
 		schemeTab.addTab(TabNames.ONTOLOGY, buildOntologyTreePane());
+		UIRegistry.registerSchemeTab(schemeTab);
 		
 		baseSP.setLeftComponent(schemeTab);
 		
@@ -107,7 +108,7 @@ class UIBuilder {
 		displayTab.addTab(TabNames.INDIVIDUALS, buildIndividualsPane());
 		displayTab.addTab(TabNames.QUERY, buildQueryPane());
 		
-		UIRegistry.registerDisplayPane(displayTab);
+		UIRegistry.registerDisplayTab(displayTab);
 		
 		return displayTab;
 	}
@@ -115,7 +116,7 @@ class UIBuilder {
 	private static JTabbedPane buildIndividualsPane() {
 		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
-		UIRegistry.registerIndividualsPane(tp);
+		UIRegistry.registerIndividualsTab(tp);
 		
 		return tp;
 	}
@@ -135,7 +136,7 @@ class UIBuilder {
 	private static JTabbedPane buildDocumentPane() {
 		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
-		UIRegistry.registerDocumentPane(tp);
+		UIRegistry.registerDocumentTab(tp);
 		
 		return tp;
 	}
@@ -143,7 +144,7 @@ class UIBuilder {
 	private static JScrollPane buildSQLResultSetPane() {
 		JScrollPane resultSetPane = new ResultSetPane();
 		
-		UIRegistry.registerQueryResultPane(resultSetPane);
+		UIRegistry.registerQueryResultTable(resultSetPane);
 		
 		return resultSetPane;
 	}
@@ -153,7 +154,7 @@ class UIBuilder {
 		queryTabs.addTab(TabNames.SPARQL_DL, new QueryArea(QueryTypes.SPARQL_DL));
 		queryTabs.addTab(TabNames.SQL, new QueryArea(QueryTypes.SQL));
 		
-		UIRegistry.registerQueryPane(queryTabs);
+		UIRegistry.registerQueryTab(queryTabs);
 		
 		return queryTabs;
 	}
@@ -161,7 +162,7 @@ class UIBuilder {
 	private static JScrollPane buildOntDescrPane() {
 		JScrollPane descrTree = new DescrTree();
 		
-		UIRegistry.registerDescriptionPane(descrTree);
+		UIRegistry.registerDescriptionTree(descrTree);
 		
 		return descrTree;
 	}
@@ -188,7 +189,7 @@ class UIBuilder {
 	private static JScrollPane buildDBTreePane() {
 		JScrollPane dbTree = new DBTree();
 		
-		UIRegistry.registerDBSchemePane(dbTree);
+		UIRegistry.registerDBSchemeTree(dbTree);
 		
 		return dbTree;
 	}
@@ -196,7 +197,7 @@ class UIBuilder {
 	private static JScrollPane buildOntClassTreePane() {
 		JScrollPane clsTree = new ClsTree();
 		
-		UIRegistry.registerClassPane(clsTree);
+		UIRegistry.registerClassTree(clsTree);
 		
 		return clsTree;
 	}
@@ -204,7 +205,7 @@ class UIBuilder {
 	private static JScrollPane buildOntObjPropertyTreePane() {
 		JScrollPane opTree = new OPTree();
 		
-		UIRegistry.registerObjectPropertyPane(opTree);
+		UIRegistry.registerObjectPropertyTree(opTree);
 		
 		return opTree;
 	}
@@ -212,7 +213,7 @@ class UIBuilder {
 	private static JScrollPane buildOntDataPropertyTreePane() {
 		JScrollPane dpTree = new DPTree();
 		
-		UIRegistry.registerDataPropertyPane(dpTree);
+		UIRegistry.registerDataPropertyTree(dpTree);
 		
 		return dpTree;
 	}

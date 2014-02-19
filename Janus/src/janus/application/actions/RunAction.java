@@ -15,7 +15,7 @@ import javax.swing.AbstractAction;
 public class RunAction extends AbstractAction {
 	
 	public void actionPerformed(ActionEvent e) {
-		Submittable submitter = UIRegistry.getSelectedQueryPane();
+		Submittable submitter = UIRegistry.getSelectedQueryArea();
 		
 		QueryTypes selectedSubmissionType = submitter.getQueryType();
 		switch(selectedSubmissionType) {
@@ -27,7 +27,7 @@ public class RunAction extends AbstractAction {
 				break;
 		}
 
-		Showable displayer = UIRegistry.getQueryResultPane();
+		Showable displayer = UIRegistry.getQueryResultTable();
 		
 		displayer.showResult(selectedSubmissionType);
 	}

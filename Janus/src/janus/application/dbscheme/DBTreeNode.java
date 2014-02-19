@@ -1,16 +1,14 @@
 package janus.application.dbscheme;
 
 class DBTreeNode {
-	static enum Type { CATALOG, TABLE, FIELD, KEY };
-	
 	private String value;
-	private Type type;
+	private DBTreeNodeTypes type;
 	
-	DBTreeNode(String value, Type type) {
+	DBTreeNode(String value, DBTreeNodeTypes type) {
 		this.value = value;
 		this.type = type;
 	}
 	
 	public String toString() { return value; }
-	Type getType() { return type; }
+	DBTreeNodeTypes getType() { return type; }
 }

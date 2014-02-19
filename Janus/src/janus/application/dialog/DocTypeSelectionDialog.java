@@ -63,6 +63,7 @@ public class DocTypeSelectionDialog extends JDialog {
 				setVisible(false);
 			}
 		});
+		getRootPane().setDefaultButton(OK);
 		southPanel.add(OK);
 
 		// Cancel

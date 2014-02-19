@@ -17,8 +17,8 @@ public class DescrTree extends JScrollPane implements AttrDescribable {
 	private DataPropDescrTreeCellRenderer dataPropRenderer;
 	
 	public DescrTree() {
-		dbRenderer = new DBDescrTreeCellRenderer(new ImageIcon(ImageURIs.DB_FIELD),
-					 							 new ImageIcon(ImageURIs.DB_KEY),
+		dbRenderer = new DBDescrTreeCellRenderer(new ImageIcon(ImageURIs.DB_NON_PRIMARY),
+					 							 new ImageIcon(ImageURIs.DB_PRIMARY),
 					 							 new ImageIcon(ImageURIs.DESCR_DATA_TYPE), 
 					 							 new ImageIcon(ImageURIs.DESCR_DEFAULT_VALUE),
 					 							 new ImageIcon(ImageURIs.DESCR_NULL_VALUE),

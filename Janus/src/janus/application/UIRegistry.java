@@ -15,101 +15,110 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 public class UIRegistry {
-	private static JScrollPane classPane;
-	private static JScrollPane dataPropertyPane;
-	private static JScrollPane dbSchemePane;
-	private static JScrollPane descriptionPane;
-	private static JTabbedPane displayPane;
-	private static JTabbedPane documentPane;
+	private static JTabbedPane schemeTab;
+	private static JScrollPane classTree;
+	private static JScrollPane dataPropertyTree;
+	private static JScrollPane dbSchemeTree;
+	private static JScrollPane descriptionTree;
+	private static JTabbedPane displayTab;
+	private static JTabbedPane documentTab;
 	private static JFrame frame;
-	private static JTabbedPane individualsPane;
-	private static JScrollPane objectPropertyPane;
-	private static JTabbedPane queryPane;
-	private static JScrollPane queryResultPane;
+	private static JTabbedPane individualsTab;
+	private static JScrollPane objectPropertyTree;
+	private static JTabbedPane queryTab;
+	private static JScrollPane queryResultTable;
 	
 	
-	public static JTabbedPane getIndividualsPane() {
-		return individualsPane;
+	public static JTabbedPane getIndividualsTab() {
+		return individualsTab;
 	}
 	
-	public static JTabbedPane getDisplayPane() {
-		return displayPane;
+	public static JTabbedPane getschemeTab() {
+		return schemeTab;
 	}
 	
-	public static JTabbedPane getDocumentPane() {
-		return documentPane;
+	public static JTabbedPane getDisplayTab() {
+		return displayTab;
 	}
 	
-	public static ClsTree getClsTreePane() {
-		return (ClsTree)classPane;
+	public static JTabbedPane getDocumentTab() {
+		return documentTab;
 	}
 	
-	static DPTree getDataPropTree() {
-		return (DPTree)dataPropertyPane;
+	public static ClsTree getClsTree() {
+		return (ClsTree)classTree;
 	}
 	
-	static DBTree getDBTree() {
-		return (DBTree)dbSchemePane;
+	static DPTree getDPTree() {
+		return (DPTree)dataPropertyTree;
+	}
+	
+	public static DBTree getDBTree() {
+		return (DBTree)dbSchemeTree;
 	}
 	
 	static DescrTree getDescriptionTree() {
-		return (DescrTree)descriptionPane;
+		return (DescrTree)descriptionTree;
 	}
 	
 	public static Window getDialogOwner() { return frame; }
 	
-	static OPTree getObjPropTree() {
-		return (OPTree)objectPropertyPane;
+	static OPTree getOPTree() {
+		return (OPTree)objectPropertyTree;
 	}
 	
-	public static Showable getQueryResultPane() {
-		return (Showable)queryResultPane;
+	public static Showable getQueryResultTable() {
+		return (Showable)queryResultTable;
 	}
 	
-	public static Submittable getSelectedQueryPane() {
-		return (Submittable)queryPane.getSelectedComponent();
+	public static Submittable getSelectedQueryArea() {
+		return (Submittable)queryTab.getSelectedComponent();
 	}
 	
 	static JFrame getWindow() { return frame; }
 	
-	static void registerDisplayPane(JTabbedPane displayPane) {
-		UIRegistry.displayPane = displayPane;
+	static void registerDisplayTab(JTabbedPane displayTab) {
+		UIRegistry.displayTab = displayTab;
 	}
 	
-	static void registerDocumentPane(JTabbedPane documentPane) {
-		UIRegistry.documentPane = documentPane;
+	static void registerDocumentTab(JTabbedPane documentTab) {
+		UIRegistry.documentTab = documentTab;
 	}
 	
-	static void registerClassPane(JScrollPane classPane) {
-		UIRegistry.classPane = classPane;
+	static void registerClassTree(JScrollPane classTree) {
+		UIRegistry.classTree = classTree;
 	}
 	
-	static void registerDataPropertyPane(JScrollPane dataPropertyPane) {
-		UIRegistry.dataPropertyPane = dataPropertyPane;
+	static void registerDataPropertyTree(JScrollPane dataPropertyTree) {
+		UIRegistry.dataPropertyTree = dataPropertyTree;
 	}
 	
-	static void registerDBSchemePane(JScrollPane dbSchemePane) {
-		UIRegistry.dbSchemePane = dbSchemePane;
+	static void registerDBSchemeTree(JScrollPane dbSchemeTree) {
+		UIRegistry.dbSchemeTree = dbSchemeTree;
 	}
 	
-	static void registerDescriptionPane(JScrollPane descriptionPane) {
-		UIRegistry.descriptionPane = descriptionPane;
+	static void registerDescriptionTree(JScrollPane descriptionTree) {
+		UIRegistry.descriptionTree = descriptionTree;
 	}
 	
-	static void registerIndividualsPane(JTabbedPane individualsPane) {
-		UIRegistry.individualsPane = individualsPane;
+	static void registerIndividualsTab(JTabbedPane individualsTab) {
+		UIRegistry.individualsTab = individualsTab;
 	}
 	
-	static void registerObjectPropertyPane(JScrollPane objectPropertyPane) {
-		UIRegistry.objectPropertyPane = objectPropertyPane;
+	static void registerSchemeTab(JTabbedPane schemeTab) {
+		UIRegistry.schemeTab = schemeTab;
 	}
 	
-	static void registerQueryPane(JTabbedPane queryPane) {
-		UIRegistry.queryPane = queryPane;
+	static void registerObjectPropertyTree(JScrollPane objectPropertyTree) {
+		UIRegistry.objectPropertyTree = objectPropertyTree;
 	}
 	
-	static void registerQueryResultPane(JScrollPane queryResultPane) {
-		UIRegistry.queryResultPane = queryResultPane;
+	static void registerQueryTab(JTabbedPane queryTab) {
+		UIRegistry.queryTab = queryTab;
+	}
+	
+	static void registerQueryResultTable(JScrollPane queryResultTable) {
+		UIRegistry.queryResultTable = queryResultTable;
 	}
 	
 	static void registerWindow(JFrame frame) {

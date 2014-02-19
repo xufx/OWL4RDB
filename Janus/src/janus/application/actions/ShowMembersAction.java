@@ -21,14 +21,14 @@ public class ShowMembersAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ClsTree tree = UIRegistry.getClsTreePane();
+		ClsTree tree = UIRegistry.getClsTree();
 		
 		URI cls = tree.getSelectedClass();
 		
-		JTabbedPane displayPane = UIRegistry.getDisplayPane();
+		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.INDIVIDUALS));
 		
-		JTabbedPane individualsPane = UIRegistry.getIndividualsPane();
+		JTabbedPane individualsPane = UIRegistry.getIndividualsTab();
 		
 		if (!alreadyExists(individualsPane, cls)) {
 			JSplitPane newPane = new IndividualPane(cls);

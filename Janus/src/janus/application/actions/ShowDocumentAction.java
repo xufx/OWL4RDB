@@ -24,10 +24,10 @@ public class ShowDocumentAction extends AbstractAction {
 		
 		if(dialog.isNormalExit()) {
 			
-			JTabbedPane displayPane = UIRegistry.getDisplayPane();
+			JTabbedPane displayPane = UIRegistry.getDisplayTab();
 			displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.DOCUMENT));
 			
-			JTabbedPane documentPane = UIRegistry.getDocumentPane();
+			JTabbedPane documentPane = UIRegistry.getDocumentTab();
 			
 			if (dialog.whichButtonIsSelected().equals(DocTypeSelectionDialog.RDF_XML)) {
 				
@@ -48,7 +48,9 @@ public class ShowDocumentAction extends AbstractAction {
 	
 	private JScrollPane buildOWLRenderingPane(RenderingType renderingType) {
 		JScrollPane sp = new JScrollPane();
-		sp.setViewportView(new JTextArea(Janus.ontBridge.dumpTBoxOntology(renderingType)));
+		JTextArea ta = new JTextArea(Janus.ontBridge.dumpTBoxOntology(renderingType));
+		ta.setEditable(false);
+		sp.setViewportView(ta);
 		
 		return sp;
 	}

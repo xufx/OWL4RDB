@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,11 +20,13 @@ import javax.swing.SwingConstants;
 @SuppressWarnings("serial")
 public class SessionManager extends JDialog {
 	
+	private JComboBox<DBMSTypes> DBMSType;
 	private JTextField host;
 	private JTextField port;
 	private JTextField id;
 	private JPasswordField password;
 	private JTextField schema;
+	private JTextField ontologyIRI;
 	
 	private boolean NORMAL_EXIT = false;
 
@@ -37,52 +40,63 @@ public class SessionManager extends JDialog {
 		JPanel basePanel = new JPanel();
 		setContentPane(basePanel);
 		basePanel.setLayout(null);
+		
+		// DBMS Type
+		JLabel DBMSTypeLabel = new JLabel("DBMS Type: ", SwingConstants.RIGHT);
+		DBMSTypeLabel.setBounds(10, 10, 100, 25);
+		basePanel.add(DBMSTypeLabel);
+		DBMSType = new JComboBox<DBMSTypes>();
+		DBMSType.addItem(DBMSTypes.MARIADB);
+		DBMSType.setBounds(120, 10, 120, 25);
+		basePanel.add(DBMSType);
 
 		// Server Host
 		JLabel hostLabel = new JLabel("Server Host: ", SwingConstants.RIGHT);
-		hostLabel.setBounds(10, 10, 100, 22);
+		hostLabel.setBounds(10, 40, 100, 25);
 		basePanel.add(hostLabel);
 		host = new JTextField("localhost");
-		//host = new JTextField("mydbinstance.codvpbjzdi5o.ap-northeast-1.rds.amazonaws.com");
-		host.setBounds(120, 10, 120, 22);
+		host.setBounds(120, 40, 120, 25);
 		basePanel.add(host);
 
 		// Port
 		JLabel portLabel = new JLabel("Port: ", SwingConstants.RIGHT);
-		portLabel.setBounds(250, 10, 30, 22);
+		portLabel.setBounds(250, 40, 30, 25);
 		basePanel.add(portLabel);
 		port = new JTextField("3306");
-		port.setBounds(290, 10, 40, 22);
+		port.setBounds(290, 40, 40, 25);
 		basePanel.add(port);
 
 		// ID
 		JLabel idLabel = new JLabel("Username: ", SwingConstants.RIGHT);
-		idLabel.setBounds(10, 40, 100, 22);
+		idLabel.setBounds(10, 70, 100, 25);
 		basePanel.add(idLabel);
 		id = new JTextField("root");
-		//id = new JTextField("awsuser");
-		id.setBounds(120, 40, 120, 22);
+		id.setBounds(120, 70, 120, 25);
 		basePanel.add(id);
 
 		// Password
 		JLabel passwordLabel = new JLabel("Password: ", SwingConstants.RIGHT);
-		passwordLabel.setBounds(10, 70, 100, 22);
+		passwordLabel.setBounds(10, 100, 100, 25);
 		basePanel.add(passwordLabel);
-		password = new JPasswordField("chlgodls");
-		//password = new JPasswordField("apmsetup");
-		//password = new JPasswordField("mypassword");
-		password.setBounds(120, 70, 120, 22);
+		password = new JPasswordField();
+		password.setBounds(120, 100, 120, 25);
 		basePanel.add(password);
 
 		// Default Schema
 		JLabel defaultSchemaLabel = new JLabel("Schema: ", SwingConstants.RIGHT);
-		defaultSchemaLabel.setBounds(10, 100, 100, 22);
+		defaultSchemaLabel.setBounds(10, 130, 100, 25);
 		basePanel.add(defaultSchemaLabel);
 		schema = new JTextField("college");
-		//schema = new JTextField("classicmodels");
-		//schema = new JTextField("university");
-		schema.setBounds(120, 100, 120, 22);
+		schema.setBounds(120, 130, 120, 25);
 		basePanel.add(schema);
+		
+		// ontology IRI
+		JLabel ontologyIRILabel = new JLabel("Ontology IRI: ", SwingConstants.RIGHT);
+		ontologyIRILabel.setBounds(10, 160, 100, 25);
+		basePanel.add(ontologyIRILabel);
+		ontologyIRI = new JTextField("<http://www.example.com/college>");
+		ontologyIRI.setBounds(120, 160, 210, 25);
+		basePanel.add(ontologyIRI);
 
 		// OK
 		JButton OK = new JButton("OK");
@@ -92,7 +106,8 @@ public class SessionManager extends JDialog {
 				setVisible(false);
 			}
 		});
-		OK.setBounds(90,130,80,22);
+		getRootPane().setDefaultButton(OK);
+		OK.setBounds(90,190,80,25);
 		basePanel.add(OK);
 
 		// Cancel
@@ -102,11 +117,11 @@ public class SessionManager extends JDialog {
 				System.exit(0);
 			}
 		});
-		cancel.setBounds(180,130,80,22);
+		cancel.setBounds(180,190,80,25);
 		basePanel.add(cancel);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds((screenSize.width - 345) >> 1, (screenSize.height- 192) >> 1, 345, 192);
+		setBounds((screenSize.width - 370) >> 1, (screenSize.height- 255) >> 1, 370, 255);
 		
 		setResizable(false);
 	}
@@ -117,6 +132,13 @@ public class SessionManager extends JDialog {
 	public String getID() { return id.getText().trim(); }
 	public String getPassword() { return new String(password.getPassword()).trim(); }
 	public String getSchema() { return schema.getText().trim(); }
+	
+	public String getOntologyIRI() { 
+		String iri = ontologyIRI.getText().trim();
+		iri = iri.substring(iri.indexOf("<")+1, iri.indexOf(">"));
+		
+		return iri; 
+	}
 	
 	public boolean isNormalExit() { return NORMAL_EXIT; }
 	

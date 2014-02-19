@@ -2,12 +2,16 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
+import janus.application.actions.ShowMembersAction;
+
 import java.net.URI;
 import java.awt.Component;
+import java.awt.event.MouseListener;
 import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ToolTipManager;
@@ -15,10 +19,12 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class OPTree extends JScrollPane {
 	private JTree tree;
+	private JPopupMenu popupMenu;
 	
 	public OPTree() {
 		buildUI();
@@ -31,9 +37,18 @@ public class OPTree extends JScrollPane {
 		
 		tree.setCellRenderer(new OntObjPropertyTreeCellRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP)));
 		
+		tree.add(buildPopupMenu());
+		
 		ToolTipManager.sharedInstance().registerComponent(tree);
 		
 		setViewportView(tree);
+	}
+	
+	private JPopupMenu buildPopupMenu() {
+		popupMenu = new JPopupMenu();
+		popupMenu.add(new ShowMembersAction("Members"));
+		
+		return popupMenu;
 	}
 	
 	private MutableTreeNode getObjPropertyHierarchy(URI opURI) {
@@ -49,6 +64,30 @@ public class OPTree extends JScrollPane {
 	
 	public void addTreeSelectionListener(TreeSelectionListener listener) {
 		tree.addTreeSelectionListener(listener);
+	}
+	
+	public void addTreePopupTrigger(MouseListener trigger) {
+		tree.addMouseListener(trigger);
+	}
+	
+	void showPopupMenu(int x, int y) {
+		popupMenu.show(this, x, y);
+	}
+	
+	TreePath getPathForLocation(int x, int y) {
+		return tree.getPathForLocation(x, y);
+	}
+	
+	void setSelectionPath(TreePath path) {
+		tree.setSelectionPath(path);
+	}
+	
+	boolean isPathSelected(TreePath path) {
+		return tree.isPathSelected(path);
+	}
+	
+	boolean isSelectionEmpty() {
+		return tree.isSelectionEmpty();
 	}
 }
 

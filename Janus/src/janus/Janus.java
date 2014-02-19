@@ -25,7 +25,7 @@ public class Janus {
 	public static final String DEFAULT_DIR_FOR_TBOX_FILE = "./ontologies/";
 	public static final String DEFAULT_DIR_FOR_DUMP_FILE = "./ontologies/dump/";
 	
-	public static final String DEFAULT_PARENT_PATH_FOR_ONT_NAMESPACE = "http://cosmos.ssu.ac.kr/ontologies/";
+	public static String ontologyIRI;
 	
 	public static DBBridge dbBridge;
 	public static OntBridge ontBridge;
@@ -40,32 +40,34 @@ public class Janus {
 		
 		setLookAndFeel();
 		
-		SessionManager loginDialog = new SessionManager(splash);
+		SessionManager sessionManager = new SessionManager(splash);
 		
 		do {
-			loginDialog.setVisible(true);
+			sessionManager.setVisible(true);
 			
-			if(!loginDialog.isNormalExit()) 
+			if(!sessionManager.isNormalExit()) 
 				System.exit(0);
 
-			dbBridge = DBBridgeFactory.getDBBridge(loginDialog.getDBMSType(),
-															loginDialog.getHost(),
-															loginDialog.getPort(),
-															loginDialog.getID(),
-															loginDialog.getPassword(),
-															loginDialog.getSchema());
+			dbBridge = DBBridgeFactory.getDBBridge(sessionManager.getDBMSType(),
+															sessionManager.getHost(),
+															sessionManager.getPort(),
+															sessionManager.getID(),
+															sessionManager.getPassword(),
+															sessionManager.getSchema());
 			
 			if(!dbBridge.isConnected()) 
 				JOptionPane.showMessageDialog(splash, "Could not connect to the DBMS.", 
 											  "Janus Error", JOptionPane.ERROR_MESSAGE);
-			else 
+			else {
+				ontologyIRI = sessionManager.getOntologyIRI();
 				break;
+			}
 			
 		} while(true);
 		
-		sqlGenerator = SQLGeneratorFactory.getSQLGenerator(loginDialog.getDBMSType());
+		sqlGenerator = SQLGeneratorFactory.getSQLGenerator(sessionManager.getDBMSType());
 		
-		loginDialog.dispose();
+		sessionManager.dispose();
 		
 		Janus.cachedDBMetadata = CachedDBMetadataFactory.generateLocalDatabaseMetaData();
 		

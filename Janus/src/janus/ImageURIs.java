@@ -13,8 +13,8 @@ public final class ImageURIs {
 	
 	public static final String DB_CATALOG = "images/db.catalog.png";
 	public static final String DB_TABLE = "images/db.table.gif";
-	public static final String DB_FIELD = "images/db.field.png";
-	public static final String DB_KEY = "images/db.key.png";
+	public static final String DB_NON_PRIMARY = "images/db.non_primary.png";
+	public static final String DB_PRIMARY = "images/db.primary.png";
 	
 	public static final String ONT_NAMED_CLS = "images/ont.named_class.png";
 	public static final String ONT_ANON_CLS = "images/ont.anonymous_class.png";

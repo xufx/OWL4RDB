@@ -44,18 +44,16 @@ public class OntMapper {
 	}
 	
 	private void writePrefixes() {
-		String currentNamespace = Janus.DEFAULT_PARENT_PATH_FOR_ONT_NAMESPACE + output.getName();
-		
 		try {
 			writer.println("Prefix(rdf:=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)");
-			writer.println("Prefix(:=<" + currentNamespace + "#>)");
+			writer.println("Prefix(:=<" + Janus.ontologyIRI + "#>)");
 			writer.println("Prefix(xsd:=<http://www.w3.org/2001/XMLSchema#>)");
 			writer.println("Prefix(skos:=<http://www.w3.org/2004/02/skos/core#>)");
 			writer.println("Prefix(xml:=<http://www.w3.org/XML/1998/namespace>)");
 			writer.println("Prefix(rdfs:=<http://www.w3.org/2000/01/rdf-schema#>)");
 			writer.println("Prefix(owl:=<http://www.w3.org/2002/07/owl#>)");
 			writer.println();
-			writer.println("Ontology(<" + currentNamespace + ">");
+			writer.println("Ontology(<" + Janus.ontologyIRI + ">");
 			writer.println();
 		} catch (Exception e) {
 			e.printStackTrace();
