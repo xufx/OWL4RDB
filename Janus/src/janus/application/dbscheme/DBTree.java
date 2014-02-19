@@ -48,7 +48,7 @@ public class DBTree extends JScrollPane {
 	
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
-		mappedClass = new GoToMappedClassAction("Mapped Class");
+		mappedClass = new GoToMappedClassAction("Go to Mapped Class");
 		popupMenu.add(mappedClass);
 		
 		return popupMenu;
