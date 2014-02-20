@@ -1,7 +1,7 @@
 package janus.sparqldl;
 
 import janus.Janus;
-import janus.mapping.ClassTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -28,7 +28,7 @@ public class Utils {
 					break;
 				}
 				
-				if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(ClassTypes.COLUMN_CLASS)) {
+				if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
 					
 					IndividualSet sIndividualSet = new IndividualSet(assertedDomainURI);
 					

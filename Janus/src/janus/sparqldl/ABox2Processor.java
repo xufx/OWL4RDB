@@ -1,7 +1,7 @@
 package janus.sparqldl;
 
 import janus.Janus;
-import janus.mapping.ClassTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -1666,7 +1666,7 @@ public class ABox2Processor {
 						break;
 					}
 
-					if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(ClassTypes.COLUMN_CLASS)) {
+					if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
 
 						Set<IndividualSet> individualSets = new ConcurrentSkipListSet<IndividualSet>();
 

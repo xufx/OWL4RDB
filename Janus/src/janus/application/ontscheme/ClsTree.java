@@ -5,7 +5,7 @@ import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.application.actions.ShowClassAssertionsAction;
-import janus.mapping.ClassTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.awt.Component;
@@ -88,16 +88,16 @@ public class ClsTree extends JScrollPane implements OntTree {
 	void showPopupMenu(int x, int y) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
-		ClassTypes type = Janus.mappingMetadata.getClassType(ontNode.getURI());
+		OWLEntityTypes type = Janus.mappingMetadata.getClassType(ontNode.getURI());
 		// setting mapped table menu enabled/disabled
-		if (type.equals(ClassTypes.OWL_THING) 
-				|| type.equals(ClassTypes.COLUMN_CLASS))
+		if (type.equals(OWLEntityTypes.OWL_THING) 
+				|| type.equals(OWLEntityTypes.COLUMN_CLASS))
 			goToMappedTable.setEnabled(false);
 		else
 			goToMappedTable.setEnabled(true);
 		// setting mapped column menu enabled/disabled
-		if (type.equals(ClassTypes.OWL_THING) 
-				|| type.equals(ClassTypes.TABLE_CLASS))
+		if (type.equals(OWLEntityTypes.OWL_THING) 
+				|| type.equals(OWLEntityTypes.TABLE_CLASS))
 			goToMappedColumn.setEnabled(false);
 		else
 			goToMappedColumn.setEnabled(true);

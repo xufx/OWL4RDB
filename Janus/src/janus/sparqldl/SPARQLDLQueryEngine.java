@@ -1,8 +1,8 @@
 package janus.sparqldl;
 
 import janus.Janus;
-import janus.mapping.ClassTypes;
 import janus.mapping.OntMapper;
+import janus.ontology.OWLEntityTypes;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -2507,7 +2507,7 @@ public class SPARQLDLQueryEngine {
 							break;
 						}
 						
-						if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(ClassTypes.COLUMN_CLASS)) {
+						if (Janus.mappingMetadata.getClassType(assertedDomainURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
 							
 							Set<IndividualSet> individualSets = new ConcurrentSkipListSet<IndividualSet>();
 							

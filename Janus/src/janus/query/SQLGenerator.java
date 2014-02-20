@@ -2,8 +2,8 @@ package janus.query;
 
 import janus.Janus;
 import janus.database.DBField;
-import janus.mapping.ClassTypes;
 import janus.mapping.metadata.IndividualTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -45,11 +45,11 @@ public abstract class SQLGenerator {
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getClassType(cls).equals(ClassTypes.TABLE_CLASS))
+		if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.TABLE_CLASS))
 			query = getQueryToGetIndividualsOfTableClass(cls);
-		else if (Janus.mappingMetadata.getClassType(cls).equals(ClassTypes.COLUMN_CLASS))
+		else if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.COLUMN_CLASS))
 			query = getQueryToGetIndividualsOfColumnClass(cls);
-		else if (Janus.mappingMetadata.getClassType(cls).equals(ClassTypes.OWL_THING))
+		else if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.OWL_THING))
 			query = getQueryToGetIndividualsOfOwlThing();
 		
 		return query;
@@ -60,9 +60,9 @@ public abstract class SQLGenerator {
 		
 		Set<URI> clses = Janus.ontBridge.getSubClses(Janus.ontBridge.getOWLThingURI());
 		for (URI aCls: clses) {
-			if (Janus.mappingMetadata.getClassType(aCls).equals(ClassTypes.TABLE_CLASS))
+			if (Janus.mappingMetadata.getClassType(aCls).equals(OWLEntityTypes.TABLE_CLASS))
 				queries.add(getQueryToGetIndividualsOfTableClass(aCls));
-			else if (Janus.mappingMetadata.getClassType(aCls).equals(ClassTypes.COLUMN_CLASS))
+			else if (Janus.mappingMetadata.getClassType(aCls).equals(OWLEntityTypes.COLUMN_CLASS))
 				queries.add(getQueryToGetIndividualsOfColumnClass(aCls));
 		}
 		

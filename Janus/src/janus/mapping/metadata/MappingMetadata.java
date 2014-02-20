@@ -2,7 +2,6 @@ package janus.mapping.metadata;
 
 import janus.database.Column;
 import janus.database.DBField;
-import janus.mapping.ClassTypes;
 import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
@@ -91,9 +90,9 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public ClassTypes getClassType(URI classURI) {
-		if (classURI.toString().equals(ClassTypes.OWL_THING.pattern()))
-			return ClassTypes.OWL_THING;
+	public OWLEntityTypes getClassType(URI classURI) {
+		if (classURI.toString().equals(OWLEntityTypes.OWL_THING.pattern()))
+			return OWLEntityTypes.OWL_THING;
 		
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
@@ -141,7 +140,7 @@ public class MappingMetadata {
 	public String getMappedClassFragment(String table) {
 		for (ClassMetadata cls: classes)
 			if (cls.getMappedTableName().equals(table) 
-					&& cls.getClassType().equals(ClassTypes.TABLE_CLASS))
+					&& cls.getClassType().equals(OWLEntityTypes.TABLE_CLASS))
 				return cls.getClassName();
 		
 		return null;
@@ -153,7 +152,7 @@ public class MappingMetadata {
 	
 	public String getMappedClassFragment(String table, String column) {
 		for (ClassMetadata cls: classes)
-			if (cls.getClassType().equals(ClassTypes.COLUMN_CLASS) 
+			if (cls.getClassType().equals(OWLEntityTypes.COLUMN_CLASS) 
 					&& cls.getMappedTableName().equals(table) 
 					&& cls.getMappedColumnName().equals(column))
 				return cls.getClassName();

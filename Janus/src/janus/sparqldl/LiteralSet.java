@@ -1,7 +1,7 @@
 package janus.sparqldl;
 
 import janus.Janus;
-import janus.mapping.ClassTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -13,7 +13,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 	private URI classURI; // subject class URI
 	private URI dataPropertyURI; // predicate
 	
-	private ClassTypes classType;
+	private OWLEntityTypes classType;
 	
 	private String mappedTable;
 	
@@ -34,7 +34,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 		
 		mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
 		
-		if (classType.equals(ClassTypes.COLUMN_CLASS))
+		if (classType.equals(OWLEntityTypes.COLUMN_CLASS))
 			mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 		else {
 			mappedColumn = Janus.mappingMetadata.getMappedColumnNameToProperty(dataPropertyURI);
@@ -64,7 +64,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 		joinWhereSet = new ConcurrentSkipListSet<String>();
 		valueWhereSet = new ConcurrentSkipListSet<String>();
 		
-		if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 			if (!Janus.cachedDBMetadata.isNotNull(mappedTable, mappedColumn))
 				valueWhereSet.add(mappedTable + "." + mappedColumn + " IS NOT NULL"); 
 		}
@@ -79,7 +79,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 	}
 	
 	void acceptSameAsCondition(Individual inclusionMember) {
-		if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 			String value = inclusionMember.getHasKeyColumnValueAt(0);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " = '" + value + "'";
@@ -110,7 +110,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 		fromSet.add(joinTable);
 		
 		String joinColumn = null;
-		if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 			joinColumn = Janus.mappingMetadata.getMappedColumnNameToClass(familyClassURI);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
@@ -152,7 +152,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 		URI dp = dataPropertyURI;
 		LiteralSet object = this;
 
-		if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 
 			IndividualSet sIndividualSet = new IndividualSet(classURI);
 			sIndividualSet.addAllFromSet(fromSet);
@@ -294,7 +294,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 			Set<String> familyValueWhereSet = sameSelectColumnLiteralSet.getValueWhereSet();
 			
 			for (String familyValueWhereCondition: familyValueWhereSet) {
-				if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 					//String whereCondition = mappedTable + "." + mappedColumn + familyValueWhereCondition.substring(familyValueWhereCondition.indexOf(" = "));
 					String whereCondition = mappedTable + "." + mappedColumn + familyValueWhereCondition.substring(familyValueWhereCondition.indexOf(" "));
 					
@@ -337,7 +337,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 			
 			if (!joinTable.equals(mappedTable)) {
 				String joinColumn = null;
-				if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 					joinColumn = sameSelectColumnLiteralSet.getMappedColumn();
 
 					String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
@@ -365,7 +365,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 			Set<String> familyValueWhereSet = familyIndividualSet.getValueWhereSet();
 			
 			for (String familyValueWhereCondition: familyValueWhereSet) {
-				if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 					
 					if (!Janus.ontBridge.areDisjointWith(classURI, familyIndividualSet.getClassURI())) {
 						String operator = familyValueWhereCondition.substring(familyValueWhereCondition.indexOf(" ")+1);
@@ -413,7 +413,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 			
 			if (!joinTable.equals(mappedTable)) {
 				String joinColumn = null;
-				if (classType.equals(ClassTypes.COLUMN_CLASS)) {
+				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
 					joinColumn = familyIndividualSet.getMappedColumn();
 
 					String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
