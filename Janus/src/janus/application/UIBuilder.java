@@ -121,7 +121,7 @@ class UIBuilder {
 	private static JTabbedPane buildIndividualsPane() {
 		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
-		UIRegistry.registerIndividualsTab(tp);
+		UIRegistry.registerAssertionsTab(tp);
 		
 		return tp;
 	}

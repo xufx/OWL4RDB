@@ -29,7 +29,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
 		
-		JTabbedPane individualsPane = UIRegistry.getIndividualsTab();
+		JTabbedPane individualsPane = UIRegistry.getAssertionsTab();
 		
 		if (!alreadyExists(individualsPane, cls)) {
 			JSplitPane newPane = new AssertionsPane(cls);

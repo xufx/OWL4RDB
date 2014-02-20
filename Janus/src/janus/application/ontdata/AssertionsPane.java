@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 public class AssertionsPane extends JSplitPane implements ListSelectionListener {
 	private URI cls;
 	
-	private ClassAssertionsTable membersTable;
+	private ClsAssertionsTable clsAssertionsTable;
 	private JTabbedPane types;
 	private JTabbedPane opAssertions;
 	private JTabbedPane dpAssertions;
@@ -65,16 +65,16 @@ public class AssertionsPane extends JSplitPane implements ListSelectionListener 
 	}
 	
 	private JScrollPane buildMembersPane() {
-		membersTable = new ClassAssertionsTable(cls);
-		membersTable.addMembersTableSelectionListener(this);
+		clsAssertionsTable = new ClsAssertionsTable(cls);
+		clsAssertionsTable.addMembersTableSelectionListener(this);
 		
-		return membersTable;
+		return clsAssertionsTable;
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(membersTable.getSelectedMember()));
-		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(membersTable.getSelectedMember()));
-		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(membersTable.getSelectedMember()));
+		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(clsAssertionsTable.getSelectedMember()));
+		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(clsAssertionsTable.getSelectedMember()));
+		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(clsAssertionsTable.getSelectedMember()));
 	}
 }

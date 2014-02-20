@@ -24,14 +24,14 @@ public class UIRegistry {
 	private static JTabbedPane displayTab;
 	private static JTabbedPane documentTab;
 	private static JFrame frame;
-	private static JTabbedPane individualsTab;
+	private static JTabbedPane AssertionsTab;
 	private static JScrollPane objectPropertyTree;
 	private static JTabbedPane queryTab;
 	private static JScrollPane queryResultTable;
 	
 	
-	public static JTabbedPane getIndividualsTab() {
-		return individualsTab;
+	public static JTabbedPane getAssertionsTab() {
+		return AssertionsTab;
 	}
 	
 	public static JTabbedPane getPropertiesTab() {
@@ -106,8 +106,8 @@ public class UIRegistry {
 		UIRegistry.descriptionTree = descriptionTree;
 	}
 	
-	static void registerIndividualsTab(JTabbedPane individualsTab) {
-		UIRegistry.individualsTab = individualsTab;
+	static void registerAssertionsTab(JTabbedPane assertionsTab) {
+		UIRegistry.AssertionsTab = assertionsTab;
 	}
 	
 	static void registerSchemeTab(JTabbedPane schemeTab) {
