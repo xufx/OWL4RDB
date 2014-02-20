@@ -16,9 +16,10 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class GoToMappedObjectPropertyAction extends AbstractAction {
+	private static final String NAME = "Go to Mapped Object Property";
 	
-	public GoToMappedObjectPropertyAction(String name) {
-		super(name);
+	public GoToMappedObjectPropertyAction() {
+		super(NAME);
 	}
 
 	@Override

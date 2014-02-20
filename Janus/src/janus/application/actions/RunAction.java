@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 
 @SuppressWarnings("serial")
 public class RunAction extends AbstractAction {
+	private static final String NAME = "Run Query";
 	
 	public void actionPerformed(ActionEvent e) {
 		Submittable submitter = UIRegistry.getSelectedQueryArea();
@@ -49,5 +50,9 @@ public class RunAction extends AbstractAction {
 	private void submitSQL(Submittable submitter) {
 		String stmt = submitter.getQuery();
 		Janus.dbBridge.executeQuery(stmt);
+	}
+	
+	public String getToolTipText() {
+		return NAME;
 	}
 }

@@ -1,5 +1,6 @@
 package janus.mapping.metadata;
 
+import janus.database.Column;
 import janus.database.DBField;
 import janus.mapping.ClassTypes;
 
@@ -59,7 +60,27 @@ public class MappingMetadata {
 		return null;
 	}
 	
+	public Column getMappedColumnToClass(URI classURI) {
+		String className = classURI.getFragment();
+		for (ClassMetadata cls: classes) {
+			if (cls.getClassName().equals(className))
+				return cls.getMappedColumn();
+		}
+		
+		return null;
+	}
+	
 	public String getMappedColumnNameToProperty(URI propertyURI) {
+		String propertyName = propertyURI.getFragment();
+		for (PropertyMetadata property: properties) {
+			if (property.getPropertyName().equals(propertyName))
+				return property.getMappedColumnName();
+		}
+		
+		return null;
+	}
+	
+	public Column getMappedColumnToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))
@@ -89,7 +110,7 @@ public class MappingMetadata {
 	public String getMappedDataPropertyFragment(String table, String column) {
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
-					&& property.getMappedColumn().equals(column) 
+					&& property.getMappedColumnName().equals(column) 
 					&& property.getPropertyType().equals(PropertyTypes.DATA_PROPERTY))
 				return property.getPropertyName();
 		
@@ -105,7 +126,7 @@ public class MappingMetadata {
 		
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
-					&& property.getMappedColumn().equals(column) 
+					&& property.getMappedColumnName().equals(column) 
 					&& property.getPropertyType().equals(PropertyTypes.OBJECT_PROPERTY))
 				op = property.getPropertyName();
 		

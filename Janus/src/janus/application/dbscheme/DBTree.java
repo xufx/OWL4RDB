@@ -54,13 +54,13 @@ public class DBTree extends JScrollPane {
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
 		
-		goToMappedClass = new GoToMappedClassAction("Go to Mapped Class");
+		goToMappedClass = new GoToMappedClassAction();
 		popupMenu.add(goToMappedClass);
 		
-		goToMappedObjectPropery = new GoToMappedObjectPropertyAction("Go to Mapped Object Property");
+		goToMappedObjectPropery = new GoToMappedObjectPropertyAction();
 		popupMenu.add(goToMappedObjectPropery);
 		
-		goToMappedDataPropery = new GoToMappedDataPropertyAction("Go to Mapped Data Property");
+		goToMappedDataPropery = new GoToMappedDataPropertyAction();
 		popupMenu.add(goToMappedDataPropery);
 		
 		return popupMenu;
@@ -186,6 +186,26 @@ public class DBTree extends JScrollPane {
 			DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
 	        if (dbNode.getType().equals(DBTreeNodeTypes.TABLE)
 	        		&& dbNode.toString().equals(table))
+	            return new TreePath(node.getPath());
+	    }
+		
+		return null;
+	}
+	
+	public TreePath getTreePathOfColumn(Column column) {
+		TreePath path = getTreePathOfTable(column.getTableName());
+		
+		DefaultMutableTreeNode table = (DefaultMutableTreeNode)path.getLastPathComponent();
+		
+		@SuppressWarnings("unchecked")
+		Enumeration<DefaultMutableTreeNode> e = table.breadthFirstEnumeration();
+		
+		String columnName = column.getColumnName();
+		
+		while (e.hasMoreElements()) {
+			DefaultMutableTreeNode node = e.nextElement();
+			DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
+	        if (dbNode.toString().equals(columnName))
 	            return new TreePath(node.getPath());
 	    }
 		

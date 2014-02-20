@@ -14,9 +14,10 @@ import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class ShowMembersAction extends AbstractAction {
+	private static final String NAME = "Show Members";
 	
-	public ShowMembersAction(String name) {
-		super(name);
+	public ShowMembersAction() {
+		super(NAME);
 	}
 
 	@Override

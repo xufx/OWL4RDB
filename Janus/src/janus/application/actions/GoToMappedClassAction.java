@@ -17,9 +17,10 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class GoToMappedClassAction extends AbstractAction {
+	private static final String NAME = "Go to Mapped Class";
 	
-	public GoToMappedClassAction(String name) {
-		super(name);
+	public GoToMappedClassAction() {
+		super(NAME);
 	}
 
 	@Override
@@ -48,5 +49,4 @@ public class GoToMappedClassAction extends AbstractAction {
 			clsTree.setSelectionPath(path);
 		}
 	}
-
 }

@@ -49,25 +49,30 @@ class UIBuilder {
 	private static JToolBar buildToolBar() {
 		JToolBar toolBar = new JToolBar();
 		
-		JButton translate = toolBar.add(new BuildTBoxAction());
+		BuildTBoxAction buildTBoxAction = new BuildTBoxAction();
+		JButton translate = toolBar.add(buildTBoxAction);
 		translate.setIcon(new ImageIcon(ImageURIs.TOOLBAR_GENERATE_TBOX));
-		translate.setToolTipText("Build TBOX");
+		translate.setToolTipText(buildTBoxAction.getToolTipText());
 		
-		JButton run = toolBar.add(new RunAction());
+		RunAction runAction = new RunAction();
+		JButton run = toolBar.add(runAction);
 		run.setIcon(new ImageIcon(ImageURIs.TOOLBAR_RUN));
-		run.setToolTipText("Run Query");
+		run.setToolTipText(runAction.getToolTipText());
 		
-		JButton dump = toolBar.add(new DumpKnowledgeBaseAction());
+		DumpKnowledgeBaseAction dumpKnowledgeBaseAction = new DumpKnowledgeBaseAction();
+		JButton dump = toolBar.add(dumpKnowledgeBaseAction);
 		dump.setIcon(new ImageIcon(ImageURIs.TOOLBAR_DUMP));
-		dump.setToolTipText("Dump DB into OWL");
+		dump.setToolTipText(dumpKnowledgeBaseAction.getToolTipText());
 		
-		JButton showAtoms = toolBar.add(new ShowAtomsAction());
+		ShowAtomsAction showAtomsAction = new ShowAtomsAction();
+		JButton showAtoms = toolBar.add(showAtomsAction);
 		showAtoms.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_ATOMS));
-		showAtoms.setToolTipText("Show Atoms");
+		showAtoms.setToolTipText(showAtomsAction.getToolTipText());
 		
-		JButton showDoc = toolBar.add(new ShowDocumentAction());
+		ShowDocumentAction showDocumentAction = new ShowDocumentAction();
+		JButton showDoc = toolBar.add(showDocumentAction);
 		showDoc.setIcon(new ImageIcon(ImageURIs.TOOLBAR_SHOW_DOC));
-		showDoc.setToolTipText("Show Document");
+		showDoc.setToolTipText(showDocumentAction.getToolTipText());
 		
 		return toolBar;
 	}

@@ -12,9 +12,10 @@ import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
 public class GoToMappedTableAction extends AbstractAction {
+	private static final String NAME = "Go to Mapped Table";
 	
-	public GoToMappedTableAction(String name) {
-		super(name);
+	public GoToMappedTableAction() {
+		super(NAME);
 	}
 
 	@Override
@@ -33,5 +34,4 @@ public class GoToMappedTableAction extends AbstractAction {
 			dbTree.setSelectionPath(path);
 		}
 	}
-
 }

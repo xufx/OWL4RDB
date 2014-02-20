@@ -1,5 +1,6 @@
 package janus.mapping.metadata;
 
+import janus.database.Column;
 import janus.mapping.ClassTypes;
 
 class ClassMetadata implements Comparable<ClassMetadata> {
@@ -45,6 +46,10 @@ class ClassMetadata implements Comparable<ClassMetadata> {
 	
 	String getMappedColumnName() {
 		return mappedColumn;
+	}
+	
+	Column getMappedColumn() {
+		return new Column(mappedTable, mappedColumn);
 	}
 	
 	ClassTypes getClassType() {

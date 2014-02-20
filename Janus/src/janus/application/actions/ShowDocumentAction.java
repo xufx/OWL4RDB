@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 
 @SuppressWarnings("serial")
 public class ShowDocumentAction extends AbstractAction {
+	private static final String NAME = "Show Document";
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -53,5 +54,9 @@ public class ShowDocumentAction extends AbstractAction {
 		sp.setViewportView(ta);
 		
 		return sp;
+	}
+	
+	public String getToolTipText() {
+		return NAME;
 	}
 }

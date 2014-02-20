@@ -2,14 +2,14 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
-import janus.application.actions.ShowMembersAction;
-
+import janus.application.actions.GoToMappedColumnAction;
 import java.net.URI;
 import java.awt.Component;
 import java.awt.event.MouseListener;
 import java.util.Enumeration;
 import java.util.Set;
 
+import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
@@ -26,6 +26,7 @@ import javax.swing.tree.TreePath;
 public class OPTree extends JScrollPane {
 	private JTree tree;
 	private JPopupMenu popupMenu;
+	private AbstractAction goToMappedColumn;
 	
 	public OPTree() {
 		buildUI();
@@ -47,9 +48,18 @@ public class OPTree extends JScrollPane {
 	
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
-		popupMenu.add(new ShowMembersAction("Members"));
+		
+		goToMappedColumn = new GoToMappedColumnAction();
+		popupMenu.add(goToMappedColumn);
 		
 		return popupMenu;
+	}
+	
+	public URI getSelectedObjectProperty() {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		OntTreeNode opNode = (OntTreeNode)node.getUserObject();
+
+		return opNode.getURI();
 	}
 	
 	private MutableTreeNode getObjPropertyHierarchy(URI opURI) {
@@ -72,6 +82,14 @@ public class OPTree extends JScrollPane {
 	}
 	
 	void showPopupMenu(int x, int y) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
+		// setting mapped column menu enabled/disabled
+		if (ontNode.getURI().equals(Janus.ontBridge.getOWLTopObjectProperty()))
+			goToMappedColumn.setEnabled(false);
+		else
+			goToMappedColumn.setEnabled(true);
+		
 		popupMenu.show(this, x, y);
 	}
 	

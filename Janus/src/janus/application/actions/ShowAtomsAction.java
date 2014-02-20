@@ -20,6 +20,8 @@ import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class ShowAtomsAction extends AbstractAction {
+	private static final String NAME = "Show Atoms";
+	
 	private Set<String> SPARQLDLAtoms;
 	
 	public void actionPerformed(ActionEvent e) {
@@ -99,5 +101,9 @@ public class ShowAtomsAction extends AbstractAction {
 		dialog.setBounds((screenSize.width - w) >> 1, (screenSize.height - h) >> 1, w, h);
 		
 		dialog.setVisible(true);
+	}
+	
+	public String getToolTipText() {
+		return NAME;
 	}
 }

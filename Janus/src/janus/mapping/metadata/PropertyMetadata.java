@@ -1,5 +1,7 @@
 package janus.mapping.metadata;
 
+import janus.database.Column;
+
 class PropertyMetadata implements Comparable<PropertyMetadata> {
 	private String propertyName;
 
@@ -25,8 +27,12 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 		return mappedTable;
 	}
 	
-	String getMappedColumn() {
+	String getMappedColumnName() {
 		return mappedColumn;
+	}
+	
+	Column getMappedColumn() {
+		return new Column(mappedTable, mappedColumn);
 	}
 	
 	String getDomain() {

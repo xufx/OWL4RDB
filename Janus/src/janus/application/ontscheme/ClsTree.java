@@ -2,6 +2,7 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
+import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.mapping.ClassTypes;
 
@@ -29,6 +30,7 @@ public class ClsTree extends JScrollPane {
 	private JTree tree;
 	private JPopupMenu popupMenu;
 	private AbstractAction goToMappedTable;
+	private AbstractAction goToMappedColumn;
 	
 	public ClsTree() {
 		buildUI();
@@ -51,8 +53,11 @@ public class ClsTree extends JScrollPane {
 	private JPopupMenu buildPopupMenu() {
 		popupMenu = new JPopupMenu();
 		
-		goToMappedTable = new GoToMappedTableAction("Go to Mapped Table");
+		goToMappedTable = new GoToMappedTableAction();
 		popupMenu.add(goToMappedTable);
+		
+		goToMappedColumn = new GoToMappedColumnAction();
+		popupMenu.add(goToMappedColumn);
 		
 		return popupMenu;
 	}
@@ -85,6 +90,12 @@ public class ClsTree extends JScrollPane {
 			goToMappedTable.setEnabled(false);
 		else
 			goToMappedTable.setEnabled(true);
+		// setting mapped column menu enabled/disabled
+		if (type.equals(ClassTypes.OWL_THING) 
+				|| type.equals(ClassTypes.TABLE_CLASS))
+			goToMappedColumn.setEnabled(false);
+		else
+			goToMappedColumn.setEnabled(true);
 		
 		popupMenu.show(this, x, y);
 	}
