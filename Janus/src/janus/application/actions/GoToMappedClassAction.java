@@ -4,9 +4,9 @@ import janus.Janus;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
-import janus.application.dbscheme.DBEntityTypes;
 import janus.application.ontscheme.ClsTree;
 import janus.database.Column;
+import janus.database.DBEntityTypes;
 
 import java.awt.event.ActionEvent;
 import java.net.URI;

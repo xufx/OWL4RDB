@@ -1,5 +1,7 @@
 package janus.application.dbscheme;
 
+import janus.database.DBEntityTypes;
+
 class DBTreeNode {
 	private String value;
 	private DBEntityTypes type;

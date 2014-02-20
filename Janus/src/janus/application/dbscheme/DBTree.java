@@ -6,6 +6,7 @@ import janus.application.actions.GoToMappedClassAction;
 import janus.application.actions.GoToMappedDataPropertyAction;
 import janus.application.actions.GoToMappedObjectPropertyAction;
 import janus.database.Column;
+import janus.database.DBEntityTypes;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
