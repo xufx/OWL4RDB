@@ -13,10 +13,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class ShowInstancesAction extends AbstractAction {
+public class ShowClassAssertionsAction extends AbstractAction {
 	private static final String NAME = "Show Instances";
 	
-	public ShowInstancesAction() {
+	public ShowClassAssertionsAction() {
 		super(NAME);
 	}
 

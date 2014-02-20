@@ -102,14 +102,14 @@ class OPAssertionsTableModel extends AbstractTableModel {
 		
 		if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
 			if (column == 0)
-				columnName = "Predicate";
+				columnName = "Object Property";
 			else if (column == 1)
-				columnName = "Object";
+				columnName = "Target Individual";
 		} else {
 			if (column == 0)
-				columnName = "Subject";
+				columnName = "Source Individual";
 			else if (column == 1)
-				columnName = "Predicate";
+				columnName = "Object Property";
 		}
 		
 		return columnName;

@@ -32,7 +32,7 @@ public class IndividualPane extends JSplitPane implements ListSelectionListener 
 	
 	private void buildUI() {
 		JTabbedPane members = new JTabbedPane();
-		members.addTab(TabNames.MEMBERS, buildMembersPane());
+		members.addTab(TabNames.INSTANCES, buildMembersPane());
 		
 		setLeftComponent(members);
 		

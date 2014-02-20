@@ -4,7 +4,7 @@ import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
-import janus.application.actions.ShowInstancesAction;
+import janus.application.actions.ShowClassAssertionsAction;
 import janus.mapping.ClassTypes;
 
 import java.net.URI;
@@ -61,7 +61,7 @@ public class ClsTree extends JScrollPane {
 		goToMappedTable = new GoToMappedTableAction();
 		popupMenu.add(goToMappedTable);
 		
-		showMembers = new ShowInstancesAction();
+		showMembers = new ShowClassAssertionsAction();
 		popupMenu.add(showMembers);
 		
 		return popupMenu;

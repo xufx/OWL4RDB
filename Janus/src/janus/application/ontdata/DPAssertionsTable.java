@@ -85,9 +85,9 @@ class DPAssertionsTableModel extends AbstractTableModel {
 		String columnName = super.getColumnName(column);
 		
 		if (column == 0)
-			columnName = "Predicate";
+			columnName = "Data Property";
 		else if (column == 1)
-			columnName = "Object";
+			columnName = "Target Value";
 		
 		return columnName;
 	}
