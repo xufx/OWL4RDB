@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 public class IndividualPane extends JSplitPane implements ListSelectionListener {
 	private URI cls;
 	
-	private MembersTable membersTable;
+	private InstancesTable membersTable;
 	private JTabbedPane types;
 	private JTabbedPane opAssertions;
 	private JTabbedPane dpAssertions;
@@ -65,7 +65,7 @@ public class IndividualPane extends JSplitPane implements ListSelectionListener 
 	}
 	
 	private JScrollPane buildMembersPane() {
-		membersTable = new MembersTable(cls);
+		membersTable = new InstancesTable(cls);
 		membersTable.addMembersTableSelectionListener(this);
 		
 		return membersTable;
