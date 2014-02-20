@@ -13,10 +13,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class ShowClassAssertionsAction extends AbstractAction {
-	private static final String NAME = "Show Members";
+public class ShowInstancesAction extends AbstractAction {
+	private static final String NAME = "Show Instances";
 	
-	public ShowClassAssertionsAction() {
+	public ShowInstancesAction() {
 		super(NAME);
 	}
 
@@ -27,7 +27,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 		URI cls = tree.getSelectedClass();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
-		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.Assertions));
+		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
 		
 		JTabbedPane individualsPane = UIRegistry.getIndividualsTab();
 		
