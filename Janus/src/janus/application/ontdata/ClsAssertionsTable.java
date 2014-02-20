@@ -46,7 +46,7 @@ class ClsAssertionsTable extends JScrollPane {
 		setViewportView(table);
 	}
 	
-	void addMembersTableSelectionListener(ListSelectionListener x) {
+	void addClsAssertionsTableSelectionListener(ListSelectionListener x) {
 		table.getSelectionModel().addListSelectionListener(x);
 	}
 	
@@ -54,7 +54,7 @@ class ClsAssertionsTable extends JScrollPane {
 		return Janus.mappingMetadata.getIndividual(individualFragment);
 	}
 	
-	URI getSelectedMember() {
+	URI getSelectedIndividual() {
 		return getIndividual(table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString());
 	}
 }

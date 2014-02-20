@@ -3,6 +3,7 @@ package janus.mapping.metadata;
 import janus.Janus;
 import janus.mapping.DatatypeMap;
 import janus.mapping.OntMapper;
+import janus.ontology.OWLEntityTypes;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -39,7 +40,7 @@ public class MappingMetadataFactory {
 				String dataRange = null;
 				//Rule 4
 				//writer.println("Declaration(DataProperty(:" + dataProperty +"))");
-				PropertyMetadata dpMD = new PropertyMetadata(dataProperty, PropertyTypes.DATA_PROPERTY, table, column);
+				PropertyMetadata dpMD = new PropertyMetadata(dataProperty, OWLEntityTypes.DATA_PROPERTY, table, column);
 				
 				int sqlDataType = Janus.cachedDBMetadata.getDataType(table, column);
 				String xmlSchemaDataType = DatatypeMap.get(sqlDataType);
@@ -57,7 +58,7 @@ public class MappingMetadataFactory {
 					ClassMetadata columnClassMD = new ClassMetadata(columnClass, table, column);
 					//Rule 3
 					//writer.println("Declaration(ObjectProperty(:" + objectProperty + "))");
-					PropertyMetadata opMD = new PropertyMetadata(objectProperty, PropertyTypes.OBJECT_PROPERTY, table, column);
+					PropertyMetadata opMD = new PropertyMetadata(objectProperty, OWLEntityTypes.OBJECT_PROPERTY, table, column);
 					//Rule 5
 					//writer.println("ObjectPropertyDomain(:" + objectProperty + " :" + tableClass + ")");
 					opMD.setDomain(tableClass);

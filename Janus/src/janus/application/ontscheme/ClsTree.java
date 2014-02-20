@@ -27,7 +27,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
-public class ClsTree extends JScrollPane {
+public class ClsTree extends JScrollPane implements OntTree {
 	private JTree tree;
 	private JPopupMenu popupMenu;
 	private AbstractAction goToMappedTable;
@@ -105,7 +105,11 @@ public class ClsTree extends JScrollPane {
 		popupMenu.show(this, x, y);
 	}
 	
-	public URI getSelectedClass() {
+	public URI getSelectedEntity() {
+		return getSelectedClass();
+	}
+
+	private URI getSelectedClass() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
 
@@ -128,7 +132,11 @@ public class ClsTree extends JScrollPane {
 		return tree.isSelectionEmpty();
 	}
 	
-	public TreePath getTreePathOfClass(URI cls) {
+	public TreePath getTreePathOfEntity(URI entity) {
+		return getTreePathOfClass(entity);
+	}
+	
+	private TreePath getTreePathOfClass(URI cls) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		
 		@SuppressWarnings("unchecked")

@@ -4,13 +4,12 @@ import janus.Janus;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
-import janus.application.ontscheme.ClsTree;
-import janus.application.ontscheme.DPTree;
-import janus.application.ontscheme.OPTree;
+import janus.application.ontscheme.OntTree;
 import janus.database.Column;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.net.URI;
 
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
@@ -27,16 +26,13 @@ public class GoToMappedColumnAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Component source = getSource(e);
+		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		Column mappedColumn = null;
+		URI entity = ontTree.getSelectedEntity();
 		
-		if (source instanceof ClsTree)
-			mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(((ClsTree)source).getSelectedClass());
-		else if (source instanceof OPTree)
-			mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(((OPTree)source).getSelectedObjectProperty());
-		else if (source instanceof DPTree)
-			mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(((DPTree)source).getSelectedDataProperty());
+		
+		
+		Column mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(ontTree.getSelectedEntity());
 		
 		DBTree dbTree = UIRegistry.getDBTree();
 		
@@ -50,7 +46,7 @@ public class GoToMappedColumnAction extends AbstractAction {
 		}
 	}
 	
-	private Component getSource(ActionEvent e) {
-		return ((JPopupMenu)((Component)e.getSource()).getParent()).getInvoker();
+	private OntTree getOntTreeToEventSource(ActionEvent e) {
+		return (OntTree)((JPopupMenu)((Component)e.getSource()).getParent()).getInvoker();
 	}
 }

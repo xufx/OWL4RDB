@@ -23,7 +23,7 @@ public class GoToMappedTableAction extends AbstractAction {
 		ClsTree clsTree = UIRegistry.getClsTree();
 		DBTree dbTree = UIRegistry.getDBTree();
 		
-		String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(clsTree.getSelectedClass());
+		String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(clsTree.getSelectedEntity());
 		
 		TreePath path = dbTree.getTreePathOfTable(mappedTable);
 		

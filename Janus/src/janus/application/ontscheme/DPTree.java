@@ -25,7 +25,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
-public class DPTree extends JScrollPane {
+public class DPTree extends JScrollPane implements OntTree {
 	private JTree tree;
 	private JPopupMenu popupMenu;
 	private AbstractAction goToMappedColumn;
@@ -96,7 +96,11 @@ public class DPTree extends JScrollPane {
 		popupMenu.show(this, x, y);
 	}
 	
-	public URI getSelectedDataProperty() {
+	public URI getSelectedEntity() {
+		return getSelectedDataProperty();
+	}
+	
+	private URI getSelectedDataProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode dpNode = (OntTreeNode)node.getUserObject();
 
@@ -119,7 +123,11 @@ public class DPTree extends JScrollPane {
 		return tree.isSelectionEmpty();
 	}
 	
-	public TreePath getTreePathOfDataProperty(URI dp) {
+	public TreePath getTreePathOfEntity(URI entity) {
+		return getTreePathOfDataProperty(entity);
+	}
+	
+	private TreePath getTreePathOfDataProperty(URI dp) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		
 		@SuppressWarnings("unchecked")

@@ -1,5 +1,6 @@
 package janus.application.actions;
 
+import janus.ImageURIs;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.ontdata.AssertionsPane;
@@ -9,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.net.URI;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
@@ -24,7 +26,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		ClsTree tree = UIRegistry.getClsTree();
 		
-		URI cls = tree.getSelectedClass();
+		URI cls = tree.getSelectedEntity();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
@@ -33,7 +35,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 		
 		if (!alreadyExists(individualsPane, cls)) {
 			JSplitPane newPane = new AssertionsPane(cls);
-			individualsPane.addTab(cls.getFragment(), newPane);
+			individualsPane.addTab(cls.getFragment(), new ImageIcon(ImageURIs.ONT_NAMED_CLS),  newPane);
 			individualsPane.setToolTipTextAt(individualsPane.indexOfComponent(newPane), cls.toString());
 		}
 		individualsPane.setSelectedIndex(indexOfTab(individualsPane, cls));

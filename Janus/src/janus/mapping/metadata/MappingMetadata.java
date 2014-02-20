@@ -3,6 +3,7 @@ package janus.mapping.metadata;
 import janus.database.Column;
 import janus.database.DBField;
 import janus.mapping.ClassTypes;
+import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -111,7 +112,7 @@ public class MappingMetadata {
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
-					&& property.getPropertyType().equals(PropertyTypes.DATA_PROPERTY))
+					&& property.getPropertyType().equals(OWLEntityTypes.DATA_PROPERTY))
 				return property.getPropertyName();
 		
 		return null;
@@ -127,7 +128,7 @@ public class MappingMetadata {
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
-					&& property.getPropertyType().equals(PropertyTypes.OBJECT_PROPERTY))
+					&& property.getPropertyType().equals(OWLEntityTypes.OBJECT_PROPERTY))
 				op = property.getPropertyName();
 		
 		return op;

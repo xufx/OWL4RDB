@@ -23,7 +23,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 @SuppressWarnings("serial")
-public class OPTree extends JScrollPane {
+public class OPTree extends JScrollPane implements OntTree {
 	private JTree tree;
 	private JPopupMenu popupMenu;
 	private AbstractAction goToMappedColumn;
@@ -55,7 +55,11 @@ public class OPTree extends JScrollPane {
 		return popupMenu;
 	}
 	
-	public URI getSelectedObjectProperty() {
+	public URI getSelectedEntity() {
+		return getSelectedObjectProperty();
+	}
+	
+	private URI getSelectedObjectProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode opNode = (OntTreeNode)node.getUserObject();
 
@@ -109,7 +113,11 @@ public class OPTree extends JScrollPane {
 		return tree.isSelectionEmpty();
 	}
 	
-	public TreePath getTreePathOfObjectProperty(URI op) {
+	public TreePath getTreePathOfEntity(URI entity) {
+		return getTreePathOfObjectProperty(entity);
+	}
+	
+	private TreePath getTreePathOfObjectProperty(URI op) {
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 		
 		@SuppressWarnings("unchecked")

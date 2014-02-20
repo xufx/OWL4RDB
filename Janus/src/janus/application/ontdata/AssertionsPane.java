@@ -12,17 +12,17 @@ import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
 public class AssertionsPane extends JSplitPane implements ListSelectionListener {
-	private URI cls;
+	private URI ontURI;
 	
 	private ClsAssertionsTable clsAssertionsTable;
 	private JTabbedPane types;
 	private JTabbedPane opAssertions;
 	private JTabbedPane dpAssertions;
 	
-	public AssertionsPane(URI cls) {
+	public AssertionsPane(URI ontURI) {
 		super(JSplitPane.HORIZONTAL_SPLIT, true);
 		
-		this.cls = cls;
+		this.ontURI = ontURI;
 		
 		setResizeWeight(0.5);
 		setOneTouchExpandable(true);
@@ -65,16 +65,16 @@ public class AssertionsPane extends JSplitPane implements ListSelectionListener 
 	}
 	
 	private JScrollPane buildMembersPane() {
-		clsAssertionsTable = new ClsAssertionsTable(cls);
-		clsAssertionsTable.addMembersTableSelectionListener(this);
+		clsAssertionsTable = new ClsAssertionsTable(ontURI);
+		clsAssertionsTable.addClsAssertionsTableSelectionListener(this);
 		
 		return clsAssertionsTable;
 	}
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(clsAssertionsTable.getSelectedMember()));
-		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(clsAssertionsTable.getSelectedMember()));
-		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(clsAssertionsTable.getSelectedMember()));
+		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(clsAssertionsTable.getSelectedIndividual()));
+		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
+		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
 	}
 }

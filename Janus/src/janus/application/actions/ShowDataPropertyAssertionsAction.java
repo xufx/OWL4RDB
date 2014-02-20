@@ -24,7 +24,7 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		DPTree tree = UIRegistry.getDPTree();
 		
-		URI dp = tree.getSelectedDataProperty();
+		URI dp = tree.getSelectedEntity();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));

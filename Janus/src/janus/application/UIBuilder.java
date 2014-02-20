@@ -109,7 +109,7 @@ class UIBuilder {
 	
 	private static JTabbedPane buildDisplayPane() {
 		JTabbedPane displayTab = new JTabbedPane(JTabbedPane.TOP);
-		displayTab.addTab(TabNames.ASSERTIONS, buildIndividualsPane());
+		displayTab.addTab(TabNames.ASSERTIONS, buildAssertionsPane());
 		displayTab.addTab(TabNames.DOCUMENT, buildDocumentPane());
 		displayTab.addTab(TabNames.QUERY, buildQueryPane());
 		
@@ -118,7 +118,7 @@ class UIBuilder {
 		return displayTab;
 	}
 	
-	private static JTabbedPane buildIndividualsPane() {
+	private static JTabbedPane buildAssertionsPane() {
 		JTabbedPane tp = new ClosableTabbedPane(JTabbedPane.TOP);
 		
 		UIRegistry.registerAssertionsTab(tp);

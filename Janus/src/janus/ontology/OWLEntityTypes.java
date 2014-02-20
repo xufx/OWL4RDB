@@ -1,0 +1,5 @@
+package janus.ontology;
+
+public enum OWLEntityTypes {
+	ANNOTATION_PROPERTY, CLASS, DATA_PROPERTY, DATATYPE, NAMED_INDIVIDUAL, OBJECT_PROPERTY
+}

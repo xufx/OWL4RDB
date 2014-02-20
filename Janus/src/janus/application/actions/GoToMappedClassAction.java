@@ -40,7 +40,7 @@ public class GoToMappedClassAction extends AbstractAction {
 			mappedClass = Janus.mappingMetadata.getMappedClass(column.getTableName(), column.getColumnName());
 		}
 		
-		TreePath path = clsTree.getTreePathOfClass(mappedClass);
+		TreePath path = clsTree.getTreePathOfEntity(mappedClass);
 		
 		if (path != null) {
 			JTabbedPane schemeTab = UIRegistry.getschemeTab();

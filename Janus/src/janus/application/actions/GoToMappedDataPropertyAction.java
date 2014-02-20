@@ -31,7 +31,7 @@ public class GoToMappedDataPropertyAction extends AbstractAction {
 		
 		URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(column.getTableName(), column.getColumnName());
 		
-		TreePath path = dpTree.getTreePathOfDataProperty(mappedDP);
+		TreePath path = dpTree.getTreePathOfEntity(mappedDP);
 		
 		if (path != null) {
 			JTabbedPane schemeTab = UIRegistry.getschemeTab();

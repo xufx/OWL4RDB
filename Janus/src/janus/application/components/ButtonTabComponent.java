@@ -46,6 +46,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -76,6 +77,14 @@ class ButtonTabComponent extends JPanel {
 				int i = pane.indexOfTabComponent(ButtonTabComponent.this);
 				if (i != -1) {
 					return pane.getTitleAt(i);
+				}
+				return null;
+			}
+			
+			public Icon getIcon() {
+				int i = pane.indexOfTabComponent(ButtonTabComponent.this);
+				if (i != -1) {
+					return pane.getIconAt(i);
 				}
 				return null;
 			}
