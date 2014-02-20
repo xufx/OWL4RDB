@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
-import janus.mapping.metadata.IndividualTypes;
+import janus.ontology.OWLEntityTypes;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 class OPAssertionsTable extends JScrollPane {
 	private JTable table;
-	private IndividualTypes individualType;
+	private OWLEntityTypes individualType;
 	
 	OPAssertionsTable(URI individual) {
 		individualType = Janus.mappingMetadata.getIndividualType(individual);
@@ -39,7 +39,7 @@ class OPAssertionsTable extends JScrollPane {
 		        
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        
-		        if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+		        if (individualType.equals(OWLEntityTypes.RECORD_INDIVIDUAL)) {
 		        	if (colIndex == 0)
 		        		return getObjectProperty(value).toString();
 		        	else if (colIndex == 1)
@@ -77,7 +77,7 @@ class OPAssertionsTable extends JScrollPane {
 
 @SuppressWarnings("serial")
 class OPAssertionsTableModel extends AbstractTableModel {
-	private IndividualTypes individualType;
+	private OWLEntityTypes individualType;
 
 	private int columnCount;
 	private int rowCount;
@@ -102,7 +102,7 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	public String getColumnName(int column) {
 		String columnName = super.getColumnName(column);
 		
-		if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+		if (individualType.equals(OWLEntityTypes.RECORD_INDIVIDUAL)) {
 			if (column == 0)
 				columnName = "Object Property";
 			else if (column == 1)
@@ -165,12 +165,12 @@ class OPAssertionsTableModel extends AbstractTableModel {
 
 @SuppressWarnings("serial")
 class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
-	private IndividualTypes individualType;
+	private OWLEntityTypes individualType;
 	
 	private Icon opIcon;
 	private Icon indIcon;
 	
-	OPAssertionsTableRenderer(Icon opIcon, Icon indIcon, IndividualTypes individualType) {
+	OPAssertionsTableRenderer(Icon opIcon, Icon indIcon, OWLEntityTypes individualType) {
 		this.individualType = individualType;
 		
 		this.opIcon = opIcon;
@@ -181,7 +181,7 @@ class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		
-		if (individualType.equals(IndividualTypes.RECORD_INDIVIDUAL)) {
+		if (individualType.equals(OWLEntityTypes.RECORD_INDIVIDUAL)) {
 			if (column == 0)
 				setIcon(opIcon);
 			else if (column == 1)

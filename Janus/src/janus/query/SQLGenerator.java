@@ -2,7 +2,6 @@ package janus.query;
 
 import janus.Janus;
 import janus.database.DBField;
-import janus.mapping.metadata.IndividualTypes;
 import janus.ontology.OWLEntityTypes;
 
 import java.net.URI;
@@ -189,9 +188,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetTypesOfIndividual(URI individual) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetTypesOfRecordIndividual(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetTypesOfFieldIndividual(individual);
 		
 		return query;
@@ -201,9 +200,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetOPAssertionsOfIndividual(URI individual) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetOPAssertionsOfRecordIndividualAsSubject(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetOPAssertionsOfFieldIndividualAsObject(individual);
 		
 		return query;
@@ -340,9 +339,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetDPAssertionsOfSubject(URI individual) {
 		String query = null;
 
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetDPAssertionsOfRecordIndividualAsSubject(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(IndividualTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetDPAssertionsOfFieldIndividualAsSubject(individual);
 
 		return query;

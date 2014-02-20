@@ -69,11 +69,11 @@ public class DBTree extends JScrollPane {
 	private TreeNode getDBHierarchy() {
 		// root node
 		String catalog = Janus.cachedDBMetadata.getCatalog();
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new DBTreeNode(catalog, DBTreeNodeTypes.CATALOG));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new DBTreeNode(catalog, DBEntityTypes.CATALOG));
 		// table nodes
 		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
 		for(String table: tables) {	
-			DefaultMutableTreeNode tableNode = new DefaultMutableTreeNode(new DBTreeNode(table, DBTreeNodeTypes.TABLE));
+			DefaultMutableTreeNode tableNode = new DefaultMutableTreeNode(new DBTreeNode(table, DBEntityTypes.TABLE));
 			root.add(tableNode);
 			
 			Set<String> columns = Janus.cachedDBMetadata.getColumns(table);
@@ -81,20 +81,20 @@ public class DBTree extends JScrollPane {
 			// primary key column nodes
 			List<String> pks = Janus.cachedDBMetadata.getPrimaryKeys(table);
 			for(String pk: pks)
-				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(pk, DBTreeNodeTypes.PRIMARY)));
+				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(pk, DBEntityTypes.PRIMARY)));
 			
 			columns.removeAll(pks);
 
 			// non-key column nodes
 			Set<String> nonKeys = Janus.cachedDBMetadata.getNonKeyColumns(table);
 			for(String nonKey : nonKeys)
-				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(nonKey, DBTreeNodeTypes.NON_KEY)));
+				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(nonKey, DBEntityTypes.NON_KEY)));
 			
 			columns.removeAll(nonKeys);
 			
 			// key column (except primary) nodes
 			for(String key: columns)
-				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(key, DBTreeNodeTypes.KEY)));
+				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(key, DBEntityTypes.KEY)));
 		}
 
 		return root;
@@ -111,23 +111,23 @@ public class DBTree extends JScrollPane {
 	void showPopupMenu(int x, int y) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
-		DBTreeNodeTypes type = dbNode.getType();
+		DBEntityTypes type = dbNode.getType();
 		// setting mapped class menu enabled/disabled
-		if (type.equals(DBTreeNodeTypes.CATALOG) 
-				|| type.equals(DBTreeNodeTypes.NON_KEY))
+		if (type.equals(DBEntityTypes.CATALOG) 
+				|| type.equals(DBEntityTypes.NON_KEY))
 			goToMappedClass.setEnabled(false);
 		else
 			goToMappedClass.setEnabled(true);
 		// setting mapped object property menu enabled/disabled
-		if (type.equals(DBTreeNodeTypes.CATALOG) 
-				|| type.equals(DBTreeNodeTypes.TABLE)
-				|| type.equals(DBTreeNodeTypes.NON_KEY))
+		if (type.equals(DBEntityTypes.CATALOG) 
+				|| type.equals(DBEntityTypes.TABLE)
+				|| type.equals(DBEntityTypes.NON_KEY))
 			goToMappedObjectPropery.setEnabled(false);
 		else
 			goToMappedObjectPropery.setEnabled(true);
 		// setting mapped data property menu enabled/disabled
-		if (type.equals(DBTreeNodeTypes.CATALOG) 
-				|| type.equals(DBTreeNodeTypes.TABLE))
+		if (type.equals(DBEntityTypes.CATALOG) 
+				|| type.equals(DBEntityTypes.TABLE))
 			goToMappedDataPropery.setEnabled(false);
 		else
 			goToMappedDataPropery.setEnabled(true);
@@ -135,7 +135,7 @@ public class DBTree extends JScrollPane {
 		popupMenu.show(this, x, y);
 	}
 	
-	public DBTreeNodeTypes getTypeOfSelectedNode() {
+	public DBEntityTypes getTypeOfSelectedNode() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
 
@@ -184,7 +184,7 @@ public class DBTree extends JScrollPane {
 		while (e.hasMoreElements()) {
 			DefaultMutableTreeNode node = e.nextElement();
 			DBTreeNode dbNode = (DBTreeNode)node.getUserObject();
-	        if (dbNode.getType().equals(DBTreeNodeTypes.TABLE)
+	        if (dbNode.getType().equals(DBEntityTypes.TABLE)
 	        		&& dbNode.toString().equals(table))
 	            return new TreePath(node.getPath());
 	    }
@@ -256,7 +256,7 @@ class DBTreeCellRenderer extends DefaultTreeCellRenderer {
     private boolean isCatalogNode(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
         DBTreeNode nodeObject = (DBTreeNode)(node.getUserObject());
-        if(nodeObject.getType() == DBTreeNodeTypes.CATALOG)
+        if(nodeObject.getType() == DBEntityTypes.CATALOG)
         	return true;
         return false;
     }
@@ -264,7 +264,7 @@ class DBTreeCellRenderer extends DefaultTreeCellRenderer {
     private boolean isTableNode(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
         DBTreeNode nodeObject = (DBTreeNode)(node.getUserObject());
-        if(nodeObject.getType() == DBTreeNodeTypes.TABLE)
+        if(nodeObject.getType() == DBEntityTypes.TABLE)
         	return true;
         return false;
     }
@@ -272,7 +272,7 @@ class DBTreeCellRenderer extends DefaultTreeCellRenderer {
     private boolean isPrimaryNode(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
         DBTreeNode nodeObject = (DBTreeNode)(node.getUserObject());
-        if (nodeObject.getType() == DBTreeNodeTypes.PRIMARY)
+        if (nodeObject.getType() == DBEntityTypes.PRIMARY)
         	return true;
         return false;
     }
@@ -280,8 +280,8 @@ class DBTreeCellRenderer extends DefaultTreeCellRenderer {
     private boolean isNonPrimaryNode(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
         DBTreeNode nodeObject = (DBTreeNode)(node.getUserObject());
-        if (nodeObject.getType() == DBTreeNodeTypes.NON_KEY
-        		|| nodeObject.getType() == DBTreeNodeTypes.KEY)
+        if (nodeObject.getType() == DBEntityTypes.NON_KEY
+        		|| nodeObject.getType() == DBEntityTypes.KEY)
         	return true;
         return false;
     }

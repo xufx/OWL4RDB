@@ -192,7 +192,7 @@ public class MappingMetadata {
 		return IndividualMetadata.getMappedDBFieldsToRecordIndividual(individual);
 	}
 	
-	public IndividualTypes getIndividualType(URI individual) {
+	public OWLEntityTypes getIndividualType(URI individual) {
 		return IndividualMetadata.getIndividualType(individual);
 	}
 	

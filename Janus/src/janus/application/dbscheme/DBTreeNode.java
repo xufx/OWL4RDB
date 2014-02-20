@@ -2,13 +2,13 @@ package janus.application.dbscheme;
 
 class DBTreeNode {
 	private String value;
-	private DBTreeNodeTypes type;
+	private DBEntityTypes type;
 	
-	DBTreeNode(String value, DBTreeNodeTypes type) {
+	DBTreeNode(String value, DBEntityTypes type) {
 		this.value = value;
 		this.type = type;
 	}
 	
 	public String toString() { return value; }
-	DBTreeNodeTypes getType() { return type; }
+	DBEntityTypes getType() { return type; }
 }

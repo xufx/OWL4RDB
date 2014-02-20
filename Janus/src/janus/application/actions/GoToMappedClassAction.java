@@ -4,7 +4,7 @@ import janus.Janus;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
-import janus.application.dbscheme.DBTreeNodeTypes;
+import janus.application.dbscheme.DBEntityTypes;
 import janus.application.ontscheme.ClsTree;
 import janus.database.Column;
 
@@ -28,14 +28,14 @@ public class GoToMappedClassAction extends AbstractAction {
 		DBTree dbTree = UIRegistry.getDBTree();
 		ClsTree clsTree = UIRegistry.getClsTree();
 		
-		DBTreeNodeTypes selectedNodeType = dbTree.getTypeOfSelectedNode();
+		DBEntityTypes selectedNodeType = dbTree.getTypeOfSelectedNode();
 		
 		URI mappedClass = null;
 		
-		if (selectedNodeType.equals(DBTreeNodeTypes.TABLE))
+		if (selectedNodeType.equals(DBEntityTypes.TABLE))
 			mappedClass = Janus.mappingMetadata.getMappedClass(dbTree.getSelectedTable());
-		if (selectedNodeType.equals(DBTreeNodeTypes.PRIMARY) 
-				|| selectedNodeType.equals(DBTreeNodeTypes.KEY)) {
+		if (selectedNodeType.equals(DBEntityTypes.PRIMARY) 
+				|| selectedNodeType.equals(DBEntityTypes.KEY)) {
 			Column column = dbTree.getSelectedColumn();
 			mappedClass = Janus.mappingMetadata.getMappedClass(column.getTableName(), column.getColumnName());
 		}
