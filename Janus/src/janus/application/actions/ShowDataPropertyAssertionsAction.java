@@ -3,7 +3,7 @@ package janus.application.actions;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.ontdata.IndividualPane;
-import janus.application.ontscheme.ClsTree;
+import janus.application.ontscheme.DPTree;
 
 import java.awt.event.ActionEvent;
 import java.net.URI;
@@ -13,30 +13,30 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class ShowMembersAction extends AbstractAction {
-	private static final String NAME = "Show Members";
+public class ShowDataPropertyAssertionsAction extends AbstractAction {
+	private static final String NAME = "Show Data Property Assertions";
 	
-	public ShowMembersAction() {
+	public ShowDataPropertyAssertionsAction() {
 		super(NAME);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ClsTree tree = UIRegistry.getClsTree();
+		DPTree tree = UIRegistry.getDPTree();
 		
-		URI cls = tree.getSelectedClass();
+		URI dp = tree.getSelectedDataProperty();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
-		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.INDIVIDUALS));
+		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.Assertions));
 		
 		JTabbedPane individualsPane = UIRegistry.getIndividualsTab();
 		
-		if (!alreadyExists(individualsPane, cls)) {
-			JSplitPane newPane = new IndividualPane(cls);
-			individualsPane.addTab(cls.getFragment(), newPane);
-			individualsPane.setToolTipTextAt(individualsPane.indexOfComponent(newPane), cls.toString());
+		if (!alreadyExists(individualsPane, dp)) {
+			JSplitPane newPane = new IndividualPane(dp);
+			individualsPane.addTab(dp.getFragment(), newPane);
+			individualsPane.setToolTipTextAt(individualsPane.indexOfComponent(newPane), dp.toString());
 		}
-		individualsPane.setSelectedIndex(indexOfTab(individualsPane, cls));
+		individualsPane.setSelectedIndex(indexOfTab(individualsPane, dp));
 	}
 	
 	private boolean alreadyExists(JTabbedPane individualsPane, URI cls) {

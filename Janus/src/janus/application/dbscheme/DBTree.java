@@ -57,11 +57,11 @@ public class DBTree extends JScrollPane {
 		goToMappedClass = new GoToMappedClassAction();
 		popupMenu.add(goToMappedClass);
 		
-		goToMappedObjectPropery = new GoToMappedObjectPropertyAction();
-		popupMenu.add(goToMappedObjectPropery);
-		
 		goToMappedDataPropery = new GoToMappedDataPropertyAction();
 		popupMenu.add(goToMappedDataPropery);
+		
+		goToMappedObjectPropery = new GoToMappedObjectPropertyAction();
+		popupMenu.add(goToMappedObjectPropery);
 		
 		return popupMenu;
 	}

@@ -3,6 +3,7 @@ package janus.application.ontscheme;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
+import janus.application.actions.ShowDataPropertyAssertionsAction;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
@@ -28,6 +29,7 @@ public class DPTree extends JScrollPane {
 	private JTree tree;
 	private JPopupMenu popupMenu;
 	private AbstractAction goToMappedColumn;
+	private AbstractAction showDataPropertyAssertions;
 	
 	public DPTree() {
 		buildUI();
@@ -52,6 +54,9 @@ public class DPTree extends JScrollPane {
 
 		goToMappedColumn = new GoToMappedColumnAction();
 		popupMenu.add(goToMappedColumn);
+		
+		showDataPropertyAssertions = new ShowDataPropertyAssertionsAction();
+		popupMenu.add(showDataPropertyAssertions);
 		
 		return popupMenu;
 	}
@@ -78,11 +83,15 @@ public class DPTree extends JScrollPane {
 	void showPopupMenu(int x, int y) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
-		// setting mapped column menu enabled/disabled
-		if (ontNode.getURI().equals(Janus.ontBridge.getOWLTopDataProperty()))
+		// setting pop up menu enabled/disabled
+		if (ontNode.getURI().equals(Janus.ontBridge.getOWLTopDataProperty())) {
 			goToMappedColumn.setEnabled(false);
-		else
+			showDataPropertyAssertions.setEnabled(false);
+		}
+		else {
 			goToMappedColumn.setEnabled(true);
+			showDataPropertyAssertions.setEnabled(true);
+		}
 		
 		popupMenu.show(this, x, y);
 	}

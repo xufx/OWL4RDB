@@ -110,7 +110,7 @@ class UIBuilder {
 	private static JTabbedPane buildDisplayPane() {
 		JTabbedPane displayTab = new JTabbedPane(JTabbedPane.TOP);
 		displayTab.addTab(TabNames.DOCUMENT, buildDocumentPane());
-		displayTab.addTab(TabNames.INDIVIDUALS, buildIndividualsPane());
+		displayTab.addTab(TabNames.Assertions, buildIndividualsPane());
 		displayTab.addTab(TabNames.QUERY, buildQueryPane());
 		
 		UIRegistry.registerDisplayTab(displayTab);
