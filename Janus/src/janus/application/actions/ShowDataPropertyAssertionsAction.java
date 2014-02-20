@@ -2,7 +2,7 @@ package janus.application.actions;
 
 import janus.TabNames;
 import janus.application.UIRegistry;
-import janus.application.ontdata.IndividualPane;
+import janus.application.ontdata.AssertionsPane;
 import janus.application.ontscheme.DPTree;
 
 import java.awt.event.ActionEvent;
@@ -32,7 +32,7 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 		JTabbedPane individualsPane = UIRegistry.getIndividualsTab();
 		
 		if (!alreadyExists(individualsPane, dp)) {
-			JSplitPane newPane = new IndividualPane(dp);
+			JSplitPane newPane = new AssertionsPane(dp);
 			individualsPane.addTab(dp.getFragment(), newPane);
 			individualsPane.setToolTipTextAt(individualsPane.indexOfComponent(newPane), dp.toString());
 		}

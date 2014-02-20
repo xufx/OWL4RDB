@@ -13,6 +13,7 @@ import janus.database.SQLResultSet;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -37,9 +38,10 @@ class ClassAssertionsTable extends JScrollPane {
 			}
 		};
 		table.setDefaultRenderer(Object.class, new MembersTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
-		table.setTableHeader(null);
+		table.getTableHeader().setReorderingAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
+		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		setViewportView(table);
 	}
@@ -75,6 +77,16 @@ class MembersTableModel extends AbstractTableModel {
 		columnCount = resultSet.getResultSetColumnCount();
 		
 		cache = new CachedRecord();
+	}
+	
+	@Override
+	public String getColumnName(int column) {
+		String columnName = super.getColumnName(column);
+		
+		if (column == 0)
+			columnName = "Individual";
+		
+		return columnName;
 	}
 
 	public int getRowCount() {

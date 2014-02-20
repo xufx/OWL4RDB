@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
-public class IndividualPane extends JSplitPane implements ListSelectionListener {
+public class AssertionsPane extends JSplitPane implements ListSelectionListener {
 	private URI cls;
 	
 	private ClassAssertionsTable membersTable;
@@ -19,7 +19,7 @@ public class IndividualPane extends JSplitPane implements ListSelectionListener 
 	private JTabbedPane opAssertions;
 	private JTabbedPane dpAssertions;
 	
-	public IndividualPane(URI cls) {
+	public AssertionsPane(URI cls) {
 		super(JSplitPane.HORIZONTAL_SPLIT, true);
 		
 		this.cls = cls;

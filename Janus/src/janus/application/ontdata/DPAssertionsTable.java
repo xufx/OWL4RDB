@@ -14,6 +14,7 @@ import janus.database.SQLResultSet;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -47,6 +48,7 @@ class DPAssertionsTable extends JScrollPane {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
 		table.getTableHeader().setReorderingAllowed(false);
+		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		setViewportView(table);
 	}
