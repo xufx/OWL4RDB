@@ -14,7 +14,7 @@ import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class ShowClassAssertionsAction extends AbstractAction {
-	private static final String NAME = "Show Instances";
+	private static final String NAME = "Show Class Assertions";
 	
 	public ShowClassAssertionsAction() {
 		super(NAME);

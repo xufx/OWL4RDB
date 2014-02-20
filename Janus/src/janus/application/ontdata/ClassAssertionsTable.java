@@ -21,10 +21,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class InstancesTable extends JScrollPane {
+class ClassAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	InstancesTable(URI cls) {
+	ClassAssertionsTable(URI cls) {
 		table = new JTable(new MembersTableModel(cls)) {
 
 			@Override
