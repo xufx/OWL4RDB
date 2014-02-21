@@ -2,9 +2,9 @@ package janus.application;
 
 import janus.application.dbscheme.DBTree;
 import janus.application.description.DescrTree;
-import janus.application.ontscheme.ClsTree;
 import janus.application.ontscheme.DPTree;
 import janus.application.ontscheme.OPTree;
+import janus.application.ontscheme.OntTree;
 import janus.application.query.Showable;
 import janus.application.query.Submittable;
 
@@ -50,8 +50,8 @@ public class UIRegistry {
 		return documentTab;
 	}
 	
-	public static ClsTree getClsTree() {
-		return (ClsTree)classTree;
+	public static OntTree getClsTree() {
+		return (OntTree)classTree;
 	}
 	
 	public static DPTree getDPTree() {

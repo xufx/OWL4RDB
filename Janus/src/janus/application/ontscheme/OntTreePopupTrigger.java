@@ -5,10 +5,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.tree.TreePath;
 
-public class DPTreePopupTrigger extends MouseAdapter {
-	private DPTree tree;
+public class OntTreePopupTrigger extends MouseAdapter {
+	private OntTree tree;
 	
-	public DPTreePopupTrigger(DPTree tree) {
+	public OntTreePopupTrigger(OntTree tree) {
 		this.tree = tree;
 	}
 	

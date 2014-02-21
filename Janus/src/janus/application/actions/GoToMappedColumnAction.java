@@ -6,10 +6,11 @@ import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
 import janus.application.ontscheme.OntTree;
 import janus.database.DBColumn;
+import janus.mapping.OntEntity;
+import janus.mapping.OntEntityTypes;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.net.URI;
 
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
@@ -28,9 +29,15 @@ public class GoToMappedColumnAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		URI entity = ontTree.getSelectedEntity();
+		OntEntity entity = ontTree.getSelectedEntity();
 		
-		DBColumn mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(ontTree.getSelectedEntity());
+		DBColumn mappedColumn = null;
+		
+		if (entity.getType().equals(OntEntityTypes.COLUMN_CLASS))
+			mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(entity.getURI());
+		else if (entity.getType().equals(OntEntityTypes.DATA_PROPERTY) 
+				|| entity.getType().equals(OntEntityTypes.OBJECT_PROPERTY))
+			mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(entity.getURI());
 		
 		DBTree dbTree = UIRegistry.getDBTree();
 		

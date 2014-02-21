@@ -26,7 +26,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		ClsTree tree = UIRegistry.getClsTree();
 		
-		URI cls = tree.getSelectedEntity();
+		URI cls = tree.getSelectedURI();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
