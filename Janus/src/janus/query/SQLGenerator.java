@@ -2,7 +2,7 @@ package janus.query;
 
 import janus.Janus;
 import janus.database.DBField;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -44,11 +44,11 @@ public abstract class SQLGenerator {
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.TABLE_CLASS))
+		if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.TABLE_CLASS))
 			query = getQueryToGetIndividualsOfTableClass(cls);
-		else if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.COLUMN_CLASS))
+		else if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.COLUMN_CLASS))
 			query = getQueryToGetIndividualsOfColumnClass(cls);
-		else if (Janus.mappingMetadata.getClassType(cls).equals(OWLEntityTypes.OWL_THING))
+		else if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.OWL_THING_CLASS))
 			query = getQueryToGetIndividualsOfOwlThing();
 		
 		return query;
@@ -59,9 +59,9 @@ public abstract class SQLGenerator {
 		
 		Set<URI> clses = Janus.ontBridge.getSubClses(Janus.ontBridge.getOWLThingURI());
 		for (URI aCls: clses) {
-			if (Janus.mappingMetadata.getClassType(aCls).equals(OWLEntityTypes.TABLE_CLASS))
+			if (Janus.mappingMetadata.getClassType(aCls).equals(OntEntityTypes.TABLE_CLASS))
 				queries.add(getQueryToGetIndividualsOfTableClass(aCls));
-			else if (Janus.mappingMetadata.getClassType(aCls).equals(OWLEntityTypes.COLUMN_CLASS))
+			else if (Janus.mappingMetadata.getClassType(aCls).equals(OntEntityTypes.COLUMN_CLASS))
 				queries.add(getQueryToGetIndividualsOfColumnClass(aCls));
 		}
 		
@@ -188,9 +188,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetTypesOfIndividual(URI individual) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetTypesOfRecordIndividual(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetTypesOfFieldIndividual(individual);
 		
 		return query;
@@ -200,9 +200,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetOPAssertionsOfIndividual(URI individual) {
 		String query = null;
 		
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetOPAssertionsOfRecordIndividualAsSubject(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetOPAssertionsOfFieldIndividualAsObject(individual);
 		
 		return query;
@@ -339,9 +339,9 @@ public abstract class SQLGenerator {
 	public String getQueryToGetDPAssertionsOfSubject(URI individual) {
 		String query = null;
 
-		if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.RECORD_INDIVIDUAL))
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
 			query = getQueryToGetDPAssertionsOfRecordIndividualAsSubject(individual);
-		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OWLEntityTypes.FIELD_INDIVIDUAL))
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetDPAssertionsOfFieldIndividualAsSubject(individual);
 
 		return query;

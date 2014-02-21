@@ -5,7 +5,7 @@ import java.net.URI;
 import javax.swing.tree.TreePath;
 
 public interface OntTree {
-	URI getSelectedEntity();
+	OntTreeNode getSelectedEntity();
 	
 	TreePath getTreePathOfEntity(URI entity);
 	

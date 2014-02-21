@@ -4,6 +4,7 @@ import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.ShowDataPropertyAssertionsAction;
+import janus.ontology.OntEntityTypes;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
@@ -36,7 +37,7 @@ public class DPTree extends JScrollPane implements OntTree {
 	}
 	
 	private void buildUI() {
-		tree = new JTree(getDataPropertyHierarchy(Janus.ontBridge.getOWLTopDataProperty()));
+		tree = new JTree(getDataPropertyHierarchy(new OntTreeNode(Janus.ontBridge.getOWLTopDataProperty(), OntEntityTypes.OWL_TOP_DATA_PROPERTY)));
 		
 		tree.setDragEnabled(true);
 		
@@ -61,13 +62,13 @@ public class DPTree extends JScrollPane implements OntTree {
 		return popupMenu;
 	}
 	
-	private MutableTreeNode getDataPropertyHierarchy(URI dpURI) {
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new OntTreeNode(dpURI));
+	private MutableTreeNode getDataPropertyHierarchy(OntTreeNode entity) {
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
-		Set<URI> children = Janus.ontBridge.getSubDataProps(dpURI);
+		Set<URI> children = Janus.ontBridge.getSubDataProps(entity.getURI());
 		
 		for(URI child : children)
-			node.add(getDataPropertyHierarchy(child));
+			node.add(getDataPropertyHierarchy(new OntTreeNode(child, OntEntityTypes.DATA_PROPERTY)));
 			
 		return node;
 	}
@@ -84,7 +85,7 @@ public class DPTree extends JScrollPane implements OntTree {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
 		// setting pop up menu enabled/disabled
-		if (ontNode.getURI().equals(Janus.ontBridge.getOWLTopDataProperty())) {
+		if (ontNode.getType().equals(OntEntityTypes.OWL_TOP_DATA_PROPERTY)) {
 			goToMappedColumn.setEnabled(false);
 			showDataPropertyAssertions.setEnabled(false);
 		}
@@ -96,15 +97,14 @@ public class DPTree extends JScrollPane implements OntTree {
 		popupMenu.show(this, x, y);
 	}
 	
-	public URI getSelectedEntity() {
+	public OntTreeNode getSelectedEntity() {
 		return getSelectedDataProperty();
 	}
 	
-	private URI getSelectedDataProperty() {
+	private OntTreeNode getSelectedDataProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		OntTreeNode dpNode = (OntTreeNode)node.getUserObject();
-
-		return dpNode.getURI();
+		
+		return (OntTreeNode)node.getUserObject();
 	}
 	
 	TreePath getPathForLocation(int x, int y) {

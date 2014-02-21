@@ -1,12 +1,12 @@
 package janus.mapping.metadata;
 
 import janus.database.Column;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 class PropertyMetadata implements Comparable<PropertyMetadata> {
 	private String propertyName;
 
-	private OWLEntityTypes propertyType;
+	private OntEntityTypes propertyType;
 	
 	private String mappedTable;
 	private String mappedColumn;
@@ -16,7 +16,7 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 	
 	private String superProperty;
 
-	PropertyMetadata(String propertyName, OWLEntityTypes propertyType, String mappedTable, String mappedColumn) {
+	PropertyMetadata(String propertyName, OntEntityTypes propertyType, String mappedTable, String mappedColumn) {
 		this.propertyName = propertyName;
 		this.mappedTable = mappedTable;
 		this.mappedColumn = mappedColumn;
@@ -64,7 +64,7 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 		return propertyName;
 	}
 	
-	OWLEntityTypes getPropertyType() {
+	OntEntityTypes getPropertyType() {
 		return propertyType;
 	}
 

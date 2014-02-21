@@ -2,7 +2,7 @@ package janus.mapping.metadata;
 
 import janus.database.Column;
 import janus.database.DBField;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 import java.net.URI;
 import java.util.List;
@@ -90,9 +90,9 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public OWLEntityTypes getClassType(URI classURI) {
-		if (classURI.toString().equals(OWLEntityTypes.OWL_THING.pattern()))
-			return OWLEntityTypes.OWL_THING;
+	public OntEntityTypes getClassType(URI classURI) {
+		if (classURI.toString().equals(OntEntityTypes.OWL_THING_CLASS.pattern()))
+			return OntEntityTypes.OWL_THING_CLASS;
 		
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
@@ -111,7 +111,7 @@ public class MappingMetadata {
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
-					&& property.getPropertyType().equals(OWLEntityTypes.DATA_PROPERTY))
+					&& property.getPropertyType().equals(OntEntityTypes.DATA_PROPERTY))
 				return property.getPropertyName();
 		
 		return null;
@@ -127,7 +127,7 @@ public class MappingMetadata {
 		for (PropertyMetadata property: properties)
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
-					&& property.getPropertyType().equals(OWLEntityTypes.OBJECT_PROPERTY))
+					&& property.getPropertyType().equals(OntEntityTypes.OBJECT_PROPERTY))
 				op = property.getPropertyName();
 		
 		return op;
@@ -140,7 +140,7 @@ public class MappingMetadata {
 	public String getMappedClassFragment(String table) {
 		for (ClassMetadata cls: classes)
 			if (cls.getMappedTableName().equals(table) 
-					&& cls.getClassType().equals(OWLEntityTypes.TABLE_CLASS))
+					&& cls.getClassType().equals(OntEntityTypes.TABLE_CLASS))
 				return cls.getClassName();
 		
 		return null;
@@ -152,7 +152,7 @@ public class MappingMetadata {
 	
 	public String getMappedClassFragment(String table, String column) {
 		for (ClassMetadata cls: classes)
-			if (cls.getClassType().equals(OWLEntityTypes.COLUMN_CLASS) 
+			if (cls.getClassType().equals(OntEntityTypes.COLUMN_CLASS) 
 					&& cls.getMappedTableName().equals(table) 
 					&& cls.getMappedColumnName().equals(column))
 				return cls.getClassName();
@@ -192,7 +192,7 @@ public class MappingMetadata {
 		return IndividualMetadata.getMappedDBFieldsToRecordIndividual(individual);
 	}
 	
-	public OWLEntityTypes getIndividualType(URI individual) {
+	public OntEntityTypes getIndividualType(URI individual) {
 		return IndividualMetadata.getIndividualType(individual);
 	}
 	

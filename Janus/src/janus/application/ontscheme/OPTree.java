@@ -3,6 +3,8 @@ package janus.application.ontscheme;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
+import janus.ontology.OntEntityTypes;
+
 import java.net.URI;
 import java.awt.Component;
 import java.awt.event.MouseListener;
@@ -33,7 +35,7 @@ public class OPTree extends JScrollPane implements OntTree {
 	}
 	
 	private void buildUI() {
-		tree  = new JTree(getObjPropertyHierarchy(Janus.ontBridge.getOWLTopObjectProperty()));
+		tree  = new JTree(getObjPropertyHierarchy(new OntTreeNode(Janus.ontBridge.getOWLTopObjectProperty(), OntEntityTypes.OWL_TOP_OBJECT_PROPERTY)));
 		
 		tree.setDragEnabled(true);
 		
@@ -55,24 +57,23 @@ public class OPTree extends JScrollPane implements OntTree {
 		return popupMenu;
 	}
 	
-	public URI getSelectedEntity() {
+	public OntTreeNode getSelectedEntity() {
 		return getSelectedObjectProperty();
 	}
 	
-	private URI getSelectedObjectProperty() {
+	private OntTreeNode getSelectedObjectProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		OntTreeNode opNode = (OntTreeNode)node.getUserObject();
-
-		return opNode.getURI();
+		
+		return (OntTreeNode)node.getUserObject();
 	}
 	
-	private MutableTreeNode getObjPropertyHierarchy(URI opURI) {
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new OntTreeNode(opURI));
+	private MutableTreeNode getObjPropertyHierarchy(OntTreeNode entity) {
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
-		Set<URI> children = Janus.ontBridge.getSubObjProps(opURI);
+		Set<URI> children = Janus.ontBridge.getSubObjProps(entity.getURI());
 		
 		for(URI child : children)
-			node.add(getObjPropertyHierarchy(child));
+			node.add(getObjPropertyHierarchy(new OntTreeNode(child, OntEntityTypes.OBJECT_PROPERTY)));
 			
 		return node;
 	}
@@ -89,7 +90,7 @@ public class OPTree extends JScrollPane implements OntTree {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
 		// setting mapped column menu enabled/disabled
-		if (ontNode.getURI().equals(Janus.ontBridge.getOWLTopObjectProperty()))
+		if (ontNode.getType().equals(OntEntityTypes.OWL_TOP_OBJECT_PROPERTY))
 			goToMappedColumn.setEnabled(false);
 		else
 			goToMappedColumn.setEnabled(true);

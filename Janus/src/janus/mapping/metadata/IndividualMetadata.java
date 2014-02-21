@@ -3,7 +3,7 @@ package janus.mapping.metadata;
 import janus.Janus;
 import janus.database.DBField;
 import janus.mapping.OntMapper;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -157,11 +157,11 @@ public class IndividualMetadata {
 		return new DBField(tableName, columnName, value);
 	}
 	
-	static OWLEntityTypes getIndividualType(URI individual) {
-		if (Pattern.matches(OWLEntityTypes.FIELD_INDIVIDUAL.pattern(), individual.toString()))
-			return OWLEntityTypes.FIELD_INDIVIDUAL;
-		else if (Pattern.matches(OWLEntityTypes.RECORD_INDIVIDUAL.pattern(), individual.toString()))
-			return OWLEntityTypes.RECORD_INDIVIDUAL;
+	static OntEntityTypes getIndividualType(URI individual) {
+		if (Pattern.matches(OntEntityTypes.FIELD_INDIVIDUAL.pattern(), individual.toString()))
+			return OntEntityTypes.FIELD_INDIVIDUAL;
+		else if (Pattern.matches(OntEntityTypes.RECORD_INDIVIDUAL.pattern(), individual.toString()))
+			return OntEntityTypes.RECORD_INDIVIDUAL;
 		
 		return null;
 	}

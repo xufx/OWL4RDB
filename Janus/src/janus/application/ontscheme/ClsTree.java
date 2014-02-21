@@ -5,7 +5,7 @@ import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.application.actions.ShowClassAssertionsAction;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 import java.net.URI;
 import java.awt.Component;
@@ -39,7 +39,7 @@ public class ClsTree extends JScrollPane implements OntTree {
 	}
 	
 	private void buildUI() {
-		tree = new JTree(getClsHierarchy(Janus.ontBridge.getOWLThingURI()));
+		tree = new JTree(getClsHierarchy(new OntTreeNode(Janus.ontBridge.getOWLThingURI(), OntEntityTypes.OWL_THING_CLASS)));
 		tree.setDragEnabled(true);
 		
 		tree.setCellRenderer(new OntClassTreeCellRenderer(new ImageIcon(ImageURIs.ONT_NAMED_CLS), 
@@ -67,12 +67,12 @@ public class ClsTree extends JScrollPane implements OntTree {
 		return popupMenu;
 	}
 	
-	private MutableTreeNode getClsHierarchy(URI clsURI) {
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new OntTreeNode(clsURI));
+	private MutableTreeNode getClsHierarchy(OntTreeNode entity) {
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
-		Set<URI> children = Janus.ontBridge.getSubClses(clsURI);
+		Set<URI> children = Janus.ontBridge.getSubClses(entity.getURI());
 		for(URI child : children)
-			node.add(getClsHierarchy(child));
+			node.add(getClsHierarchy(new OntTreeNode(child, Janus.mappingMetadata.getClassType(child))));
 		
 		return node;
 	}
@@ -88,16 +88,16 @@ public class ClsTree extends JScrollPane implements OntTree {
 	void showPopupMenu(int x, int y) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		OntTreeNode ontNode = (OntTreeNode)node.getUserObject();
-		OWLEntityTypes type = Janus.mappingMetadata.getClassType(ontNode.getURI());
+		OntEntityTypes type = ontNode.getType();
 		// setting mapped table menu enabled/disabled
-		if (type.equals(OWLEntityTypes.OWL_THING) 
-				|| type.equals(OWLEntityTypes.COLUMN_CLASS))
+		if (type.equals(OntEntityTypes.OWL_THING_CLASS) 
+				|| type.equals(OntEntityTypes.COLUMN_CLASS))
 			goToMappedTable.setEnabled(false);
 		else
 			goToMappedTable.setEnabled(true);
 		// setting mapped column menu enabled/disabled
-		if (type.equals(OWLEntityTypes.OWL_THING) 
-				|| type.equals(OWLEntityTypes.TABLE_CLASS))
+		if (type.equals(OntEntityTypes.OWL_THING_CLASS) 
+				|| type.equals(OntEntityTypes.TABLE_CLASS))
 			goToMappedColumn.setEnabled(false);
 		else
 			goToMappedColumn.setEnabled(true);
@@ -105,15 +105,14 @@ public class ClsTree extends JScrollPane implements OntTree {
 		popupMenu.show(this, x, y);
 	}
 	
-	public URI getSelectedEntity() {
+	public OntTreeNode getSelectedEntity() {
 		return getSelectedClass();
 	}
 
-	private URI getSelectedClass() {
+	private OntTreeNode getSelectedClass() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
-
-		return clsNode.getURI();
+		
+		return (OntTreeNode)node.getUserObject();
 	}
 	
 	TreePath getPathForLocation(int x, int y) {

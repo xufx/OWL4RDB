@@ -1,12 +1,12 @@
 package janus.mapping.metadata;
 
 import janus.database.Column;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 class ClassMetadata implements Comparable<ClassMetadata> {
 	private String className;
 
-	private OWLEntityTypes classType; // COLUMN_CLASS or TABLE_CLASS
+	private OntEntityTypes classType; // COLUMN_CLASS or TABLE_CLASS
 
 	private String mappedTable;
 	private String mappedColumn;
@@ -18,14 +18,14 @@ class ClassMetadata implements Comparable<ClassMetadata> {
 		this.mappedTable = mappedTable;
 		this.mappedColumn = mappedColumn;
 		
-		classType = OWLEntityTypes.COLUMN_CLASS;
+		classType = OntEntityTypes.COLUMN_CLASS;
 	}
 	
 	ClassMetadata(String className, String mappedTable) {
 		this.className = className;
 		this.mappedTable = mappedTable;
 		
-		classType = OWLEntityTypes.TABLE_CLASS;
+		classType = OntEntityTypes.TABLE_CLASS;
 	}
 	
 	void setSuperClassName(String superClassName) {
@@ -52,7 +52,7 @@ class ClassMetadata implements Comparable<ClassMetadata> {
 		return new Column(mappedTable, mappedColumn);
 	}
 	
-	OWLEntityTypes getClassType() {
+	OntEntityTypes getClassType() {
 		return classType;
 	}
 

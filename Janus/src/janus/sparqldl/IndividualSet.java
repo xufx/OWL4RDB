@@ -2,7 +2,7 @@ package janus.sparqldl;
 
 import janus.Janus;
 import janus.mapping.OntMapper;
-import janus.ontology.OWLEntityTypes;
+import janus.ontology.OntEntityTypes;
 
 import java.io.PrintWriter;
 import java.net.URI;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 class IndividualSet implements Comparable<IndividualSet> {
 	private URI classURI;
 	
-	private OWLEntityTypes classType;
+	private OntEntityTypes classType;
 	
 	private String mappedTable;
 	
@@ -34,7 +34,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		
 		mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
 		
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS))
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS))
 			mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 		else
 			primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(mappedTable);
@@ -58,7 +58,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 	private void initializeSelectSet() {
 		selectSet = new ConcurrentSkipListSet<String>();
 		
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			String selectColumn = mappedTable + "." + mappedColumn;
 			
 			selectSet.add(selectColumn);
@@ -75,7 +75,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		joinWhereSet = new ConcurrentSkipListSet<String>();
 		valueWhereSet = new ConcurrentSkipListSet<String>();
 		
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			if (!Janus.cachedDBMetadata.isNotNull(mappedTable, mappedColumn))
 				valueWhereSet.add(mappedTable + "." + mappedColumn + " IS NOT NULL"); 
 		}
@@ -90,7 +90,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 	}
 	
 	void acceptDifferentFromCondition(Individual exclusionMember) {
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			String value = exclusionMember.getHasKeyColumnValueAt(0);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " <> '" + value + "'";
@@ -113,7 +113,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 	}
 	
 	void acceptSameAsCondition(Individual inclusionMember) {
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			String value = inclusionMember.getHasKeyColumnValueAt(0);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " = '" + value + "'";
@@ -148,7 +148,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		
 		Set<URI> sFamilyClasses = getFamilyClasses();
 
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			
 			for (URI familyClass: sFamilyClasses) {
 				
@@ -225,7 +225,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		URI op = Janus.mappingMetadata.getMappedObjectProperty(mappedTable, mappedColumn);
 		IndividualSet object = this;
 
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 
 			IndividualSet sIndividualSet = new IndividualSet(sClsURI);
 			sIndividualSet.intersectWith(this);
@@ -314,7 +314,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 			
 			for (String familyValueWhereCondition: familyValueWhereSet) {
 				
-				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+				if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 					
 					if (!Janus.ontBridge.areDisjointWith(classURI, otherIndividualSet.getClassURI())) {
 						String operator = familyValueWhereCondition.substring(familyValueWhereCondition.indexOf(" ")+1);
@@ -401,7 +401,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 			
 			if (!joinTable.equals(mappedTable)) {
 				String joinColumn = null;
-				if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+				if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 					joinColumn = otherIndividualSet.getMappedColumn();
 
 					String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
@@ -433,7 +433,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		fromSet.add(joinTable);
 		
 		String joinColumn = null;
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			joinColumn = Janus.mappingMetadata.getMappedColumnNameToClass(familyClassURI);
 			
 			String whereCondition = mappedTable + "." + mappedColumn + " = " + joinTable + "." + joinColumn;
@@ -498,7 +498,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		for (URI domain: domains)
 			domainClass = domain;
 		
-		if (classType.equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (classType.equals(OntEntityTypes.COLUMN_CLASS)) {
 			whereCondition = mappedTable + "." + mappedColumn + " = '" + value + "'";
 		} else {
 			if (domainClass.equals(classURI)) {
@@ -600,7 +600,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
 		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
 		
-		if (Janus.mappingMetadata.getClassType(classURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 			
 			List<String> rowData = Janus.dbBridge.getResultSetRowAt(1);
@@ -686,7 +686,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
 		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
 		
-		if (Janus.mappingMetadata.getClassType(classURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 			int rowCount = Janus.dbBridge.getResultSetRowCount();
 			for (int rowIndex = 1; rowIndex <= rowCount; rowIndex++) {
@@ -746,7 +746,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
 		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
 		
-		if (Janus.mappingMetadata.getClassType(classURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 			int rowCount = Janus.dbBridge.getResultSetRowCount();
 			for (int rowIndex = 1; rowIndex <= rowCount; rowIndex++) {
@@ -801,7 +801,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 	Set<URI> getFamilyClasses() {
 		Set<URI> familyClasses = null;
 		
-		if (Janus.mappingMetadata.getClassType(classURI).equals(OWLEntityTypes.COLUMN_CLASS)) {
+		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String rootColumn = Janus.cachedDBMetadata.getRootTableDotColumn(mappedTable, mappedColumn);
 			
 			try {
