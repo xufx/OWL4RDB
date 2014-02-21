@@ -57,14 +57,14 @@ public class OPTree extends JScrollPane implements OntTree {
 		return popupMenu;
 	}
 	
-	public OntTreeNode getSelectedEntity() {
+	public URI getSelectedEntity() {
 		return getSelectedObjectProperty();
 	}
 	
-	private OntTreeNode getSelectedObjectProperty() {
+	private URI getSelectedObjectProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		
-		return (OntTreeNode)node.getUserObject();
+		return ((OntTreeNode)node.getUserObject()).getURI();
 	}
 	
 	private MutableTreeNode getObjPropertyHierarchy(OntTreeNode entity) {

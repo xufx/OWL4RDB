@@ -97,14 +97,14 @@ public class DPTree extends JScrollPane implements OntTree {
 		popupMenu.show(this, x, y);
 	}
 	
-	public OntTreeNode getSelectedEntity() {
+	public URI getSelectedEntity() {
 		return getSelectedDataProperty();
 	}
 	
-	private OntTreeNode getSelectedDataProperty() {
+	private URI getSelectedDataProperty() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		
-		return (OntTreeNode)node.getUserObject();
+		return ((OntTreeNode)node.getUserObject()).getURI();
 	}
 	
 	TreePath getPathForLocation(int x, int y) {

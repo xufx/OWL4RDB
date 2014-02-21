@@ -5,7 +5,7 @@ import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
 import janus.application.ontscheme.ClsTree;
-import janus.database.Column;
+import janus.database.DBColumn;
 import janus.database.DBEntityTypes;
 
 import java.awt.event.ActionEvent;
@@ -36,7 +36,7 @@ public class GoToMappedClassAction extends AbstractAction {
 			mappedClass = Janus.mappingMetadata.getMappedClass(dbTree.getSelectedTable());
 		if (selectedNodeType.equals(DBEntityTypes.PRIMARY) 
 				|| selectedNodeType.equals(DBEntityTypes.KEY)) {
-			Column column = dbTree.getSelectedColumn();
+			DBColumn column = dbTree.getSelectedColumn();
 			mappedClass = Janus.mappingMetadata.getMappedClass(column.getTableName(), column.getColumnName());
 		}
 		

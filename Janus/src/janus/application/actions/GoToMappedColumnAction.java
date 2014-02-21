@@ -5,7 +5,7 @@ import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
 import janus.application.ontscheme.OntTree;
-import janus.database.Column;
+import janus.database.DBColumn;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -30,9 +30,7 @@ public class GoToMappedColumnAction extends AbstractAction {
 		
 		URI entity = ontTree.getSelectedEntity();
 		
-		
-		
-		Column mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(ontTree.getSelectedEntity());
+		DBColumn mappedColumn = Janus.mappingMetadata.getMappedColumnToClass(ontTree.getSelectedEntity());
 		
 		DBTree dbTree = UIRegistry.getDBTree();
 		

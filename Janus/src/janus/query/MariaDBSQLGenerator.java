@@ -1,7 +1,7 @@
 package janus.query;
 
 import janus.Janus;
-import janus.database.Column;
+import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.DatatypeMap;
 import janus.mapping.OntMapper;
@@ -46,7 +46,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	} 
 	
 	private String getConcatCallStatementToBuildFieldIndividual(String table, String keyColumn) {
-		Column rootColumn = Janus.cachedDBMetadata.getRootColumn(table, keyColumn);
+		DBColumn rootColumn = Janus.cachedDBMetadata.getRootColumn(table, keyColumn);
 		
 		return "concat('" + OntMapper.TABLE_NAME + "=" + rootColumn.getTableName() + "&" + OntMapper.COLUMN_NAME + "="+ rootColumn.getColumnName() + "&" + OntMapper.VALUE + "=', " + table + "." + keyColumn + ")";
 	}
@@ -70,7 +70,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	}
 	
 	protected String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields) {
-		Column rootColumn = Janus.cachedDBMetadata.getRootColumn(table, opColumn);
+		DBColumn rootColumn = Janus.cachedDBMetadata.getRootColumn(table, opColumn);
 		
 		String concatCallStatement = getConcatCallStatementToBuildFieldIndividual(rootColumn.getTableName(), rootColumn.getColumnName(), table, opColumn);
 		

@@ -1,6 +1,6 @@
 package janus.mapping.metadata;
 
-import janus.database.Column;
+import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.OntEntityTypes;
 
@@ -60,7 +60,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public Column getMappedColumnToClass(URI classURI) {
+	public DBColumn getMappedColumnToClass(URI classURI) {
 		String className = classURI.getFragment();
 		for (ClassMetadata cls: classes) {
 			if (cls.getClassName().equals(className))
@@ -80,7 +80,7 @@ public class MappingMetadata {
 		return null;
 	}
 	
-	public Column getMappedColumnToProperty(URI propertyURI) {
+	public DBColumn getMappedColumnToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
 			if (property.getPropertyName().equals(propertyName))

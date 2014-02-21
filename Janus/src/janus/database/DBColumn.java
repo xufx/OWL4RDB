@@ -1,10 +1,10 @@
 package janus.database;
 
-public class Column {
+public class DBColumn {
 	private String tableName;
 	private String columnName;
 	
-	public Column(String tableName, String columnName) {
+	public DBColumn(String tableName, String columnName) {
 		this.tableName = tableName;
 		this.columnName = columnName;
 	}

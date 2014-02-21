@@ -5,7 +5,7 @@ import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
 import janus.application.ontscheme.DPTree;
-import janus.database.Column;
+import janus.database.DBColumn;
 
 import java.awt.event.ActionEvent;
 import java.net.URI;
@@ -27,7 +27,7 @@ public class GoToMappedDataPropertyAction extends AbstractAction {
 		DBTree dbTree = UIRegistry.getDBTree();
 		DPTree dpTree = UIRegistry.getDPTree();
 		
-		Column column = dbTree.getSelectedColumn();
+		DBColumn column = dbTree.getSelectedColumn();
 		
 		URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(column.getTableName(), column.getColumnName());
 		

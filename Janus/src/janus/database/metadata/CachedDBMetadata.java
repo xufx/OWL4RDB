@@ -1,6 +1,6 @@
 package janus.database.metadata;
 
-import janus.database.Column;
+import janus.database.DBColumn;
 
 import java.util.List;
 import java.util.Set;
@@ -38,7 +38,7 @@ public class CachedDBMetadata {
 		return tableName + "." + columnName;
 	}
 	
-	public Column getRootColumn(String tableName, String columnName) {
+	public DBColumn getRootColumn(String tableName, String columnName) {
 		String superColumn = getSuperColumn(tableName, columnName);
 		
 		while (superColumn != null) {
@@ -49,7 +49,7 @@ public class CachedDBMetadata {
 			superColumn = getSuperColumn(tableName, columnName);
 		}
 		
-		return new Column(tableName, columnName);
+		return new DBColumn(tableName, columnName);
 	}
 	
 	public boolean isForeignKey(String tableName, String columnName) {

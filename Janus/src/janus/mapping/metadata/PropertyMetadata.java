@@ -1,6 +1,6 @@
 package janus.mapping.metadata;
 
-import janus.database.Column;
+import janus.database.DBColumn;
 import janus.mapping.OntEntityTypes;
 
 class PropertyMetadata implements Comparable<PropertyMetadata> {
@@ -32,8 +32,8 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 		return mappedColumn;
 	}
 	
-	Column getMappedColumn() {
-		return new Column(mappedTable, mappedColumn);
+	DBColumn getMappedColumn() {
+		return new DBColumn(mappedTable, mappedColumn);
 	}
 	
 	String getDomain() {

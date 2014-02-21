@@ -105,14 +105,14 @@ public class ClsTree extends JScrollPane implements OntTree {
 		popupMenu.show(this, x, y);
 	}
 	
-	public OntTreeNode getSelectedEntity() {
+	public URI getSelectedEntity() {
 		return getSelectedClass();
 	}
 
-	private OntTreeNode getSelectedClass() {
+	private URI getSelectedClass() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		
-		return (OntTreeNode)node.getUserObject();
+		return ((OntTreeNode)node.getUserObject()).getURI();
 	}
 	
 	TreePath getPathForLocation(int x, int y) {

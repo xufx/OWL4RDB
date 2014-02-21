@@ -5,7 +5,7 @@ import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
 import janus.application.ontscheme.OPTree;
-import janus.database.Column;
+import janus.database.DBColumn;
 
 import java.awt.event.ActionEvent;
 import java.net.URI;
@@ -27,7 +27,7 @@ public class GoToMappedObjectPropertyAction extends AbstractAction {
 		DBTree dbTree = UIRegistry.getDBTree();
 		OPTree opTree = UIRegistry.getOPTree();
 		
-		Column column = dbTree.getSelectedColumn();
+		DBColumn column = dbTree.getSelectedColumn();
 		
 		URI mappedOP = Janus.mappingMetadata.getMappedObjectProperty(column.getTableName(), column.getColumnName());
 		

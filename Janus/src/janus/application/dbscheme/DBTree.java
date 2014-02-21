@@ -5,7 +5,7 @@ import janus.Janus;
 import janus.application.actions.GoToMappedClassAction;
 import janus.application.actions.GoToMappedDataPropertyAction;
 import janus.application.actions.GoToMappedObjectPropertyAction;
-import janus.database.Column;
+import janus.database.DBColumn;
 import janus.database.DBEntityTypes;
 
 import java.awt.Component;
@@ -166,14 +166,14 @@ public class DBTree extends JScrollPane {
 		return dbNode.toString();
 	}
 	
-	public Column getSelectedColumn() {
+	public DBColumn getSelectedColumn() {
 		DefaultMutableTreeNode columnNode = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		DefaultMutableTreeNode tableNode = (DefaultMutableTreeNode)columnNode.getParent();
 		
 		DBTreeNode dbColumnNode = (DBTreeNode)columnNode.getUserObject();
 		DBTreeNode dbTableNode = (DBTreeNode)tableNode.getUserObject();
 
-		return new Column(dbTableNode.toString(), dbColumnNode.toString());
+		return new DBColumn(dbTableNode.toString(), dbColumnNode.toString());
 	}
 	
 	public TreePath getTreePathOfTable(String table) {
@@ -193,7 +193,7 @@ public class DBTree extends JScrollPane {
 		return null;
 	}
 	
-	public TreePath getTreePathOfColumn(Column column) {
+	public TreePath getTreePathOfColumn(DBColumn column) {
 		TreePath path = getTreePathOfTable(column.getTableName());
 		
 		DefaultMutableTreeNode table = (DefaultMutableTreeNode)path.getLastPathComponent();
