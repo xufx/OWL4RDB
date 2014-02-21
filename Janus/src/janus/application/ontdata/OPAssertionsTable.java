@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

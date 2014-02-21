@@ -1,6 +1,6 @@
 package janus.application.ontscheme;
 
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
 

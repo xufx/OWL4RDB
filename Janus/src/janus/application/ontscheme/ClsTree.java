@@ -5,7 +5,7 @@ import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.application.actions.ShowClassAssertionsAction;
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
 import java.awt.Component;

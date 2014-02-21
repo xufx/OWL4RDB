@@ -2,7 +2,7 @@ package janus.mapping.metadata;
 
 import janus.database.Column;
 import janus.database.DBField;
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
 import java.util.List;

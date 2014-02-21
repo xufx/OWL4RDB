@@ -2,8 +2,8 @@ package janus.mapping.metadata;
 
 import janus.Janus;
 import janus.database.DBField;
+import janus.mapping.OntEntityTypes;
 import janus.mapping.OntMapper;
-import janus.ontology.OntEntityTypes;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;

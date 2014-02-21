@@ -2,8 +2,8 @@ package janus.mapping.metadata;
 
 import janus.Janus;
 import janus.mapping.DatatypeMap;
+import janus.mapping.OntEntityTypes;
 import janus.mapping.OntMapper;
-import janus.ontology.OntEntityTypes;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;

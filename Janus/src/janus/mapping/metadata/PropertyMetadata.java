@@ -1,7 +1,7 @@
 package janus.mapping.metadata;
 
 import janus.database.Column;
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 class PropertyMetadata implements Comparable<PropertyMetadata> {
 	private String propertyName;

@@ -1,8 +1,8 @@
 package janus.sparqldl;
 
 import janus.Janus;
+import janus.mapping.OntEntityTypes;
 import janus.mapping.OntMapper;
-import janus.ontology.OntEntityTypes;
 
 import java.io.File;
 import java.io.PrintWriter;

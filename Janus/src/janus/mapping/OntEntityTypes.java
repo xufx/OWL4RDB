@@ -1,7 +1,6 @@
-package janus.ontology;
+package janus.mapping;
 
 import janus.Janus;
-import janus.mapping.OntMapper;
 
 public enum OntEntityTypes {
 	OWL_TOP_DATA_PROPERTY(Janus.ontBridge.getOWLTopDataProperty().toString()),

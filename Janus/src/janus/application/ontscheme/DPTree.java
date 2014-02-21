@@ -4,7 +4,7 @@ import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.ShowDataPropertyAssertionsAction;
-import janus.ontology.OntEntityTypes;
+import janus.mapping.OntEntityTypes;
 
 import java.awt.Component;
 import java.awt.event.MouseListener;
