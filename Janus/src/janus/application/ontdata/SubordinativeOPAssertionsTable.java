@@ -23,11 +23,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class OPAssertionsTable extends JScrollPane {
+class SubordinativeOPAssertionsTable extends JScrollPane {
 	private JTable table;
 	private OntEntityTypes individualType;
 	
-	OPAssertionsTable(URI individual) {
+	SubordinativeOPAssertionsTable(URI individual) {
 		individualType = Janus.mappingMetadata.getIndividualType(individual);
 		
 		table = new JTable(new OPAssertionsTableModel(individual)) {

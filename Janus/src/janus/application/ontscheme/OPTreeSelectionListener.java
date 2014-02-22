@@ -21,8 +21,8 @@ public class OPTreeSelectionListener implements TreeSelectionListener {
 			return;
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		OntTreeNode objPropNode = (OntTreeNode)node.getUserObject();
+		OntTreeNode opNode = (OntTreeNode)node.getUserObject();
 		
-		announcer.describeOWLObjProp(objPropNode.getURI());
+		announcer.describeOWLObjProp(opNode.getURI());
 	}
 }

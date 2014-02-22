@@ -4,7 +4,7 @@ import janus.Janus;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
-import janus.application.ontscheme.ClsTree;
+import janus.application.ontscheme.OntTree;
 import janus.database.DBColumn;
 import janus.database.DBEntityTypes;
 
@@ -26,7 +26,7 @@ public class GoToMappedClassAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		DBTree dbTree = UIRegistry.getDBTree();
-		ClsTree clsTree = UIRegistry.getClsTree();
+		OntTree clsTree = UIRegistry.getClsTree();
 		
 		DBEntityTypes selectedNodeType = dbTree.getTypeOfSelectedNode();
 		

@@ -5,14 +5,9 @@ import janus.application.dbscheme.DBTree;
 import janus.application.dbscheme.DBTreePopupTrigger;
 import janus.application.dbscheme.DBTreeSelectionListener;
 import janus.application.description.AttrDescribable;
-import janus.application.ontscheme.ClsTree;
 import janus.application.ontscheme.OntTreePopupTrigger;
 import janus.application.ontscheme.ClsTreeSelectionListener;
-import janus.application.ontscheme.DPTree;
-import janus.application.ontscheme.DPTreePopupTrigger;
 import janus.application.ontscheme.DPTreeSelectionListener;
-import janus.application.ontscheme.OPTree;
-import janus.application.ontscheme.OPTreePopupTrigger;
 import janus.application.ontscheme.OPTreeSelectionListener;
 import janus.application.ontscheme.OntTree;
 
@@ -67,14 +62,14 @@ class EventHandlerBuilder {
 	}
 	
 	private static void connectDPTreeSelectionListener() {
-		DPTree tree = UIRegistry.getDPTree();
+		OntTree tree = UIRegistry.getDPTree();
 		AttrDescribable announcer = UIRegistry.getDescriptionTree();
 		DPTreeSelectionListener listener = new DPTreeSelectionListener(announcer);
 		tree.addTreeSelectionListener(listener);
 	}
 	
 	private static void connectOPTreeSelectionListener() {
-		OPTree tree = UIRegistry.getOPTree();
+		OntTree tree = UIRegistry.getOPTree();
 		AttrDescribable announcer = UIRegistry.getDescriptionTree();
 		OPTreeSelectionListener listener = new OPTreeSelectionListener(announcer);
 		tree.addTreeSelectionListener(listener);
@@ -94,14 +89,14 @@ class EventHandlerBuilder {
 	}
 	
 	private static void connectOPTreePopupTrigger() {
-		OPTree tree = UIRegistry.getOPTree();
-		OPTreePopupTrigger trigger = new OPTreePopupTrigger(tree);
+		OntTree tree = UIRegistry.getOPTree();
+		OntTreePopupTrigger trigger = new OntTreePopupTrigger(tree);
 		tree.addTreePopupTrigger(trigger);
 	}
 	
 	private static void connectDPTreePopupTrigger() {
-		DPTree tree = UIRegistry.getDPTree();
-		DPTreePopupTrigger trigger = new DPTreePopupTrigger(tree);
+		OntTree tree = UIRegistry.getDPTree();
+		OntTreePopupTrigger trigger = new OntTreePopupTrigger(tree);
 		tree.addTreePopupTrigger(trigger);
 	}
 }

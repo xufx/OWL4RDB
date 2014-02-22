@@ -22,10 +22,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class DPAssertionsTable extends JScrollPane {
+class SubordinativeDPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	DPAssertionsTable(URI individual) {
+	SubordinativeDPAssertionsTable(URI individual) {
 		table = new JTable(new DPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {

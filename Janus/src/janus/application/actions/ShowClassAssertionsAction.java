@@ -4,7 +4,7 @@ import janus.ImageURIs;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.ontdata.AssertionsPane;
-import janus.application.ontscheme.ClsTree;
+import janus.application.ontscheme.OntTree;
 
 import java.awt.event.ActionEvent;
 import java.net.URI;
@@ -24,7 +24,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ClsTree tree = UIRegistry.getClsTree();
+		OntTree tree = UIRegistry.getClsTree();
 		
 		URI cls = tree.getSelectedURI();
 		

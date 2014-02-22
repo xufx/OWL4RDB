@@ -74,7 +74,7 @@ public class AssertionsPane extends JSplitPane implements ListSelectionListener 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(clsAssertionsTable.getSelectedIndividual()));
-		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new OPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
-		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new DPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
+		opAssertions.setComponentAt(opAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new SubordinativeOPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
+		dpAssertions.setComponentAt(dpAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new SubordinativeDPAssertionsTable(clsAssertionsTable.getSelectedIndividual()));
 	}
 }

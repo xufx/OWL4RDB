@@ -4,7 +4,7 @@ import janus.Janus;
 import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.dbscheme.DBTree;
-import janus.application.ontscheme.DPTree;
+import janus.application.ontscheme.OntTree;
 import janus.database.DBColumn;
 
 import java.awt.event.ActionEvent;
@@ -25,7 +25,7 @@ public class GoToMappedDataPropertyAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		DBTree dbTree = UIRegistry.getDBTree();
-		DPTree dpTree = UIRegistry.getDPTree();
+		OntTree dpTree = UIRegistry.getDPTree();
 		
 		DBColumn column = dbTree.getSelectedColumn();
 		
