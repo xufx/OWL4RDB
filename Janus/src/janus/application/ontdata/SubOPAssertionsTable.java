@@ -23,14 +23,14 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class SubordinativeOPAssertionsTable extends JScrollPane {
+class SubOPAssertionsTable extends JScrollPane {
 	private JTable table;
 	private OntEntityTypes individualType;
 	
-	SubordinativeOPAssertionsTable(URI individual) {
+	SubOPAssertionsTable(URI individual) {
 		individualType = Janus.mappingMetadata.getIndividualType(individual);
 		
-		table = new JTable(new OPAssertionsTableModel(individual)) {
+		table = new JTable(new SubOPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
@@ -55,7 +55,7 @@ class SubordinativeOPAssertionsTable extends JScrollPane {
 			}
 		};
 		table.setDefaultRenderer(Object.class, 
-				new OPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP), 
+				new SubOPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP), 
 											  new ImageIcon(ImageURIs.ONT_INDIVIDUAL),
 											  individualType));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -76,7 +76,7 @@ class SubordinativeOPAssertionsTable extends JScrollPane {
 }
 
 @SuppressWarnings("serial")
-class OPAssertionsTableModel extends AbstractTableModel {
+class SubOPAssertionsTableModel extends AbstractTableModel {
 	private OntEntityTypes individualType;
 
 	private int columnCount;
@@ -85,7 +85,7 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	
 	private SQLResultSet resultSet;
 
-	OPAssertionsTableModel(URI individual) {
+	SubOPAssertionsTableModel(URI individual) {
 		individualType = Janus.mappingMetadata.getIndividualType(individual);
 		
 		String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfIndividual(individual);
@@ -164,13 +164,13 @@ class OPAssertionsTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
+class SubOPAssertionsTableRenderer extends DefaultTableCellRenderer {
 	private OntEntityTypes individualType;
 	
 	private Icon opIcon;
 	private Icon indIcon;
 	
-	OPAssertionsTableRenderer(Icon opIcon, Icon indIcon, OntEntityTypes individualType) {
+	SubOPAssertionsTableRenderer(Icon opIcon, Icon indIcon, OntEntityTypes individualType) {
 		this.individualType = individualType;
 		
 		this.opIcon = opIcon;

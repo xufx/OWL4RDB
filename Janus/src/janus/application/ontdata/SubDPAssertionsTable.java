@@ -22,11 +22,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class SubordinativeDPAssertionsTable extends JScrollPane {
+class SubDPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	SubordinativeDPAssertionsTable(URI individual) {
-		table = new JTable(new DPAssertionsTableModel(individual)) {
+	SubDPAssertionsTable(URI individual) {
+		table = new JTable(new SubDPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
@@ -43,7 +43,7 @@ class SubordinativeDPAssertionsTable extends JScrollPane {
 			}
 		};
 		table.setDefaultRenderer(Object.class, 
-				new DPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), 
+				new SubDPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), 
 											  new ImageIcon(ImageURIs.ONT_LITERAL)));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
@@ -63,7 +63,7 @@ class SubordinativeDPAssertionsTable extends JScrollPane {
 }
 
 @SuppressWarnings("serial")
-class DPAssertionsTableModel extends AbstractTableModel {
+class SubDPAssertionsTableModel extends AbstractTableModel {
 
 	private int columnCount;
 	private int rowCount;
@@ -71,7 +71,7 @@ class DPAssertionsTableModel extends AbstractTableModel {
 	
 	private SQLResultSet resultSet;
 
-	DPAssertionsTableModel(URI individual) {
+	SubDPAssertionsTableModel(URI individual) {
 		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSubject(individual);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
@@ -141,12 +141,12 @@ class DPAssertionsTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class DPAssertionsTableRenderer extends DefaultTableCellRenderer {
+class SubDPAssertionsTableRenderer extends DefaultTableCellRenderer {
 
 	private Icon dpIcon;
 	private Icon litIcon;
 	
-	DPAssertionsTableRenderer(Icon dpIcon, Icon litIcon) {
+	SubDPAssertionsTableRenderer(Icon dpIcon, Icon litIcon) {
 		this.dpIcon = dpIcon;
 		this.litIcon = litIcon;
 	}
