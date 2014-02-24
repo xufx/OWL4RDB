@@ -202,7 +202,7 @@ public class OntMapper {
 		for(String tableName : tableNames) {
 			String tableClass = Janus.mappingMetadata.getMappedClassFragment(tableName);
 			
-			List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(tableName);
+			List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(tableName);
 			String query = "SELECT * FROM " + tableName;
 			Janus.dbBridge.executeQuery(query);
 			

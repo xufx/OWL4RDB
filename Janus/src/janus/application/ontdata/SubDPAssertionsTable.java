@@ -72,7 +72,7 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	SubDPAssertionsTableModel(URI individual) {
-		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSubject(individual);
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSourceIndividual(individual);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		

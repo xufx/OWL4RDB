@@ -51,10 +51,6 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		return "concat('" + OntMapper.TABLE_NAME + "=" + rootColumn.getTableName() + "&" + OntMapper.COLUMN_NAME + "="+ rootColumn.getColumnName() + "&" + OntMapper.VALUE + "=', " + table + "." + keyColumn + ")";
 	}
 	
-	private String getConcatCallStatementToBuildFieldIndividual(String rootTable, String rootColumn, String valueTable, String valueColumn) {
-		return "concat('" + OntMapper.TABLE_NAME + "=" + rootTable + "&" + OntMapper.COLUMN_NAME + "="+ rootColumn + "&" + OntMapper.VALUE + "=', " + valueTable + "." + valueColumn + ")";
-	}
-	
 	private String getConcatCallStatementToBuildRecordIndividual(String table, List<String> pk) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
@@ -70,9 +66,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	}
 	
 	protected String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields) {
-		DBColumn rootColumn = Janus.cachedDBMetadata.getRootColumn(table, opColumn);
-		
-		String concatCallStatement = getConcatCallStatementToBuildFieldIndividual(rootColumn.getTableName(), rootColumn.getColumnName(), table, opColumn);
+		String concatCallStatement = getConcatCallStatementToBuildFieldIndividual(table, opColumn);
 		
 		StringBuffer query = new StringBuffer("SELECT '"  + op.getFragment() +"', " + concatCallStatement
 												+ " FROM " + table
@@ -141,10 +135,60 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
 
-		List<String> pkColumns = Janus.cachedDBMetadata.getPrimaryKeys(table);
+		List<String> pkColumns = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
 		return "SELECT " + getConcatCallStatementToBuildRecordIndividual(table, pkColumns) + ", '" + op.getFragment() + "'"
 						+ " FROM " + table 
 						+ " WHERE " + table + "." + column + " = " + "'" + value + "'";
+	}
+	
+	protected String getQueryToGetDPAssertionsOfDPWithTableClassDomain(URI dp) {
+		DBColumn mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(dp);
+		String table = mappedColumn.getTableName();
+		String dpColumn = mappedColumn.getColumnName();
+		
+		List<String> pk = Janus.cachedDBMetadata.getPrimaryKey(table);
+		
+		return "SELECT " + getConcatCallStatementToBuildRecordIndividual(table, pk) + ", " + getConcatCallStatementToBuildLiteral(table, dpColumn)
+				+ " FROM " + table;
+	}
+	
+	protected String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp) {
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		DBColumn mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(dp);
+		String table = mappedColumn.getTableName();
+		String column = mappedColumn.getColumnName();
+		
+		if (!(Janus.cachedDBMetadata.isPrimaryKey(table, column)
+				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
+			query.append("DISTINCT ");
+		
+		query.append(getConcatCallStatementToBuildFieldIndividual(table, column) + ", " + getConcatCallStatementToBuildLiteral(table, column)
+					 + " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
+	}
+	
+	//object property assertions 
+	public String getQueryToGetOPAsserionsOfOP(URI op) {
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		DBColumn mappedColumn = Janus.mappingMetadata.getMappedColumnToProperty(op);
+		String table = mappedColumn.getTableName();
+		String column = mappedColumn.getColumnName();
+		
+		List<String> pk = Janus.cachedDBMetadata.getPrimaryKey(table);
+		
+		query.append(getConcatCallStatementToBuildRecordIndividual(table, pk) + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+				     + " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
 	}
 }

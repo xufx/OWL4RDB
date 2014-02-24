@@ -80,7 +80,7 @@ public class DBTree extends JScrollPane {
 			Set<String> columns = Janus.cachedDBMetadata.getColumns(table);
 			
 			// primary key column nodes
-			List<String> pks = Janus.cachedDBMetadata.getPrimaryKeys(table);
+			List<String> pks = Janus.cachedDBMetadata.getPrimaryKey(table);
 			for(String pk: pks)
 				tableNode.add(new DefaultMutableTreeNode(new DBTreeNode(pk, DBEntityTypes.PRIMARY)));
 			

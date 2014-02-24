@@ -28,7 +28,7 @@ public class Literal {
 			for (String table: tables) {
 				Set<String> columns = Janus.cachedDBMetadata.getColumns(table);
 				Set<String> keyColumns = Janus.cachedDBMetadata.getKeyColumns(table);
-				List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
+				List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(table);
 				
 				String query = "SELECT * FROM " + table + " WHERE ";
 				for (String column: columns)

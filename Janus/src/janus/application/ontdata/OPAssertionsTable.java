@@ -22,45 +22,63 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class ClsAssertionsTable extends JScrollPane {
+class OPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	ClsAssertionsTable(URI cls) {
-		table = new JTable(new ClsAssertionsTableModel(cls)) {
-
+	OPAssertionsTable(URI op) {
+		table = new JTable(new OPAssertionsTableModel(op)) {
+			
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        String value = getValueAt(rowIndex, colIndex).toString();
+		        if (colIndex == 0)
+		        	return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        else if (colIndex == 1)
+		        	return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
+		        
+		        return super.getToolTipText();
 			}
 		};
-		table.setDefaultRenderer(Object.class, new ClsAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
+		table.setDefaultRenderer(Object.class, new OPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
 		table.getTableHeader().setReorderingAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setCellSelectionEnabled(true);
 		table.setDragEnabled(true);
 		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		setViewportView(table);
 	}
 	
-	void addClsAssertionsTableSelectionListener(ListSelectionListener x) {
+	void addOPAssertionsTableSelectionListener(ListSelectionListener x) {
 		table.getSelectionModel().addListSelectionListener(x);
+		table.getColumnModel().getSelectionModel().addListSelectionListener(x);
 	}
 	
 	private URI getIndividual(String individualFragment) {
 		return Janus.mappingMetadata.getIndividual(individualFragment);
 	}
 	
+	private String getToolTipTextForLiteral(String literal, int width) {
+		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
+	}
+	
 	URI getSelectedIndividual() {
-		return getIndividual(table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString());
+		int row = table.getSelectedRow();
+		int col = table.getSelectedColumn();
+		
+		if (row >= 0 && col >= 0)
+			return getIndividual(table.getValueAt(row, col).toString());
+		
+		return null;
 	}
 }
 
 @SuppressWarnings("serial")
-class ClsAssertionsTableModel extends AbstractTableModel {
+class OPAssertionsTableModel extends AbstractTableModel {
 	
 	private int columnCount;
 	private int rowCount;
@@ -68,8 +86,8 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 	
 	private SQLResultSet resultSet;
 
-	ClsAssertionsTableModel(URI cls) {
-		String query = Janus.sqlGenerator.getQueryToGetIndividualsOfClass(cls);
+	OPAssertionsTableModel(URI op) {
+		String query = Janus.sqlGenerator.getQueryToGetOPAsserionsOfOP(op);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -84,7 +102,9 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 		String columnName = super.getColumnName(column);
 		
 		if (column == 0)
-			columnName = "Individual";
+			columnName = "Source Individual";
+		else if (column == 1)
+			columnName = "Target Individual";
 		
 		return columnName;
 	}
@@ -98,7 +118,6 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		
 		Record record = cache.get(rowIndex);
 
 		if (record == null) {
@@ -136,11 +155,11 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class ClsAssertionsTableRenderer extends DefaultTableCellRenderer {
+class OPAssertionsTableRenderer extends DefaultTableCellRenderer {
 
 	private Icon individualIcon;
 	
-	ClsAssertionsTableRenderer(Icon individualIcon) {
+	OPAssertionsTableRenderer(Icon individualIcon) {
 		this.individualIcon = individualIcon;
 	}
 	

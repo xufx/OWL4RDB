@@ -2,6 +2,7 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
+import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.ShowDataPropertyAssertionsAction;
 import janus.mapping.OntEntityTypes;
 
@@ -16,6 +17,7 @@ import javax.swing.tree.TreeCellRenderer;
 
 @SuppressWarnings("serial")
 public class DPTree extends OntTree {
+	private AbstractAction goToMappedColumn;
 	private AbstractAction showDataPropertyAssertions;
 	
 	protected TreeCellRenderer constructTreeCellRenderer() {
@@ -27,10 +29,11 @@ public class DPTree extends OntTree {
 	}
 	
 	protected void addMenuItemsToPopupMenu() {
+		goToMappedColumn = new GoToMappedColumnAction();
+		popupMenu.add(goToMappedColumn);
+		
 		showDataPropertyAssertions = new ShowDataPropertyAssertionsAction();
 		popupMenu.add(showDataPropertyAssertions);
-		
-		super.addMenuItemsToPopupMenu();
 	}
 	
 	protected MutableTreeNode buildHierarchy(OntTreeNode entity) {

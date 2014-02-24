@@ -142,7 +142,7 @@ public class CachedDBMetadata {
 		return null;
 	}
 	
-	public List<String> getPrimaryKeys(String tableName) {
+	public List<String> getPrimaryKey(String tableName) {
 		for (TableMetadata table: tables)
 			if (table.getTableName().equals(tableName))
 				return table.getPrimaryKeys();
@@ -151,7 +151,7 @@ public class CachedDBMetadata {
 	}
 	
 	public boolean isPrimaryKeySingleColumn(String tableName) {
-		if (getPrimaryKeys(tableName).size() < 2)
+		if (getPrimaryKey(tableName).size() < 2)
 			return true;
 		
 		return false;
@@ -234,7 +234,7 @@ public class CachedDBMetadata {
 	public Set<String> getKeyColumns(String tableName) {
 		Set<String> keyColumns = new ConcurrentSkipListSet<String>();
 		
-		keyColumns.addAll(getPrimaryKeys(tableName));
+		keyColumns.addAll(getPrimaryKey(tableName));
 		keyColumns.addAll(getForeignKeys(tableName));
 		keyColumns.addAll(getUniqueKeys(tableName));
 		
@@ -262,7 +262,7 @@ public class CachedDBMetadata {
 		}
 		String matchedRootColumnForMe = superColumn;
 		
-		List<String> targetPKs = getPrimaryKeys(targetTable);
+		List<String> targetPKs = getPrimaryKey(targetTable);
 		for (String targetPK: targetPKs) {
 			superTable = targetTable;
 			superColumn = targetPK;

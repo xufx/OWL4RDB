@@ -41,6 +41,12 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetOPAssertionOfField(DBField field);
 	
+	protected abstract String getQueryToGetDPAssertionsOfDPWithTableClassDomain(URI dp);
+	
+	protected abstract String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp);
+	
+	public abstract String getQueryToGetOPAsserionsOfOP(URI op);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -70,7 +76,7 @@ public abstract class SQLGenerator {
 	
 	private String getQueryToGetIndividualsOfTableClass(URI cls) {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(cls);
-		List<String> pk = Janus.cachedDBMetadata.getPrimaryKeys(table);
+		List<String> pk = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
 		return getQueryToGetIndividualsOfTableClass(pk, table);
 	}
@@ -336,7 +342,7 @@ public abstract class SQLGenerator {
 	}
 	
 	//data property assertions 
-	public String getQueryToGetDPAssertionsOfSubject(URI individual) {
+	public String getQueryToGetDPAssertionsOfSourceIndividual(URI individual) {
 		String query = null;
 
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
@@ -344,6 +350,22 @@ public abstract class SQLGenerator {
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
 			query = getQueryToGetDPAssertionsOfFieldIndividualAsSubject(individual);
 
+		return query;
+	}
+	
+	//data property assertions 
+	public String getQueryToGetDPAsserionsOfDP(URI dp) {
+		String query = null;
+		
+		URI domainCls = Janus.mappingMetadata.getDomainClassOfProperty(dp);
+		
+		OntEntityTypes type = Janus.mappingMetadata.getClassType(domainCls);
+		
+		if (type.equals(OntEntityTypes.TABLE_CLASS))
+			query = getQueryToGetDPAssertionsOfDPWithTableClassDomain(dp);
+		else if (type.equals(OntEntityTypes.COLUMN_CLASS))
+			query = getQueryToGetDPAssertionsOfDPWithColumnClassDomain(dp);
+		
 		return query;
 	}
 }

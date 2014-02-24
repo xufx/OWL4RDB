@@ -227,7 +227,7 @@ class Individual {
 			fragment = OntMapper.CELL_INDIVIDUAL_PREFIX + OntMapper.INDIVIDUAL_DELIMITER + familyClass.getFragment() + OntMapper.INDIVIDUAL_DELIMITER + hasKeyColumnValues[0];
 		else if (numberOfHasKeyValue < 2) {
 			String targetClassName = familyClass.getFragment();
-			List<String> pks = Janus.cachedDBMetadata.getPrimaryKeys(targetClassName);
+			List<String> pks = Janus.cachedDBMetadata.getPrimaryKey(targetClassName);
 			String primaryKey = null;
 			for (String pk: pks) {
 				primaryKey = pk;
@@ -242,7 +242,7 @@ class Individual {
 			
 			fragment = OntMapper.ROW_INDIVIDUAL_PREFIX + OntMapper.INDIVIDUAL_DELIMITER + String.valueOf(numberOfHasKeyValue) + OntMapper.INDIVIDUAL_DELIMITER + targetClassName;
 			
-			List<String> pks = Janus.cachedDBMetadata.getPrimaryKeys(targetClassName);
+			List<String> pks = Janus.cachedDBMetadata.getPrimaryKey(targetClassName);
 			for (String pk: pks) {
 				String superTable = targetTableName;
 				String superColumn = pk;
@@ -394,7 +394,7 @@ class Individual {
 		URI sClassURI = getClassURI();
 
 		Set<String> keyColumns = Janus.cachedDBMetadata.getKeyColumns(mappedTableName);
-		List<String> primaryKeyColumns = Janus.cachedDBMetadata.getPrimaryKeys(mappedTableName);
+		List<String> primaryKeyColumns = Janus.cachedDBMetadata.getPrimaryKey(mappedTableName);
 		Set<String> nonPKKeyColumns = new ConcurrentSkipListSet<String>();
 		nonPKKeyColumns.addAll(keyColumns);
 		nonPKKeyColumns.removeAll(primaryKeyColumns);
@@ -487,7 +487,7 @@ class Individual {
 				Individual familyIndividual = new Individual(familyIndividualURI);
 
 				keyColumns = Janus.cachedDBMetadata.getKeyColumns(familyTable);
-				primaryKeyColumns = Janus.cachedDBMetadata.getPrimaryKeys(familyTable);
+				primaryKeyColumns = Janus.cachedDBMetadata.getPrimaryKey(familyTable);
 				nonPKKeyColumns = new ConcurrentSkipListSet<String>();
 				nonPKKeyColumns.addAll(keyColumns);
 				nonPKKeyColumns.removeAll(primaryKeyColumns);
@@ -1033,7 +1033,7 @@ class Individual {
 			URI predicate = Janus.mappingMetadata.getMappedObjectProperty(mappedTableName, hasKeyColumnNames[0]);
 			URI object = individual;
 
-			List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(mappedTableName);
+			List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(mappedTableName);
 			String query = "SELECT DISTINCT ";
 			for (String pk: primaryKeys)
 				query = query + pk + ", ";

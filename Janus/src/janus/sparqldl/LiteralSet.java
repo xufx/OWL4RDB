@@ -39,7 +39,7 @@ class LiteralSet implements Comparable<LiteralSet> {
 		else {
 			mappedColumn = Janus.mappingMetadata.getMappedColumnNameToProperty(dataPropertyURI);
 			
-			primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(mappedTable);
+			primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(mappedTable);
 		}
 		
 		initializeSelectColumn();

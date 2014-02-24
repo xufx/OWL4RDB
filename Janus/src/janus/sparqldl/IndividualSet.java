@@ -37,7 +37,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		if (classType.equals(OntEntityTypes.COLUMN_CLASS))
 			mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
 		else
-			primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(mappedTable);
+			primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(mappedTable);
 		
 		initializeSelectSet();
 		initializeFromSet();
@@ -470,7 +470,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		} else {
 			String mappedTableToObjProperty = Janus.mappingMetadata.getMappedTableNameToProperty(objProperty);
 			String mappedColumnToObjProperty = Janus.mappingMetadata.getMappedColumnNameToProperty(objProperty);
-			List<String> pks = Janus.cachedDBMetadata.getPrimaryKeys(mappedTableToObjProperty);
+			List<String> pks = Janus.cachedDBMetadata.getPrimaryKey(mappedTableToObjProperty);
 			
 			if ((pks.contains(mappedColumnToObjProperty) && pks.size() == 1) || 
 				(pks.contains(mappedColumnToObjProperty) && pks.size() > 1 && Janus.ontBridge.isSubClassOf(classURI, domainClass))) {
@@ -598,7 +598,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		Janus.dbBridge.executeQuery(query);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
-		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
+		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
 		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
@@ -684,7 +684,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		Janus.dbBridge.executeQuery(query);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
-		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
+		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
 		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);
@@ -744,7 +744,7 @@ class IndividualSet implements Comparable<IndividualSet> {
 		Janus.dbBridge.executeQuery(query);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(classURI);
-		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKeys(table);
+		List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
 		if (Janus.mappingMetadata.getClassType(classURI).equals(OntEntityTypes.COLUMN_CLASS)) {
 			String columnName = Janus.mappingMetadata.getMappedColumnNameToClass(classURI);

@@ -1,5 +1,6 @@
 package janus.application.ontdata;
 
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.URI;
@@ -22,36 +23,48 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 @SuppressWarnings("serial")
-class ClsAssertionsTable extends JScrollPane {
+class DPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	ClsAssertionsTable(URI cls) {
-		table = new JTable(new ClsAssertionsTableModel(cls)) {
-
+	DPAssertionsTable(URI dp) {
+		table = new JTable(new DPAssertionsTableModel(dp)) {
+			
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        String value = getValueAt(rowIndex, colIndex).toString();
+		        if (colIndex == 0)
+		        	return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        else if (colIndex == 1)
+		        	return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
+		        
+		        return super.getToolTipText();
 			}
 		};
-		table.setDefaultRenderer(Object.class, new ClsAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
+		table.setDefaultRenderer(Object.class, new DPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL),
+																		     new ImageIcon(ImageURIs.ONT_LITERAL)));
 		table.getTableHeader().setReorderingAllowed(false);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setCellSelectionEnabled(true);
 		table.setDragEnabled(true);
 		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		setViewportView(table);
 	}
 	
-	void addClsAssertionsTableSelectionListener(ListSelectionListener x) {
+	void addDPAssertionsTableSelectionListener(ListSelectionListener x) {
 		table.getSelectionModel().addListSelectionListener(x);
 	}
 	
 	private URI getIndividual(String individualFragment) {
 		return Janus.mappingMetadata.getIndividual(individualFragment);
+	}
+	
+	private String getToolTipTextForLiteral(String literal, int width) {
+		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
 	}
 	
 	URI getSelectedIndividual() {
@@ -60,7 +73,7 @@ class ClsAssertionsTable extends JScrollPane {
 }
 
 @SuppressWarnings("serial")
-class ClsAssertionsTableModel extends AbstractTableModel {
+class DPAssertionsTableModel extends AbstractTableModel {
 	
 	private int columnCount;
 	private int rowCount;
@@ -68,8 +81,8 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 	
 	private SQLResultSet resultSet;
 
-	ClsAssertionsTableModel(URI cls) {
-		String query = Janus.sqlGenerator.getQueryToGetIndividualsOfClass(cls);
+	DPAssertionsTableModel(URI dp) {
+		String query = Janus.sqlGenerator.getQueryToGetDPAsserionsOfDP(dp);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -84,7 +97,9 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 		String columnName = super.getColumnName(column);
 		
 		if (column == 0)
-			columnName = "Individual";
+			columnName = "Source Individual";
+		else if (column == 1)
+			columnName = "Target Value";
 		
 		return columnName;
 	}
@@ -136,17 +151,26 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 }
 
 @SuppressWarnings("serial")
-class ClsAssertionsTableRenderer extends DefaultTableCellRenderer {
+class DPAssertionsTableRenderer extends DefaultTableCellRenderer {
 
 	private Icon individualIcon;
+	private Icon litIcon;
 	
-	ClsAssertionsTableRenderer(Icon individualIcon) {
+	DPAssertionsTableRenderer(Icon individualIcon, Icon litIcon) {
 		this.individualIcon = individualIcon;
+		this.litIcon = litIcon;
 	}
 	
 	@Override
-	protected void setValue(Object value) {
-		super.setValue(value);
-		setIcon(individualIcon);
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int row, int column) {
+		
+		if (column == 0)
+			setIcon(individualIcon);
+		else if (column == 1)
+			setIcon(litIcon);
+		
+		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+				row, column);
 	}
 }

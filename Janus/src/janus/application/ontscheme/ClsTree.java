@@ -2,6 +2,7 @@ package janus.application.ontscheme;
 
 import janus.ImageURIs;
 import janus.Janus;
+import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.application.actions.ShowClassAssertionsAction;
 import janus.mapping.OntEntityTypes;
@@ -21,8 +22,9 @@ import javax.swing.tree.TreeCellRenderer;
 
 @SuppressWarnings("serial")
 public class ClsTree extends OntTree {
+	private AbstractAction goToMappedColumn;
 	private AbstractAction goToMappedTable;
-	private AbstractAction showMembers;
+	private AbstractAction showClassAssertions;
 	
 	protected TreeCellRenderer constructTreeCellRenderer() {
 		return new OntClassTreeCellRenderer(new ImageIcon(ImageURIs.ONT_NAMED_CLS), 
@@ -34,13 +36,14 @@ public class ClsTree extends OntTree {
 	}
 	
 	protected void addMenuItemsToPopupMenu() {
+		goToMappedColumn = new GoToMappedColumnAction();
+		popupMenu.add(goToMappedColumn);
+		
 		goToMappedTable = new GoToMappedTableAction();
 		popupMenu.add(goToMappedTable);
 		
-		showMembers = new ShowClassAssertionsAction();
-		popupMenu.add(showMembers);
-		
-		super.addMenuItemsToPopupMenu();
+		showClassAssertions = new ShowClassAssertionsAction();
+		popupMenu.add(showClassAssertions);
 	}
 	
 	protected MutableTreeNode buildHierarchy(OntTreeNode entity) {

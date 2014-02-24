@@ -5,12 +5,15 @@ import janus.TabNames;
 import janus.application.UIRegistry;
 import janus.application.ontdata.AssertionsPane;
 import janus.application.ontscheme.OntTree;
+import janus.mapping.OntEntity;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.net.URI;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
@@ -24,9 +27,11 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		OntTree tree = UIRegistry.getDPTree();
+		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		URI dp = tree.getSelectedURI();
+		OntEntity entity = ontTree.getSelectedEntity();
+		
+		URI dp = entity.getURI();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
@@ -34,7 +39,7 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 		JTabbedPane assertionsPane = UIRegistry.getAssertionsTab();
 		
 		if (!alreadyExists(assertionsPane, dp)) {
-			JSplitPane newPane = new AssertionsPane(dp);
+			JSplitPane newPane = new AssertionsPane(entity);
 			assertionsPane.addTab(dp.getFragment(), new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), newPane);
 			assertionsPane.setToolTipTextAt(assertionsPane.indexOfComponent(newPane), dp.toString());
 		}
@@ -63,5 +68,9 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 			}
 		
 		return index;
+	}
+	
+	private OntTree getOntTreeToEventSource(ActionEvent e) {
+		return (OntTree)((JPopupMenu)((Component)e.getSource()).getParent()).getInvoker();
 	}
 }

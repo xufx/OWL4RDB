@@ -4,7 +4,7 @@ import janus.database.DBColumn;
 import janus.mapping.OntEntityTypes;
 
 class PropertyMetadata implements Comparable<PropertyMetadata> {
-	private String propertyName;
+	private String propertyFragment;
 
 	private OntEntityTypes propertyType;
 	
@@ -16,8 +16,8 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 	
 	private String superProperty;
 
-	PropertyMetadata(String propertyName, OntEntityTypes propertyType, String mappedTable, String mappedColumn) {
-		this.propertyName = propertyName;
+	PropertyMetadata(String propertyFragment, OntEntityTypes propertyType, String mappedTable, String mappedColumn) {
+		this.propertyFragment = propertyFragment;
 		this.mappedTable = mappedTable;
 		this.mappedColumn = mappedColumn;
 		
@@ -60,8 +60,8 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 		this.superProperty = superProperty;
 	}
 	
-	String getPropertyName() {
-		return propertyName;
+	String getPropertyFragment() {
+		return propertyFragment;
 	}
 	
 	OntEntityTypes getPropertyType() {
@@ -70,6 +70,6 @@ class PropertyMetadata implements Comparable<PropertyMetadata> {
 
 	@Override
 	public int compareTo(PropertyMetadata o) {
-		return propertyName.compareTo(o.getPropertyName());
+		return propertyFragment.compareTo(o.getPropertyFragment());
 	}
 }

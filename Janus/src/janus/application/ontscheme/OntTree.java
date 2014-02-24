@@ -1,6 +1,5 @@
 package janus.application.ontscheme;
 
-import janus.application.actions.GoToMappedColumnAction;
 import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
@@ -8,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.net.URI;
 import java.util.Enumeration;
 
-import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -23,8 +21,6 @@ import javax.swing.tree.TreePath;
 public abstract class OntTree extends JScrollPane {
 	protected JTree tree;
 	protected JPopupMenu popupMenu;
-	
-	protected AbstractAction goToMappedColumn;
 	
 	protected OntTree() {
 		buildUI();
@@ -115,10 +111,7 @@ public abstract class OntTree extends JScrollPane {
 		return tree.getPathForLocation(x, y);
 	}
 	
-	protected void addMenuItemsToPopupMenu() {
-		goToMappedColumn = new GoToMappedColumnAction();
-		popupMenu.add(goToMappedColumn);
-	}
+	protected abstract void addMenuItemsToPopupMenu();
 	
 	private OntTreeNode getSelectedTreeNode() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();

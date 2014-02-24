@@ -43,7 +43,7 @@ public class MappingMetadata {
 	public String getMappedTableNameToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
-			if (property.getPropertyName().equals(propertyName))
+			if (property.getPropertyFragment().equals(propertyName))
 				return property.getMappedTable();
 		}
 		
@@ -73,7 +73,7 @@ public class MappingMetadata {
 	public String getMappedColumnNameToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
-			if (property.getPropertyName().equals(propertyName))
+			if (property.getPropertyFragment().equals(propertyName))
 				return property.getMappedColumnName();
 		}
 		
@@ -83,7 +83,7 @@ public class MappingMetadata {
 	public DBColumn getMappedColumnToProperty(URI propertyURI) {
 		String propertyName = propertyURI.getFragment();
 		for (PropertyMetadata property: properties) {
-			if (property.getPropertyName().equals(propertyName))
+			if (property.getPropertyFragment().equals(propertyName))
 				return property.getMappedColumn();
 		}
 		
@@ -112,7 +112,7 @@ public class MappingMetadata {
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
 					&& property.getPropertyType().equals(OntEntityTypes.DATA_PROPERTY))
-				return property.getPropertyName();
+				return property.getPropertyFragment();
 		
 		return null;
 	}
@@ -128,7 +128,7 @@ public class MappingMetadata {
 			if (property.getMappedTable().equals(table) 
 					&& property.getMappedColumnName().equals(column) 
 					&& property.getPropertyType().equals(OntEntityTypes.OBJECT_PROPERTY))
-				op = property.getPropertyName();
+				op = property.getPropertyFragment();
 		
 		return op;
 	}
@@ -156,6 +156,17 @@ public class MappingMetadata {
 					&& cls.getMappedTableName().equals(table) 
 					&& cls.getMappedColumnName().equals(column))
 				return cls.getClassName();
+		
+		return null;
+	}
+	
+	public URI getDomainClassOfProperty(URI prop) {
+		String propertyFragment = prop.getFragment();
+		
+		for (PropertyMetadata property: properties) {
+			if (property.getPropertyFragment().equals(propertyFragment))
+				return getURIOfFragment(property.getDomain());
+		}
 		
 		return null;
 	}
