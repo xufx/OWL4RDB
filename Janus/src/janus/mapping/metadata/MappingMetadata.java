@@ -1,7 +1,9 @@
 package janus.mapping.metadata;
 
+import janus.Janus;
 import janus.database.DBColumn;
 import janus.database.DBField;
+import janus.mapping.DatatypeMap;
 import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
@@ -229,5 +231,31 @@ public class MappingMetadata {
 	
 	URI getOntologyID() {
 		return ontologyID;
+	}
+	
+	public String getDatatypeOfTypedLiteral(String typedLiteral) {
+		return LiteralMetadata.getDatatype(typedLiteral);
+	}
+	
+	public String getLexicalValueOfTypedLiteral(String typedLiteral) {
+		return LiteralMetadata.getLexicalValue(typedLiteral);
+	}
+	
+	public Set<DBColumn> getMappedDBColumnsToDatatypeOfTypedLiteral(String datatypeOfTypedLiteral) {
+		Set<Integer> mappedSQLTypes = DatatypeMap.getMappedSQLTypes(datatypeOfTypedLiteral);
+		
+		Set<DBColumn> mappedDBColumns = new ConcurrentSkipListSet<DBColumn>();
+		
+		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
+		
+		for(String table: tables) {
+			Set<String> columns = Janus.cachedDBMetadata.getColumns(table);
+			
+			for(String column: columns)
+				if (mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(table, column)))
+					mappedDBColumns.add(new DBColumn(table, column));
+		}
+		
+		return mappedDBColumns;
 	}
 }

@@ -11,4 +11,12 @@ class LiteralMetadata {
 		
 		return literal;
 	}
+	
+	static String getDatatype(String typedLiteral) {
+		return typedLiteral.substring(typedLiteral.lastIndexOf("^^")+2);
+	}
+	
+	static String getLexicalValue(String typedLiteral) {
+		return typedLiteral.substring(typedLiteral.indexOf("\"")+1, typedLiteral.lastIndexOf("\"^^" + getDatatype(typedLiteral)));
+	}
 }

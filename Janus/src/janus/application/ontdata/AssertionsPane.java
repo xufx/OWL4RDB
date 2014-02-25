@@ -98,20 +98,28 @@ public class AssertionsPane extends JSplitPane implements ListSelectionListener 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		URI selectedIndividual = null;
+		String selectedLiteral = null;
 
 		if (ontEntity.getType().equals(OntEntityTypes.TABLE_CLASS) 
 				|| ontEntity.getType().equals(OntEntityTypes.COLUMN_CLASS)
 				|| ontEntity.getType().equals(OntEntityTypes.OWL_THING_CLASS))
 			selectedIndividual = clsAssertionsTable.getSelectedIndividual();
-		else if (ontEntity.getType().equals(OntEntityTypes.DATA_PROPERTY))
+		else if (ontEntity.getType().equals(OntEntityTypes.DATA_PROPERTY)) {
 			selectedIndividual = dpAssertionsTable.getSelectedIndividual();
-		else if (ontEntity.getType().equals(OntEntityTypes.OBJECT_PROPERTY))
+			selectedLiteral = dpAssertionsTable.getSelectedLiteral();
+		} else if (ontEntity.getType().equals(OntEntityTypes.OBJECT_PROPERTY))
 			selectedIndividual = opAssertionsTable.getSelectedIndividual();
 		
 		if (selectedIndividual != null) {
 			types.setComponentAt(types.indexOfTab(TabNames.TYPES), new TypesTable(selectedIndividual));
 			subOPAssertions.setComponentAt(subOPAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), new SubOPAssertionsTable(selectedIndividual));
 			subDPAssertions.setComponentAt(subDPAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new SubDPAssertionsTable(selectedIndividual));
+		}
+		
+		if (selectedLiteral != null) {
+			types.setComponentAt(types.indexOfTab(TabNames.TYPES), null);
+			subOPAssertions.setComponentAt(subOPAssertions.indexOfTab(TabNames.OBJECT_PROPERTY_ASSERTIONS), null);
+			subDPAssertions.setComponentAt(subDPAssertions.indexOfTab(TabNames.DATA_PROPERTY_ASSERTIONS), new SubDPAssertionsTable(selectedLiteral));
 		}
 	}
 }

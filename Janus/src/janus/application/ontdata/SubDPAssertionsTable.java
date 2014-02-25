@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.OntEntityTypes;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -25,8 +26,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 class SubDPAssertionsTable extends JScrollPane {
 	private JTable table;
 	
-	SubDPAssertionsTable(URI individual) {
-		table = new JTable(new SubDPAssertionsTableModel(individual)) {
+	private SubDPAssertionsTable() {
+		table = new JTable() {
 			@Override
 			public String getToolTipText(MouseEvent event) {
 				Point p = event.getPoint();
@@ -53,6 +54,18 @@ class SubDPAssertionsTable extends JScrollPane {
 		setViewportView(table);
 	}
 	
+	SubDPAssertionsTable(URI individual) {
+		this();
+		
+		table.setModel(new SubDPAssertionsTableModel(individual));
+	}
+	
+	SubDPAssertionsTable(String literal) {
+		this();
+		
+		table.setModel(new SubDPAssertionsTableModel(literal));
+	}
+	
 	private String getToolTipTextForLiteral(String literal, int width) {
 		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
 	}
@@ -64,32 +77,60 @@ class SubDPAssertionsTable extends JScrollPane {
 
 @SuppressWarnings("serial")
 class SubDPAssertionsTableModel extends AbstractTableModel {
+	private OntEntityTypes entityType;
 
 	private int columnCount;
 	private int rowCount;
 	private CachedRecord cache;
 	
 	private SQLResultSet resultSet;
+	
+	private SubDPAssertionsTableModel() {
+		cache = new CachedRecord();
+	}
 
 	SubDPAssertionsTableModel(URI individual) {
+		this();
+		
+		entityType = Janus.mappingMetadata.getIndividualType(individual);
+		
 		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSourceIndividual(individual);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
 		rowCount = resultSet.getResultSetRowCount();
 		columnCount = resultSet.getResultSetColumnCount();
+	}
+	
+	SubDPAssertionsTableModel(String literal) {
+		this();
 		
-		cache = new CachedRecord();
+		entityType = OntEntityTypes.TYPED_LITERAL;
+		
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfTargetLiteral(literal);
+		
+		resultSet = Janus.dbBridge.executeQuery(query);
+		
+		rowCount = resultSet.getResultSetRowCount();
+		columnCount = resultSet.getResultSetColumnCount();
 	}
 	
 	@Override
 	public String getColumnName(int column) {
 		String columnName = super.getColumnName(column);
 		
-		if (column == 0)
-			columnName = "Data Property";
-		else if (column == 1)
-			columnName = "Target Value";
+		if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
+				|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			if (column == 0)
+				columnName = "Data Property";
+			else if (column == 1)
+				columnName = "Target Value";
+		} else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
+			if (column == 0)
+				columnName = "Source Individual";
+			else if (column == 1)
+				columnName = "Data Property";
+		}
 		
 		return columnName;
 	}

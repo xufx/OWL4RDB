@@ -117,7 +117,7 @@ class TableMetadata implements Comparable<TableMetadata> {
 		return foreignKeys;
 	}
 	
-	public List<String> getPrimaryKeys() {
+	public List<String> getPrimaryKey() {
 		List<String> primaryKeys = new ArrayList<String>();
 		
 		for (ColumnMetadata columnMetaData: columnMetaDataSet)
@@ -139,7 +139,7 @@ class TableMetadata implements Comparable<TableMetadata> {
 	}
 	
 	int getRowCount() {
-		List<String> primaryKeys = getPrimaryKeys();
+		List<String> primaryKeys = getPrimaryKey();
 		
 		String query = "SELECT COUNT(DISTINCT ";
 		

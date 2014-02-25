@@ -57,6 +57,7 @@ class DPAssertionsTable extends JScrollPane {
 	
 	void addDPAssertionsTableSelectionListener(ListSelectionListener x) {
 		table.getSelectionModel().addListSelectionListener(x);
+		table.getColumnModel().getSelectionModel().addListSelectionListener(x);
 	}
 	
 	private URI getIndividual(String individualFragment) {
@@ -68,7 +69,23 @@ class DPAssertionsTable extends JScrollPane {
 	}
 	
 	URI getSelectedIndividual() {
-		return getIndividual(table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString());
+		int row = table.getSelectedRow();
+		int col = table.getSelectedColumn();
+		
+		if (row >= 0 && col == 0)
+			return getIndividual(table.getValueAt(row, col).toString());
+		
+		return null;
+	}
+	
+	String getSelectedLiteral() {
+		int row = table.getSelectedRow();
+		int col = table.getSelectedColumn();
+		
+		if (row >= 0 && col == 1)
+			return table.getValueAt(row, col).toString();
+		
+		return null;
 	}
 }
 

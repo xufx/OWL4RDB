@@ -16,19 +16,22 @@ import java.util.regex.Pattern;
 
 public class IndividualMetadata {
 	
+	// generates an individual with ordered column names.
 	static String getMappedRecordIndividualFragment(String table, List<DBField> pkFields) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
+		List<String> pkOfRootTable = Janus.cachedDBMetadata.getPrimaryKey(rootTable);
+		
 		List<DBField> pkRootFields = new Vector<DBField>();
 		
-		for (DBField pkField: pkFields) {
-			String srcColumn = pkField.getColumnName();
+		for (String pkColumn: pkOfRootTable) {
+			String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(rootTable, pkColumn, table);
 			
-			String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(table, srcColumn, rootTable);
-			
-			DBField pkRootField = new DBField(rootTable, matchedColumn, pkField.getValue());
-			
-			pkRootFields.add(pkRootField);
+			for (DBField field: pkFields)
+				if (field.getColumnName().equals(matchedColumn)) {
+					pkRootFields.add(new DBField(rootTable, pkColumn, field.getValue()));
+					break;
+				}
 		} 
 		
 		String individualFragment = OntMapper.TABLE_NAME + OntMapper.IS + rootTable;

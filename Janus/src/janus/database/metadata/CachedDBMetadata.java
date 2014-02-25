@@ -145,7 +145,7 @@ public class CachedDBMetadata {
 	public List<String> getPrimaryKey(String tableName) {
 		for (TableMetadata table: tables)
 			if (table.getTableName().equals(tableName))
-				return table.getPrimaryKeys();
+				return table.getPrimaryKey();
 		
 		return null;
 	}

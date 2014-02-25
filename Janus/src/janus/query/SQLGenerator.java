@@ -1,6 +1,7 @@
 package janus.query;
 
 import janus.Janus;
+import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.OntEntityTypes;
 
@@ -19,7 +20,7 @@ public abstract class SQLGenerator {
 	/* Type I-II: when a table has multiple column primary key.
 	 * SELECT pk1, pk2, ... , pkn FROM table
 	 */
-	protected abstract String getQueryToGetIndividualsOfTableClass(List<String> pk, String table);
+	protected abstract String getQueryToGetIndividualsOfTableClass(String table);
 	
 	/* Type I-III: to select a non-nullable key column.
 	 * SELECT DISTINCT keyColumn FROM table
@@ -35,8 +36,10 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields);
 	
+	// the param record is a source individual.
 	protected abstract String getQueryToGetDPAssertionOfRecord(URI dp, String dpColumn, String table, List<DBField> PKFields);
 	
+	// the param field is a source individual.
 	protected abstract String getQueryToGetDPAssertionOfField(URI dp, String dpColumn, String table, String value);
 	
 	protected abstract String getQueryToGetOPAssertionOfField(DBField field);
@@ -46,6 +49,10 @@ public abstract class SQLGenerator {
 	protected abstract String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp);
 	
 	public abstract String getQueryToGetOPAsserionsOfOP(URI op);
+	
+	protected abstract String getQueryToGetDPAssertionsOfKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
+	
+	protected abstract String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
 	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
@@ -76,9 +83,8 @@ public abstract class SQLGenerator {
 	
 	private String getQueryToGetIndividualsOfTableClass(URI cls) {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(cls);
-		List<String> pk = Janus.cachedDBMetadata.getPrimaryKey(table);
 		
-		return getQueryToGetIndividualsOfTableClass(pk, table);
+		return getQueryToGetIndividualsOfTableClass(table);
 	}
 	
 	private String getQueryToGetIndividualsOfColumnClass(URI cls) {
@@ -367,5 +373,25 @@ public abstract class SQLGenerator {
 			query = getQueryToGetDPAssertionsOfDPWithColumnClassDomain(dp);
 		
 		return query;
+	}
+	
+	//data property assertions
+	public String getQueryToGetDPAssertionsOfTargetLiteral(String literal) {
+		String lexicalValue = Janus.mappingMetadata.getLexicalValueOfTypedLiteral(literal);
+		String datatypeOfTypedLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(literal);
+		
+		Set<DBColumn> dbColumns = Janus.mappingMetadata.getMappedDBColumnsToDatatypeOfTypedLiteral(datatypeOfTypedLiteral);
+		
+		List<String> queries = new Vector<String>();
+		
+		for(DBColumn dbColumn: dbColumns) {
+			
+			if (Janus.cachedDBMetadata.isKey(dbColumn.getTableName(), dbColumn.getColumnName()))
+				queries.add(getQueryToGetDPAssertionsOfKeyColumnLiteral(dbColumn, lexicalValue));
+			else
+				queries.add(getQueryToGetDPAssertionsOfNonKeyColumnLiteral(dbColumn, lexicalValue));
+		}
+		
+		return getUnionQuery(queries);
 	}
 }

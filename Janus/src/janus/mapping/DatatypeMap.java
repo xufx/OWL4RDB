@@ -2,6 +2,8 @@ package janus.mapping;
 
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public final class DatatypeMap {
 	private static Map<Integer, String> map = new Hashtable<Integer, String>(36);
@@ -54,5 +56,16 @@ public final class DatatypeMap {
 	public static String get(int key) {
 		return map.get(Integer.valueOf(key));
 	}
-
+	
+	public static Set<Integer> getMappedSQLTypes(String anXSD) {
+		Set<Integer> mappedSQLTypes = new ConcurrentSkipListSet<Integer>();
+		
+		Set<Integer> keySet = map.keySet();
+		
+		for (Integer key: keySet)
+			if (map.get(key).equals(anXSD))
+				mappedSQLTypes.add(key);
+		
+		return mappedSQLTypes;
+	}
 }
