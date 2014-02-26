@@ -34,13 +34,7 @@ class OPAssertionsTable extends JScrollPane {
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        String value = getValueAt(rowIndex, colIndex).toString();
-		        if (colIndex == 0)
-		        	return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
-		        else if (colIndex == 1)
-		        	return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
-		        
-		        return super.getToolTipText();
+		        return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
 			}
 		};
 		table.setDefaultRenderer(Object.class, new OPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
@@ -60,10 +54,6 @@ class OPAssertionsTable extends JScrollPane {
 	
 	private URI getIndividual(String individualFragment) {
 		return Janus.mappingMetadata.getIndividual(individualFragment);
-	}
-	
-	private String getToolTipTextForLiteral(String literal, int width) {
-		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
 	}
 	
 	URI getSelectedIndividual() {
@@ -99,14 +89,12 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		String columnName = super.getColumnName(column);
-		
 		if (column == 0)
-			columnName = "Source Individual";
+			return "Source Individual";
 		else if (column == 1)
-			columnName = "Target Individual";
+			return "Target Individual";
 		
-		return columnName;
+		return super.getColumnName(column);
 	}
 
 	public int getRowCount() {

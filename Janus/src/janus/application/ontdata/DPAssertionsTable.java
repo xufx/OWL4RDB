@@ -111,14 +111,12 @@ class DPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		String columnName = super.getColumnName(column);
-		
 		if (column == 0)
-			columnName = "Source Individual";
+			return "Source Individual";
 		else if (column == 1)
-			columnName = "Target Value";
+			return "Target Value";
 		
-		return columnName;
+		return super.getColumnName(column);
 	}
 
 	public int getRowCount() {

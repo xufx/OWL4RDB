@@ -54,6 +54,8 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
 	
+	protected abstract String getQueryToGetAllClsAsserionsOfTableClass(String table, URI cls);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -390,5 +392,24 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 2);
+	}
+	
+	public String getQueryToGetAllClsAssertions() {
+		List<String> queries = new Vector<String>();
+		
+		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
+		
+		for (String table: tables) {
+			URI owlThing = Janus.ontBridge.getOWLThingURI();
+			queries.add(getQueryToGetAllClsAsserionsOfTableClass(table, owlThing));
+			
+			URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
+			queries.add(getQueryToGetAllClsAsserionsOfTableClass(table, mappedClass));
+			
+			
+			
+		}
+		
+		return null;
 	}
 }

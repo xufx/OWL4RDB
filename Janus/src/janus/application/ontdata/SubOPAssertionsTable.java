@@ -25,9 +25,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 class SubOPAssertionsTable extends JScrollPane {
 	private JTable table;
+	
 	SubOPAssertionsTable(URI individual) {
-		final OntEntityTypes individualType = Janus.mappingMetadata.getIndividualType(individual);
-		
 		table = new JTable(new SubOPAssertionsTableModel(individual)) {
 			@Override
 			public String getToolTipText(MouseEvent event) {
@@ -37,25 +36,17 @@ class SubOPAssertionsTable extends JScrollPane {
 		        
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        
-		        if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
-		        	if (colIndex == 0)
-		        		return getObjectProperty(value).toString();
-		        	else if (colIndex == 1)
-		        		return getIndividual(value).toString();
-		        } else {
-		        	if (colIndex == 0)
-		        		return getIndividual(value).toString();
-		        	else if (colIndex == 1)
-		        		return getObjectProperty(value).toString();
-		        }
+		        if (colIndex == 0)
+		        	return getObjectProperty(value).toString();
+		        else if (colIndex == 1)
+		        	return getIndividual(value).toString();
 		        
 		        return super.getToolTipText();
 			}
 		};
 		table.setDefaultRenderer(Object.class, 
 				new SubOPAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP), 
-											  new ImageIcon(ImageURIs.ONT_INDIVIDUAL),
-											  individualType));
+											  new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDragEnabled(true);
 		table.getTableHeader().setReorderingAllowed(false);
@@ -98,21 +89,18 @@ class SubOPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		String columnName = super.getColumnName(column);
+		if (column == 0)
+			return "Object Property";
 		
 		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
-			if (column == 0)
-				columnName = "Object Property";
-			else if (column == 1)
-				columnName = "Target Individual";
-		} else {
-			if (column == 0)
-				columnName = "Source Individual";
-			else if (column == 1)
-				columnName = "Object Property";
+			if (column == 1)
+				return "Target Individual";
+		} else if (individualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			if (column == 1)
+				return "Source Individual";
 		}
 		
-		return columnName;
+		return super.getColumnName(column);
 	}
 
 	public int getRowCount() {
@@ -163,14 +151,10 @@ class SubOPAssertionsTableModel extends AbstractTableModel {
 
 @SuppressWarnings("serial")
 class SubOPAssertionsTableRenderer extends DefaultTableCellRenderer {
-	private OntEntityTypes individualType;
-	
 	private Icon opIcon;
 	private Icon indIcon;
 	
-	SubOPAssertionsTableRenderer(Icon opIcon, Icon indIcon, OntEntityTypes individualType) {
-		this.individualType = individualType;
-		
+	SubOPAssertionsTableRenderer(Icon opIcon, Icon indIcon) {
 		this.opIcon = opIcon;
 		this.indIcon = indIcon;
 	}
@@ -179,17 +163,10 @@ class SubOPAssertionsTableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		
-		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
-			if (column == 0)
-				setIcon(opIcon);
-			else if (column == 1)
-				setIcon(indIcon);
-		} else {
-			if (column == 0)
-				setIcon(indIcon);
-			else if (column == 1)
-				setIcon(opIcon);
-		}
+		if (column == 0)
+			setIcon(opIcon);
+		else if (column == 1)
+			setIcon(indIcon);
 		
 		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
 				row, column);

@@ -81,7 +81,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	protected String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields) {
 		String concatCallStatement = getConcatCallStatementToBuildFieldIndividual(table, opColumn);
 		
-		StringBuffer query = new StringBuffer("SELECT '"  + op.getFragment() +"', " + concatCallStatement
+		StringBuffer query = new StringBuffer("SELECT " + "'" + op.getFragment() + "'" + ", " + concatCallStatement
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -148,7 +148,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
 
-		return "SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + ", '" + op.getFragment() + "'"
+		return "SELECT " + "'" + op.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
 						+ " FROM " + table 
 						+ " WHERE " + table + "." + column + " = " + "'" + value + "'";
 	}
@@ -212,7 +212,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 		
-		query.append(getConcatCallStatementToBuildFieldIndividual(table, column) + ", '" + dp.getFragment() + "'"
+		query.append("'" + dp.getFragment() + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
 				 + " FROM " + table
 				 + " WHERE " + dbColumn.toString() + " = " + "'" + lexicalValueOfLiteral + "'");
 				
@@ -227,10 +227,15 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 		
-		query.append(getConcatCallStatementToBuildRecordIndividual(table) + ", '" + dp.getFragment() + "'"
+		query.append("'" + dp.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) 
 				 + " FROM " + table
 				 + " WHERE " + dbColumn.toString() + " = " + "'" + lexicalValueOfLiteral + "'");
 		
 		return query.toString();
+	}
+	
+	protected String getQueryToGetAllClsAsserionsOfTableClass(String table, URI cls) {
+		return "SELECT " + "'" + cls.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
+				        + " FROM " + table;
 	}
 }

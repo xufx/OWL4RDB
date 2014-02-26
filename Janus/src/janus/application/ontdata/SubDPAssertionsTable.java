@@ -36,17 +36,16 @@ class SubDPAssertionsTable extends JScrollPane {
 		        
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        
+		        if (colIndex == 0)
+	        		return getDataProperty(value).toString();
+		        
 		        if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
 						|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
-		        	if (colIndex == 0)
-		        		return getDataProperty(value).toString();
-		        	else if (colIndex == 1)
+		        	if (colIndex == 1)
 		        		return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
 		        } else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
-		        	if (colIndex == 0)
+		        	if (colIndex == 1)
 		        		return getIndividual(value).toString();
-		        	else if (colIndex == 1)
-		        		return getDataProperty(value).toString();
 		        }
 		        
 		        return super.getToolTipText();
@@ -132,22 +131,19 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		String columnName = super.getColumnName(column);
+		if (column == 0)
+			return "Data Property";
 		
 		if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
 				|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
-			if (column == 0)
-				columnName = "Data Property";
-			else if (column == 1)
-				columnName = "Target Value";
+			if (column == 1)
+				return "Target Value";
 		} else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
-			if (column == 0)
-				columnName = "Source Individual";
-			else if (column == 1)
-				columnName = "Data Property";
+			if (column == 1)
+				return "Source Individual";
 		}
 		
-		return columnName;
+		return super.getColumnName(column);
 	}
 
 	public int getRowCount() {
@@ -216,17 +212,16 @@ class SubDPAssertionsTableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
 		
+		if (column == 0)
+			setIcon(dpIcon);
+		
 		if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
 				|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
-			if (column == 0)
-				setIcon(dpIcon);
-			else if (column == 1)
+			if (column == 1)
 				setIcon(litIcon);
 		} else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
-			if (column == 0)
+			if (column == 1)
 				setIcon(indIcon);
-			else if (column == 1)
-				setIcon(dpIcon);
 		}
 		
 		return super.getTableCellRendererComponent(table, value, isSelected, hasFocus,

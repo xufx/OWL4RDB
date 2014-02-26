@@ -81,12 +81,10 @@ class ClsAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		String columnName = super.getColumnName(column);
-		
 		if (column == 0)
-			columnName = "Individual";
+			return "Individual";
 		
-		return columnName;
+		return super.getColumnName(column);
 	}
 
 	public int getRowCount() {
