@@ -32,7 +32,7 @@ public abstract class SQLGenerator {
 	 */
 	protected abstract String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table);
 	
-	protected abstract String getQueryToGetResultSetOf2X0();
+	protected abstract String getQueryToGetEmptyResultSet(int columnCount);
 	
 	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields);
 	
@@ -78,7 +78,7 @@ public abstract class SQLGenerator {
 				queries.add(getQueryToGetIndividualsOfColumnClass(aCls));
 		}
 		
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 1);
 	}
 	
 	private String getQueryToGetIndividualsOfTableClass(URI cls) {
@@ -122,7 +122,7 @@ public abstract class SQLGenerator {
 			queries.add(getQueryToGetTypeOfField(cls, mappedTable, mappedColumn, value));
 		}
 		
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 1);
 	}
 	
 	private String getQueryToGetTypesOfRecordIndividual(URI individual) {
@@ -151,7 +151,7 @@ public abstract class SQLGenerator {
 			queries.add(getQueryToGetTypeOfRecord(cls, mappedTable, familyFields));
 		}
 		
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 1);
 	}
 	
 	private String getQueryToGetTypeOfRecord(URI cls, String table, List<DBField> fields) {
@@ -186,7 +186,13 @@ public abstract class SQLGenerator {
 		return query.toString();
 	}
 	
-	private String getUnionQuery(List<String> queries) {
+	private String getUnionQuery(List<String> queries, int columnCount) {
+		if (queries.isEmpty())
+			return getQueryToGetEmptyResultSet(columnCount);
+		
+		if (queries.size() == 1)
+			return queries.get(0);
+		
 		StringBuffer query = new StringBuffer();
 		
 		for (int i = 0; i < queries.size() - 1; i++)
@@ -213,15 +219,15 @@ public abstract class SQLGenerator {
 		String query = null;
 		
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetOPAssertionsOfRecordIndividualAsSubject(individual);
+			query = getQueryToGetOPAssertionsOfRecordSourceIndividual(individual);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetOPAssertionsOfFieldIndividualAsObject(individual);
+			query = getQueryToGetOPAssertionsOfFieldTargetIndividual(individual);
 		
 		return query;
 	}
 	
 	// the parameter individual is object.
-	private String getQueryToGetOPAssertionsOfFieldIndividualAsObject(URI individual) {
+	private String getQueryToGetOPAssertionsOfFieldTargetIndividual(URI individual) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
 		
 		String table = field.getTableName();
@@ -241,14 +247,11 @@ public abstract class SQLGenerator {
 			queries.add(getQueryToGetOPAssertionOfField(new DBField(familyTable, familyColumn, value)));
 		}
 		
-		if (queries.size() == 1)
-			return queries.get(0);
-		else
-			return getUnionQuery(queries);
+		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetOPAssertionsOfRecordIndividualAsSubject(URI individual) {
+	private String getQueryToGetOPAssertionsOfRecordSourceIndividual(URI individual) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
@@ -278,11 +281,11 @@ public abstract class SQLGenerator {
 			}
 		}
 		
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfRecordIndividualAsSubject(URI individual) {
+	private String getQueryToGetDPAssertionsOfRecordSourceIndividual(URI individual) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
@@ -312,17 +315,11 @@ public abstract class SQLGenerator {
 			}
 		}
 		
-		int queryCount = queries.size();
-		if (queryCount == 0)
-			return getQueryToGetResultSetOf2X0();
-		else if (queryCount == 1)
-			return queries.get(0);
-		else
-			return getUnionQuery(queries);
+		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfFieldIndividualAsSubject(URI individual) {
+	private String getQueryToGetDPAssertionsOfFieldSourceIndividual(URI individual) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
 		
 		String table = field.getTableName();
@@ -344,7 +341,7 @@ public abstract class SQLGenerator {
 			queries.add(getQueryToGetDPAssertionOfField(mappedDP, mappedColumn, mappedTable, value));
 		}
 
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 2);
 	}
 	
 	//data property assertions 
@@ -352,9 +349,9 @@ public abstract class SQLGenerator {
 		String query = null;
 
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfRecordIndividualAsSubject(individual);
+			query = getQueryToGetDPAssertionsOfRecordSourceIndividual(individual);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfFieldIndividualAsSubject(individual);
+			query = getQueryToGetDPAssertionsOfFieldSourceIndividual(individual);
 
 		return query;
 	}
@@ -392,6 +389,6 @@ public abstract class SQLGenerator {
 				queries.add(getQueryToGetDPAssertionsOfNonKeyColumnLiteral(dbColumn, lexicalValue));
 		}
 		
-		return getUnionQuery(queries);
+		return getUnionQuery(queries, 2);
 	}
 }

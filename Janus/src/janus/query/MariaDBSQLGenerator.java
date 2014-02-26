@@ -41,8 +41,17 @@ class MariaDBSQLGenerator extends SQLGenerator {
 				+ " WHERE " + keyColumn + " IS NOT NULL";
 	}
 	
-	protected String getQueryToGetResultSetOf2X0() {
-		return "SELECT '', '' FROM DUAL WHERE FALSE";
+	protected String getQueryToGetEmptyResultSet(int columnCount) {
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		for (int i = 0; i < columnCount-1; i++)
+			query.append("'', ");
+		
+		query.append("''");
+		
+		query.append(" FROM DUAL WHERE FALSE");
+		
+		return query.toString();
 	} 
 	
 	private String getConcatCallStatementToBuildFieldIndividual(String table, String keyColumn) {
@@ -211,6 +220,17 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	}
 	
 	protected String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral) {
-		return null;
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		String table = dbColumn.getTableName();
+		String column = dbColumn.getColumnName();
+		
+		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
+		
+		query.append(getConcatCallStatementToBuildRecordIndividual(table) + ", '" + dp.getFragment() + "'"
+				 + " FROM " + table
+				 + " WHERE " + dbColumn.toString() + " = " + "'" + lexicalValueOfLiteral + "'");
+		
+		return query.toString();
 	}
 }

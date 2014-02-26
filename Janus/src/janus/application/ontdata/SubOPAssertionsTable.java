@@ -25,10 +25,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 @SuppressWarnings("serial")
 class SubOPAssertionsTable extends JScrollPane {
 	private JTable table;
-	private OntEntityTypes individualType;
-	
 	SubOPAssertionsTable(URI individual) {
-		individualType = Janus.mappingMetadata.getIndividualType(individual);
+		final OntEntityTypes individualType = Janus.mappingMetadata.getIndividualType(individual);
 		
 		table = new JTable(new SubOPAssertionsTableModel(individual)) {
 			@Override
