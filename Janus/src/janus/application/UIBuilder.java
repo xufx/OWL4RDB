@@ -42,8 +42,6 @@ class UIBuilder {
 		window.getContentPane().add(buildBaseSplitPane(), BorderLayout.CENTER);
 		
 		window.getContentPane().add(buildToolBar(), BorderLayout.NORTH);
-		
-		window.setTitle("Janus");
 	}
 	
 	private static JToolBar buildToolBar() {

@@ -4,6 +4,7 @@ import janus.Janus;
 import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.OntEntityTypes;
+import janus.mapping.PrefixMap;
 
 import java.net.URI;
 import java.util.List;
@@ -54,7 +55,9 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
 	
-	protected abstract String getQueryToGetAllClsAsserionsOfTableClass(String table, URI cls);
+	protected abstract String getQueryToGetAllClsAssertionsOfTableClass(String table, URI cls);
+	
+	protected abstract String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls);
 	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
@@ -156,9 +159,23 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 1);
 	}
 	
+	protected String getAbbreviatedClassIRIString(URI cls) {
+		String clsString = cls.toString();
+		
+		String clsExceptFragment = clsString.substring(0, clsString.indexOf("#"));
+		
+		if (!clsExceptFragment.equals(Janus.ontologyIRI)) {
+			String prefix = PrefixMap.getPrefixName(URI.create(clsExceptFragment));
+			
+			return prefix + ":" + cls.getFragment();
+		}
+		
+		return cls.getFragment();
+	}
+	
 	private String getQueryToGetTypeOfRecord(URI cls, String table, List<DBField> fields) {
 		
-		StringBuffer query = new StringBuffer("SELECT '"  + cls.getFragment() +"'"
+		StringBuffer query = new StringBuffer("SELECT '"  + getAbbreviatedClassIRIString(cls) +"'"
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -181,7 +198,7 @@ public abstract class SQLGenerator {
 				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
 			query.append("DISTINCT ");
 		
-		query.append("'" + cls.getFragment() +"'"
+		query.append("'" + getAbbreviatedClassIRIString(cls) +"'"
 				+ " FROM " + table
 				+ " WHERE " + table + "." + column + " = " + "'" + value + "'");
 		
@@ -394,22 +411,34 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 2);
 	}
 	
+	// for Type(?a, ?C), which both ?a and ?C are empty.
 	public String getQueryToGetAllClsAssertions() {
 		List<String> queries = new Vector<String>();
+		
+		URI owlThing = Janus.ontBridge.getOWLThingURI();
 		
 		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
 		
 		for (String table: tables) {
-			URI owlThing = Janus.ontBridge.getOWLThingURI();
-			queries.add(getQueryToGetAllClsAsserionsOfTableClass(table, owlThing));
+			
+			if (Janus.cachedDBMetadata.isRootTable(table)) {
+				queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, owlThing));
+			}
 			
 			URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
-			queries.add(getQueryToGetAllClsAsserionsOfTableClass(table, mappedClass));
+			queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, mappedClass));
 			
+			Set<String> keys = Janus.cachedDBMetadata.getKeyColumns(table);
 			
-			
+			for (String key: keys) {
+				if (Janus.cachedDBMetadata.isRootColumn(table, key))
+					queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, owlThing));
+				
+				mappedClass = Janus.mappingMetadata.getMappedClass(table, key);
+				queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, mappedClass));
+			}
 		}
 		
-		return null;
+		return getUnionQuery(queries, 2);
 	}
 }

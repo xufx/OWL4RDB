@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.PrefixMap;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
@@ -30,10 +32,12 @@ class TypesTable extends JScrollPane {
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        if (rowIndex == 0)
-		        	return Janus.ontBridge.getOWLThingURI().toString();
+		        String value = getValueAt(rowIndex, colIndex).toString();
+		        
+		        if (hasPrefix(value))
+		        	return getClassNotInDefaultNamespace(value).toString();
 		        else
-		        	return getType((String)getValueAt(rowIndex, colIndex)).toString();
+		        	return getClassInDefaultNamespace(value).toString();
 			}
 		};
 		table.setDefaultRenderer(Object.class, new TypesTableRenderer(new ImageIcon(ImageURIs.ONT_NAMED_CLS)));
@@ -44,8 +48,18 @@ class TypesTable extends JScrollPane {
 		setViewportView(table);
 	}
 	
-	private URI getType(String classFragment) {
+	private URI getClassNotInDefaultNamespace(String abbreviatedIRI) {
+		String[] tokens = abbreviatedIRI.split(":");
+		
+		return URI.create(PrefixMap.getFullIRI(tokens[0]) + "#" + tokens[1]);
+	}
+	
+	private URI getClassInDefaultNamespace(String classFragment) {
 		return Janus.mappingMetadata.getClassURI(classFragment);
+	}
+	
+	private boolean hasPrefix(String cls) {
+		return cls.split(":").length == 2 ? true : false;
 	}
 }
 

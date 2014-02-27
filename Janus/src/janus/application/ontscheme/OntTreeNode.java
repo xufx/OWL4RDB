@@ -14,7 +14,14 @@ class OntTreeNode {
 	}
 	
 	URI getURI() { return uri; }
-	public String toString() { return uri.getFragment(); }
+	
+	public String toString() { 
+		
+		
+		
+		
+		return uri.getFragment(); }
+	
 	String getToolTipText() { return uri.toString(); }
 	OntEntityTypes getType() { return type; }
 }

@@ -67,8 +67,6 @@ public class Janus {
 		
 		sqlGenerator = SQLGeneratorFactory.getSQLGenerator(sessionManager.getDBMSType());
 		
-		sessionManager.dispose();
-		
 		Janus.cachedDBMetadata = CachedDBMetadataFactory.generateLocalDatabaseMetaData();
 		
 		ontMapper = new OntMapper();
@@ -87,9 +85,12 @@ public class Janus {
 
 		Janus.mappingMetadata = MappingMetadataFactory.generateMappingMetaData();
 		
-		JanusWindow mainWindow = new JanusWindow();
+		JanusWindow mainWindow = new JanusWindow(sessionManager.getSchema() + " <" + ontologyIRI + ">");
+		sessionManager.dispose();
 		splash.dispose();
 		mainWindow.setVisible(true);
+		
+		System.out.println(Janus.sqlGenerator.getQueryToGetAllClsAssertions());
 	}
 	
 	private static void setLookAndFeel() {

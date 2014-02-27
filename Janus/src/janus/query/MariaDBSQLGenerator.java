@@ -234,8 +234,24 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		return query.toString();
 	}
 	
-	protected String getQueryToGetAllClsAsserionsOfTableClass(String table, URI cls) {
-		return "SELECT " + "'" + cls.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
+	protected String getQueryToGetAllClsAssertionsOfTableClass(String table, URI cls) {
+		return "SELECT " + "'" + getAbbreviatedClassIRIString(cls) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
 				        + " FROM " + table;
+	}
+	
+	protected String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls) {
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		if (!(Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)
+				&& Janus.cachedDBMetadata.isPrimaryKey(table, column)))
+			query.append("DISTINCT ");
+		
+		query.append("'" + getAbbreviatedClassIRIString(cls) + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+		        + " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
 	}
 }
