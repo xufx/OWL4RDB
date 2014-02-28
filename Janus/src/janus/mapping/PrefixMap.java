@@ -18,14 +18,14 @@ public final class PrefixMap {
 		map.put(URI.create("http://www.w3.org/XML/1998/namespace"), "xml");
 		map.put(URI.create("http://www.w3.org/2000/01/rdf-schema"), "rdfs");
 		map.put(URI.create("http://www.w3.org/2002/07/owl"), "owl");
-		map.put(URI.create(Janus.ontologyIRI), "");
+		map.put(URI.create(Janus.ontologyURI), "");
 	}
 	
-	public static String getPrefixName(URI fullIRI) {
-		return map.get(fullIRI);
+	public static String getPrefix(URI uri) {
+		return map.get(uri);
 	}
 	
-	public static URI getFullIRI(String prefixName) {
+	public static URI getURI(String prefix) {
 		Set<Map.Entry<URI, String>> entrySet = map.entrySet();
 		
 		Iterator<Map.Entry<URI, String>> iterator = entrySet.iterator();
@@ -33,7 +33,7 @@ public final class PrefixMap {
 		while (iterator.hasNext()) {
 			Map.Entry<URI, String> entry = iterator.next();
 			
-			if (entry.getValue().equals(prefixName))
+			if (entry.getValue().equals(prefix))
 				return entry.getKey();
 		}
 		

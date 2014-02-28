@@ -4,6 +4,7 @@ import janus.Janus;
 import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.DatatypeMap;
+import janus.mapping.OntEntity;
 import janus.mapping.OntMapper;
 
 import java.net.URI;
@@ -57,14 +58,14 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	private String getConcatCallStatementToBuildFieldIndividual(String table, String keyColumn) {
 		DBColumn rootColumn = Janus.cachedDBMetadata.getRootColumn(table, keyColumn);
 		
-		return "concat('" + OntMapper.TABLE_NAME + "=" + rootColumn.getTableName() + "&" + OntMapper.COLUMN_NAME + "="+ rootColumn.getColumnName() + "&" + OntMapper.VALUE + "=', " + table + "." + keyColumn + ")";
+		return "concat('" + OntMapper.COLON + OntMapper.TABLE_NAME + "=" + rootColumn.getTableName() + "&" + OntMapper.COLUMN_NAME + "="+ rootColumn.getColumnName() + "&" + OntMapper.VALUE + "=', " + table + "." + keyColumn + ")";
 	}
 	
 	// generates an individual with ordered column names.
 	private String getConcatCallStatementToBuildRecordIndividual(String table) {
 		String rootTable = Janus.cachedDBMetadata.getRootTable(table);
 		
-		StringBuffer concat = new StringBuffer("concat('" + OntMapper.TABLE_NAME + "=" + rootTable + "'");
+		StringBuffer concat = new StringBuffer("concat('" + OntMapper.COLON + OntMapper.TABLE_NAME + "=" + rootTable + "'");
 		
 		List<String> pkOfRootTable = Janus.cachedDBMetadata.getPrimaryKey(rootTable);
 		
@@ -81,7 +82,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	protected String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields) {
 		String concatCallStatement = getConcatCallStatementToBuildFieldIndividual(table, opColumn);
 		
-		StringBuffer query = new StringBuffer("SELECT " + "'" + op.getFragment() + "'" + ", " + concatCallStatement
+		StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(op) + "'" + ", " + concatCallStatement
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -108,7 +109,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	}
 	
 	protected String getQueryToGetDPAssertionOfRecord(URI dp, String dpColumn, String table, List<DBField> PKFields) {
-		StringBuffer query = new StringBuffer("SELECT '"  + dp.getFragment() +"', " + getConcatCallStatementToBuildLiteral(table, dpColumn)
+		StringBuffer query = new StringBuffer("SELECT '"  + OntEntity.getCURIE(dp) +"', " + getConcatCallStatementToBuildLiteral(table, dpColumn)
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -134,7 +135,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
 			query.append("DISTINCT ");
 		
-		query.append("'"  + dp.getFragment() +"', " + getConcatCallStatementToBuildLiteral(table, dpColumn) 
+		query.append("'"  + OntEntity.getCURIE(dp) +"', " + getConcatCallStatementToBuildLiteral(table, dpColumn) 
 				+ " FROM " + table
 				+ " WHERE " + table + "." + dpColumn + " = '" + value + "'");
 		
@@ -148,7 +149,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
 
-		return "SELECT " + "'" + op.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
+		return "SELECT " + "'" + OntEntity.getCURIE(op) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
 						+ " FROM " + table 
 						+ " WHERE " + table + "." + column + " = " + "'" + value + "'";
 	}
@@ -212,7 +213,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 		
-		query.append("'" + dp.getFragment() + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+		query.append("'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
 				 + " FROM " + table
 				 + " WHERE " + dbColumn.toString() + " = " + "'" + lexicalValueOfLiteral + "'");
 				
@@ -227,7 +228,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 		
-		query.append("'" + dp.getFragment() + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) 
+		query.append("'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) 
 				 + " FROM " + table
 				 + " WHERE " + dbColumn.toString() + " = " + "'" + lexicalValueOfLiteral + "'");
 		
@@ -235,7 +236,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	}
 	
 	protected String getQueryToGetAllClsAssertionsOfTableClass(String table, URI cls) {
-		return "SELECT " + "'" + getAbbreviatedClassIRIString(cls) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
+		return "SELECT " + "'" + OntEntity.getCURIE(cls) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table)
 				        + " FROM " + table;
 	}
 	
@@ -246,7 +247,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 				&& Janus.cachedDBMetadata.isPrimaryKey(table, column)))
 			query.append("DISTINCT ");
 		
-		query.append("'" + getAbbreviatedClassIRIString(cls) + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+		query.append("'" + OntEntity.getCURIE(cls) + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
 		        + " FROM " + table);
 		
 		if (!Janus.cachedDBMetadata.isNotNull(table, column))

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
 import javax.swing.Icon;
@@ -37,7 +38,7 @@ class SubDPAssertionsTable extends JScrollPane {
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        
 		        if (colIndex == 0)
-	        		return getDataProperty(value).toString();
+	        		return  OntEntity.getURI(value).toString();
 		        
 		        if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
 						|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
@@ -45,7 +46,7 @@ class SubDPAssertionsTable extends JScrollPane {
 		        		return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
 		        } else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
 		        	if (colIndex == 1)
-		        		return getIndividual(value).toString();
+		        		return  OntEntity.getURI(value).toString();
 		        }
 		        
 		        return super.getToolTipText();
@@ -78,14 +79,6 @@ class SubDPAssertionsTable extends JScrollPane {
 	
 	private String getToolTipTextForLiteral(String literal, int width) {
 		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
-	}
-	
-	private URI getDataProperty(String dpFragment) {
-		return Janus.mappingMetadata.getDataProperty(dpFragment);
-	}
-	
-	private URI getIndividual(String individualFragment) {
-		return Janus.mappingMetadata.getIndividual(individualFragment);
 	}
 }
 

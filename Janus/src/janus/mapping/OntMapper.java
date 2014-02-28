@@ -28,6 +28,9 @@ public class OntMapper {
 	public static final String IS = "=";
 	public static final String AND = "&";
 	
+	public static final String COLON = ":";
+	public static final String NUMBER_SIGN = "#";
+	
 	
 	
 	
@@ -51,15 +54,15 @@ public class OntMapper {
 	
 	private void writePrefixes() {
 		try {
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/1999/02/22-rdf-syntax-ns")) + ":=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)");
-			writer.println("Prefix(:=<" + Janus.ontologyIRI + "#>)");
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/2001/XMLSchema")) + ":=<http://www.w3.org/2001/XMLSchema#>)");
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/2004/02/skos/core")) + ":=<http://www.w3.org/2004/02/skos/core#>)");
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/XML/1998/namespace")) + ":=<http://www.w3.org/XML/1998/namespace>)");
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/2000/01/rdf-schema")) + ":=<http://www.w3.org/2000/01/rdf-schema#>)");
-			writer.println("Prefix(" + PrefixMap.getPrefixName(URI.create("http://www.w3.org/2002/07/owl")) + ":=<http://www.w3.org/2002/07/owl#>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/1999/02/22-rdf-syntax-ns")) + ":=<http://www.w3.org/1999/02/22-rdf-syntax-ns#>)");
+			writer.println("Prefix(:=<" + Janus.ontologyURI + "#>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/2001/XMLSchema")) + ":=<http://www.w3.org/2001/XMLSchema#>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/2004/02/skos/core")) + ":=<http://www.w3.org/2004/02/skos/core#>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/XML/1998/namespace")) + ":=<http://www.w3.org/XML/1998/namespace>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/2000/01/rdf-schema")) + ":=<http://www.w3.org/2000/01/rdf-schema#>)");
+			writer.println("Prefix(" + PrefixMap.getPrefix(URI.create("http://www.w3.org/2002/07/owl")) + ":=<http://www.w3.org/2002/07/owl#>)");
 			writer.println();
-			writer.println("Ontology(<" + Janus.ontologyIRI + ">");
+			writer.println("Ontology(<" + Janus.ontologyURI + ">");
 			writer.println();
 		} catch (Exception e) {
 			e.printStackTrace();

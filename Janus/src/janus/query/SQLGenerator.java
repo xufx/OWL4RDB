@@ -3,9 +3,8 @@ package janus.query;
 import janus.Janus;
 import janus.database.DBColumn;
 import janus.database.DBField;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
-import janus.mapping.PrefixMap;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
@@ -159,23 +158,9 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 1);
 	}
 	
-	protected String getAbbreviatedClassIRIString(URI cls) {
-		String clsString = cls.toString();
-		
-		String clsExceptFragment = clsString.substring(0, clsString.indexOf("#"));
-		
-		if (!clsExceptFragment.equals(Janus.ontologyIRI)) {
-			String prefix = PrefixMap.getPrefixName(URI.create(clsExceptFragment));
-			
-			return prefix + ":" + cls.getFragment();
-		}
-		
-		return cls.getFragment();
-	}
-	
 	private String getQueryToGetTypeOfRecord(URI cls, String table, List<DBField> fields) {
 		
-		StringBuffer query = new StringBuffer("SELECT '"  + getAbbreviatedClassIRIString(cls) +"'"
+		StringBuffer query = new StringBuffer("SELECT '"  + OntEntity.getCURIE(cls) +"'"
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -198,7 +183,7 @@ public abstract class SQLGenerator {
 				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
 			query.append("DISTINCT ");
 		
-		query.append("'" + getAbbreviatedClassIRIString(cls) +"'"
+		query.append("'" + OntEntity.getCURIE(cls) +"'"
 				+ " FROM " + table
 				+ " WHERE " + table + "." + column + " = " + "'" + value + "'");
 		

@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.OntEntity;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,7 +35,9 @@ class ClsAssertionsTable extends JScrollPane {
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        String curie = getValueAt(rowIndex, colIndex).toString();
+		        
+		        return OntEntity.getURI(curie).toString();
 			}
 		};
 		table.setDefaultRenderer(Object.class, new ClsAssertionsTableRenderer(new ImageIcon(ImageURIs.ONT_INDIVIDUAL)));
@@ -50,12 +53,10 @@ class ClsAssertionsTable extends JScrollPane {
 		table.getSelectionModel().addListSelectionListener(x);
 	}
 	
-	private URI getIndividual(String individualFragment) {
-		return Janus.mappingMetadata.getIndividual(individualFragment);
-	}
-	
 	URI getSelectedIndividual() {
-		return getIndividual(table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString());
+		String curie = table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()).toString();
+        
+        return OntEntity.getURI(curie);
 	}
 }
 

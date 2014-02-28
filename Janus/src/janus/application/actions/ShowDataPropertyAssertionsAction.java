@@ -9,8 +9,6 @@ import janus.mapping.OntEntity;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.net.URI;
-
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
@@ -29,9 +27,7 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		OntEntity entity = ontTree.getSelectedOntEntity();
-		
-		URI dp = entity.getURI();
+		OntEntity dp = ontTree.getSelectedOntEntity();
 		
 		JTabbedPane displayPane = UIRegistry.getDisplayTab();
 		displayPane.setSelectedIndex(displayPane.indexOfTab(TabNames.ASSERTIONS));
@@ -39,30 +35,30 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 		JTabbedPane assertionsPane = UIRegistry.getAssertionsTab();
 		
 		if (!alreadyExists(assertionsPane, dp)) {
-			JSplitPane newPane = new AssertionsPane(entity);
-			assertionsPane.addTab(dp.getFragment(), new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), newPane);
-			assertionsPane.setToolTipTextAt(assertionsPane.indexOfComponent(newPane), dp.toString());
+			JSplitPane newPane = new AssertionsPane(dp);
+			assertionsPane.addTab(dp.toString(), new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP), newPane);
+			assertionsPane.setToolTipTextAt(assertionsPane.indexOfComponent(newPane), dp.getToolTipText());
 		}
 		assertionsPane.setSelectedIndex(indexOfTab(assertionsPane, dp));
 	}
 	
-	private boolean alreadyExists(JTabbedPane assertionsPane, URI dp) {
+	private boolean alreadyExists(JTabbedPane assertionsPane, OntEntity dp) {
 		int tabCount = assertionsPane.getTabCount();
 		
 		for (int i = 0; i < tabCount; i++)
-			if (assertionsPane.getToolTipTextAt(i).equals(dp.toString()))
+			if (assertionsPane.getToolTipTextAt(i).equals(dp.getToolTipText()))
 				return true;
 		
 		return false;
 	}
 	
-	private int indexOfTab(JTabbedPane assertionsPane, URI dp) {
+	private int indexOfTab(JTabbedPane assertionsPane, OntEntity dp) {
 		int index = -1;
 		
 		int tabCount = assertionsPane.getTabCount();
 		
 		for (int i = 0; i < tabCount; i++)
-			if (assertionsPane.getToolTipTextAt(i).equals(dp.toString())) {
+			if (assertionsPane.getToolTipTextAt(i).equals(dp.getToolTipText())) {
 				index = i;
 				break;
 			}

@@ -1,5 +1,7 @@
 package janus.application.description;
 
+import janus.mapping.OntEntity;
+
 import java.net.URI;
 
 class DataPropDescrTreeNode {
@@ -14,7 +16,7 @@ class DataPropDescrTreeNode {
 	}
 	
 	public String toString() { 
-		if(isURI()) return ((URI)value).getFragment();
+		if(isURI()) return OntEntity.getCURIE(((URI)value));
 
 		return value.toString();
 	}

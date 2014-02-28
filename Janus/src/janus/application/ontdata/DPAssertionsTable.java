@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.OntEntity;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -37,7 +38,7 @@ class DPAssertionsTable extends JScrollPane {
 		        
 		        String value = getValueAt(rowIndex, colIndex).toString();
 		        if (colIndex == 0)
-		        	return getIndividual((String)getValueAt(rowIndex, colIndex)).toString();
+		        	return OntEntity.getURI(value).toString();
 		        else if (colIndex == 1)
 		        	return getToolTipTextForLiteral(value, getCellRect(rowIndex, colIndex, true).width);
 		        
@@ -60,10 +61,6 @@ class DPAssertionsTable extends JScrollPane {
 		table.getColumnModel().getSelectionModel().addListSelectionListener(x);
 	}
 	
-	private URI getIndividual(String individualFragment) {
-		return Janus.mappingMetadata.getIndividual(individualFragment);
-	}
-	
 	private String getToolTipTextForLiteral(String literal, int width) {
 		return "<html><p width=\"" + width + "\">" + literal + "</p></html>";
 	}
@@ -73,7 +70,7 @@ class DPAssertionsTable extends JScrollPane {
 		int col = table.getSelectedColumn();
 		
 		if (row >= 0 && col == 0)
-			return getIndividual(table.getValueAt(row, col).toString());
+			return OntEntity.getURI(table.getValueAt(row, col).toString());
 		
 		return null;
 	}

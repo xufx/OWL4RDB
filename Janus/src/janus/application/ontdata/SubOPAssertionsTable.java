@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import janus.ImageURIs;
 import janus.Janus;
 import janus.database.SQLResultSet;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
 import javax.swing.Icon;
@@ -34,14 +35,9 @@ class SubOPAssertionsTable extends JScrollPane {
 				int rowIndex = rowAtPoint(p);
 		        int colIndex = columnAtPoint(p);
 		        
-		        String value = getValueAt(rowIndex, colIndex).toString();
+		        String curie = getValueAt(rowIndex, colIndex).toString();
 		        
-		        if (colIndex == 0)
-		        	return getObjectProperty(value).toString();
-		        else if (colIndex == 1)
-		        	return getIndividual(value).toString();
-		        
-		        return super.getToolTipText();
+		        return OntEntity.getURI(curie).toString();
 			}
 		};
 		table.setDefaultRenderer(Object.class, 
@@ -53,14 +49,6 @@ class SubOPAssertionsTable extends JScrollPane {
 		((DefaultTableCellRenderer)table.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 		
 		setViewportView(table);
-	}
-	
-	private URI getObjectProperty(String opFragment) {
-		return Janus.mappingMetadata.getObjectProperty(opFragment);
-	}
-	
-	private URI getIndividual(String individualFragment) {
-		return Janus.mappingMetadata.getIndividual(individualFragment);
 	}
 }
 

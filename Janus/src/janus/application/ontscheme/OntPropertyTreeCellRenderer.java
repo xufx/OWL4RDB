@@ -24,9 +24,7 @@ class OntPropertyTreeCellRenderer extends DefaultTreeCellRenderer {
 							                      boolean leaf,
 							                      int row,
 							                      boolean hasFocus) {
-    	// except root node
-    	if(!((DefaultMutableTreeNode)value).isRoot())
-    		setToolTipText(getToolTipText(value));
+    	setToolTipText(getToolTipText(value));
     	
     	super.getTreeCellRendererComponent(tree, value, sel,
                         				   expanded, leaf, row,

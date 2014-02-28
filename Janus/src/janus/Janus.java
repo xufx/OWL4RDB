@@ -25,7 +25,7 @@ public class Janus {
 	public static final String DEFAULT_DIR_FOR_TBOX_FILE = "./ontologies/";
 	public static final String DEFAULT_DIR_FOR_DUMP_FILE = "./ontologies/dump/";
 	
-	public static String ontologyIRI;
+	public static String ontologyURI;
 	
 	public static DBBridge dbBridge;
 	public static OntBridge ontBridge;
@@ -59,7 +59,7 @@ public class Janus {
 				JOptionPane.showMessageDialog(splash, "Could not connect to the DBMS.", 
 											  "Janus Error", JOptionPane.ERROR_MESSAGE);
 			else {
-				ontologyIRI = sessionManager.getOntologyIRI();
+				ontologyURI = sessionManager.getOntologyIRI();
 				break;
 			}
 			
@@ -85,12 +85,10 @@ public class Janus {
 
 		Janus.mappingMetadata = MappingMetadataFactory.generateMappingMetaData();
 		
-		JanusWindow mainWindow = new JanusWindow(sessionManager.getSchema() + " <" + ontologyIRI + ">");
+		JanusWindow mainWindow = new JanusWindow(sessionManager.getSchema() + " <" + ontologyURI + ">");
 		sessionManager.dispose();
 		splash.dispose();
 		mainWindow.setVisible(true);
-		
-		System.out.println(Janus.sqlGenerator.getQueryToGetAllClsAssertions());
 	}
 	
 	private static void setLookAndFeel() {
