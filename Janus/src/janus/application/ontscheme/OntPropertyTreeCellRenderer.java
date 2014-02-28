@@ -1,5 +1,7 @@
 package janus.application.ontscheme;
 
+import janus.mapping.OntEntity;
+
 import java.awt.Component;
 
 import javax.swing.Icon;
@@ -36,7 +38,7 @@ class OntPropertyTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private String getToolTipText(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-        OntTreeNode propertyNode = (OntTreeNode)node.getUserObject();
+        OntEntity propertyNode = (OntEntity)node.getUserObject();
         
         return propertyNode.getToolTipText();
     }

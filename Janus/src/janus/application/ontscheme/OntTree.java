@@ -27,13 +27,13 @@ public abstract class OntTree extends JScrollPane {
 	}
 	
 	public URI getSelectedURI() {
-		return getSelectedTreeNode().getURI();
+		return getSelectedOntEntity().getURI();
 	}
 	
-	public OntEntity getSelectedEntity() {
-		OntTreeNode node = getSelectedTreeNode();
+	public OntEntity getSelectedOntEntity() {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		
-		return new OntEntity(node.getURI(), node.getType());
+		return (OntEntity)node.getUserObject();
 	}
 	
 	public TreePath getTreePathOfEntity(URI entity) {
@@ -44,7 +44,7 @@ public abstract class OntTree extends JScrollPane {
 		
 		while (e.hasMoreElements()) {
 			DefaultMutableTreeNode node = e.nextElement();
-			OntTreeNode entityNode = (OntTreeNode)node.getUserObject();
+			OntEntity entityNode = (OntEntity)node.getUserObject();
 	        if (entityNode.getURI().equals(entity))
 	            return new TreePath(node.getPath());
 	    }
@@ -64,7 +64,7 @@ public abstract class OntTree extends JScrollPane {
 		tree.addMouseListener(trigger);
 	}
 	
-	protected abstract MutableTreeNode buildHierarchy(OntTreeNode entity);
+	protected abstract MutableTreeNode buildHierarchy(OntEntity entity);
 	
 	private void buildUI() {
 		tree  = new JTree(buildHierarchy(constructRootNode()));
@@ -86,10 +86,10 @@ public abstract class OntTree extends JScrollPane {
 	
 	protected abstract TreeCellRenderer constructTreeCellRenderer();
 	
-	protected abstract OntTreeNode constructRootNode();
+	protected abstract OntEntity constructRootNode();
 	
 	void showPopupMenu(int x, int y) {
-		OntTreeNode node = getSelectedTreeNode();
+		OntEntity node = getSelectedOntEntity();
 		OntEntityTypes type = node.getType();
 		
 		determinePopupMenuItemOnOff(type);
@@ -112,10 +112,4 @@ public abstract class OntTree extends JScrollPane {
 	}
 	
 	protected abstract void addMenuItemsToPopupMenu();
-	
-	private OntTreeNode getSelectedTreeNode() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		
-		return (OntTreeNode)node.getUserObject();
-	}
 }

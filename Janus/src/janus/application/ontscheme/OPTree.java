@@ -4,6 +4,7 @@ import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.ShowObjectPropertyAssertionsAction;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
@@ -24,17 +25,17 @@ public class OPTree extends  OntTree {
 		return new OntPropertyTreeCellRenderer(new ImageIcon(ImageURIs.ONT_NAMED_OBJ_PROP));
 	}
 	
-	protected OntTreeNode constructRootNode() {
-		return new OntTreeNode(Janus.ontBridge.getOWLTopObjectProperty(), OntEntityTypes.OWL_TOP_OBJECT_PROPERTY);
+	protected OntEntity constructRootNode() {
+		return new OntEntity(Janus.ontBridge.getOWLTopObjectProperty(), OntEntityTypes.OWL_TOP_OBJECT_PROPERTY);
 	}
 	
-	protected MutableTreeNode buildHierarchy(OntTreeNode entity) {
+	protected MutableTreeNode buildHierarchy(OntEntity entity) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
 		Set<URI> children = Janus.ontBridge.getSubObjProps(entity.getURI());
 		
 		for(URI child : children)
-			node.add(buildHierarchy(new OntTreeNode(child, OntEntityTypes.OBJECT_PROPERTY)));
+			node.add(buildHierarchy(new OntEntity(child, OntEntityTypes.OBJECT_PROPERTY)));
 			
 		return node;
 	}

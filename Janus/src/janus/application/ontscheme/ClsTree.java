@@ -5,6 +5,7 @@ import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.GoToMappedTableAction;
 import janus.application.actions.ShowClassAssertionsAction;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
@@ -31,8 +32,8 @@ public class ClsTree extends OntTree {
 				new ImageIcon(ImageURIs.ONT_NAMED_EQUIVLNT_CLS));
 	}
 	
-	protected OntTreeNode constructRootNode() {
-		return new OntTreeNode(Janus.ontBridge.getOWLThingURI(), OntEntityTypes.OWL_THING_CLASS);
+	protected OntEntity constructRootNode() {
+		return new OntEntity(Janus.ontBridge.getOWLThingURI(), OntEntityTypes.OWL_THING_CLASS);
 	}
 	
 	protected void addMenuItemsToPopupMenu() {
@@ -46,12 +47,12 @@ public class ClsTree extends OntTree {
 		popupMenu.add(showClassAssertions);
 	}
 	
-	protected MutableTreeNode buildHierarchy(OntTreeNode entity) {
+	protected MutableTreeNode buildHierarchy(OntEntity entity) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
 		Set<URI> children = Janus.ontBridge.getSubClses(entity.getURI());
 		for(URI child : children)
-			node.add(buildHierarchy(new OntTreeNode(child, Janus.mappingMetadata.getClassType(child))));
+			node.add(buildHierarchy(new OntEntity(child, Janus.mappingMetadata.getClassType(child))));
 		
 		return node;
 	}
@@ -105,14 +106,14 @@ class OntClassTreeCellRenderer extends DefaultTreeCellRenderer {
     
     private String getToolTipText(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-        OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
+        OntEntity clsNode = (OntEntity)node.getUserObject();
         
         return clsNode.getToolTipText();
     }
 
     private boolean isEquivlntClsNode(Object value) {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
-        OntTreeNode clsNode = (OntTreeNode)node.getUserObject();
+        OntEntity clsNode = (OntEntity)node.getUserObject();
         
         return Janus.ontBridge.hasEquivlntCls(clsNode.getURI());
     }

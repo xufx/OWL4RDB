@@ -4,6 +4,7 @@ import janus.ImageURIs;
 import janus.Janus;
 import janus.application.actions.GoToMappedColumnAction;
 import janus.application.actions.ShowDataPropertyAssertionsAction;
+import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
 import java.net.URI;
@@ -24,8 +25,8 @@ public class DPTree extends OntTree {
 		return new OntPropertyTreeCellRenderer(new ImageIcon(ImageURIs.ONT_NAMED_DATA_PROP));
 	}
 	
-	protected OntTreeNode constructRootNode() {
-		return new OntTreeNode(Janus.ontBridge.getOWLTopDataProperty(), OntEntityTypes.OWL_TOP_DATA_PROPERTY);
+	protected OntEntity constructRootNode() {
+		return new OntEntity(Janus.ontBridge.getOWLTopDataProperty(), OntEntityTypes.OWL_TOP_DATA_PROPERTY);
 	}
 	
 	protected void addMenuItemsToPopupMenu() {
@@ -36,13 +37,13 @@ public class DPTree extends OntTree {
 		popupMenu.add(showDataPropertyAssertions);
 	}
 	
-	protected MutableTreeNode buildHierarchy(OntTreeNode entity) {
+	protected MutableTreeNode buildHierarchy(OntEntity entity) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(entity);
 		
 		Set<URI> children = Janus.ontBridge.getSubDataProps(entity.getURI());
 		
 		for(URI child : children)
-			node.add(buildHierarchy(new OntTreeNode(child, OntEntityTypes.DATA_PROPERTY)));
+			node.add(buildHierarchy(new OntEntity(child, OntEntityTypes.DATA_PROPERTY)));
 			
 		return node;
 	}

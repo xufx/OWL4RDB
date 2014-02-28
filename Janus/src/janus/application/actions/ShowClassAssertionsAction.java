@@ -29,7 +29,7 @@ public class ShowClassAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		OntEntity entity = ontTree.getSelectedEntity();
+		OntEntity entity = ontTree.getSelectedOntEntity();
 		
 		URI cls = entity.getURI();
 		

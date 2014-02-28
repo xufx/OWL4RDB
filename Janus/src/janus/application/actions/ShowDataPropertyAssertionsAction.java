@@ -29,7 +29,7 @@ public class ShowDataPropertyAssertionsAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		OntTree ontTree = getOntTreeToEventSource(e);
 		
-		OntEntity entity = ontTree.getSelectedEntity();
+		OntEntity entity = ontTree.getSelectedOntEntity();
 		
 		URI dp = entity.getURI();
 		

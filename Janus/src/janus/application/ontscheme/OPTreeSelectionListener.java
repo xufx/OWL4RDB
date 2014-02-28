@@ -1,6 +1,7 @@
 package janus.application.ontscheme;
 
 import janus.application.description.AttrDescribable;
+import janus.mapping.OntEntity;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -21,7 +22,7 @@ public class OPTreeSelectionListener implements TreeSelectionListener {
 			return;
 		
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
-		OntTreeNode opNode = (OntTreeNode)node.getUserObject();
+		OntEntity opNode = (OntEntity)node.getUserObject();
 		
 		announcer.describeOWLObjProp(opNode.getURI());
 	}
