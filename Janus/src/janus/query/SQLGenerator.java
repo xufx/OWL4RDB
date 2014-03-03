@@ -58,6 +58,12 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls);
 	
+	protected abstract String getQueryToGetAllOPAssertions(String table, String column);
+	
+	protected abstract String getQueryToGetAllDPAssertionsOfRecords(String table, String column);
+	
+	protected abstract String getQueryToGetAllDPAssertionsOfFields(String table, String column);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -425,5 +431,25 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 2);
+	}
+	
+	// for PropertyValue(?a, ?p, ?d), which ?a, ?p and ?d are empty.
+	public String getQueryToGetAllPropertyAssertions() {
+		List<String> queries = new Vector<String>();
+		
+		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
+		
+		for (String table: tables) {
+			Set<String> columns = Janus.cachedDBMetadata.getColumns(table);
+			
+			for (String column: columns)
+				if (Janus.cachedDBMetadata.isKey(table, column)) {
+					queries.add(getQueryToGetAllOPAssertions(table, column));
+					queries.add(getQueryToGetAllDPAssertionsOfFields(table, column));
+				} else
+					queries.add(getQueryToGetAllDPAssertionsOfRecords(table, column));
+		}
+		
+		return getUnionQuery(queries, 3);
 	}
 }

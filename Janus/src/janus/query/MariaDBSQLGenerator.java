@@ -255,4 +255,46 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		return query.toString();
 	}
+	
+	protected String getQueryToGetAllOPAssertions(String table, String column) {
+		URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
+		
+		StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(op) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+												+ " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
+	}
+	
+	protected String getQueryToGetAllDPAssertionsOfRecords(String table, String column) {
+		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
+		
+		StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+												+ " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
+	}
+	
+	protected String getQueryToGetAllDPAssertionsOfFields(String table, String column) {
+		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
+		
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		if (!(Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)
+				&& Janus.cachedDBMetadata.isPrimaryKey(table, column)))
+			query.append("DISTINCT ");
+		
+		query.append("'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildFieldIndividual(table, column) + ", " + getConcatCallStatementToBuildLiteral(table, column)
+		        + " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, column))
+			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
+	}
 }
