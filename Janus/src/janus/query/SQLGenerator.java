@@ -5,6 +5,7 @@ import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
@@ -63,6 +64,12 @@ public abstract class SQLGenerator {
 	protected abstract String getQueryToGetAllDPAssertionsOfRecords(String table, String column);
 	
 	protected abstract String getQueryToGetAllDPAssertionsOfFields(String table, String column);
+	
+	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is an object property.
+	public abstract String getQueryToGetSourceIndividualsOfOPAssertion(URI op, URI aTargetIndividual);
+	
+	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is an object property.
+	public abstract String getQueryToGetTargetIndividualsOfOPAssertion(URI op, URI aSourceIndividual);
 	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;

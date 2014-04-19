@@ -1,6 +1,8 @@
 package janus;
 
 import java.io.File;
+import java.net.URI;
+
 import janus.application.JanusWindow;
 import janus.application.dialog.SessionManager;
 import janus.database.DBBridge;
@@ -89,6 +91,10 @@ public class Janus {
 		sessionManager.dispose();
 		splash.dispose();
 		mainWindow.setVisible(true);
+		
+		System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&c=id&v=C0")));
+		
+		System.out.println(Janus.sqlGenerator.getQueryToGetTargetIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&k=id&v=C0")));
 	}
 	
 	private static void setLookAndFeel() {

@@ -271,7 +271,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 	protected String getQueryToGetAllDPAssertionsOfRecords(String table, String column) {
 		URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 		
-		StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) + ", " + getConcatCallStatementToBuildFieldIndividual(table, column)
+		StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" + ", " + getConcatCallStatementToBuildRecordIndividual(table) + ", " + getConcatCallStatementToBuildLiteral(table, column)
 												+ " FROM " + table);
 		
 		if (!Janus.cachedDBMetadata.isNotNull(table, column))
@@ -294,6 +294,41 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		
 		if (!Janus.cachedDBMetadata.isNotNull(table, column))
 			query.append(" WHERE " + table + "." + column + " IS NOT NULL");
+		
+		return query.toString();
+	}
+	
+	public String getQueryToGetSourceIndividualsOfOPAssertion(URI op, URI aTargetIndividual) {
+		DBColumn opColumn = Janus.mappingMetadata.getMappedColumnToProperty(op);
+		
+		String table = opColumn.getTableName();
+		
+		return "SELECT " + getConcatCallStatementToBuildRecordIndividual(table)
+				+ " FROM " + table
+				+ " WHERE " + opColumn.toString() + " = " + "'" + Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(aTargetIndividual).getValue() + "'";
+	}
+	
+	public String getQueryToGetTargetIndividualsOfOPAssertion(URI op, URI aSourceIndividual) {
+		DBColumn opColumn = Janus.mappingMetadata.getMappedColumnToProperty(op);
+		
+		String table = opColumn.getTableName();
+		String column = opColumn.getColumnName();
+		
+		StringBuffer query = new StringBuffer("SELECT " + getConcatCallStatementToBuildFieldIndividual(table, column)
+										   + " FROM " + table
+										   + " WHERE ");
+		
+		List<DBField> srcFields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(aSourceIndividual);
+		
+		for (int i = 0; i < srcFields.size()-1; i++) {
+			String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcFields.get(i).getTableName(), srcFields.get(i).getColumnName(), table);
+			
+			query.append(table + "." + matchedColumn + " = " + "'" + srcFields.get(i).getValue() + "'" + " AND ");
+		}
+		
+		DBField lastSrcField = srcFields.get(srcFields.size()-1);
+		String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(lastSrcField.getTableName(), lastSrcField.getColumnName(), table);
+		query.append(table + "." + matchedColumn + " = " + "'" + lastSrcField.getValue() + "'");
 		
 		return query.toString();
 	}
