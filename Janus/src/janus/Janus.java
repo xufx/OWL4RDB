@@ -92,9 +92,11 @@ public class Janus {
 		splash.dispose();
 		mainWindow.setVisible(true);
 		
-		System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&c=id&v=C0")));
+		//System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&c=id&v=C0")));
 		
-		System.out.println(Janus.sqlGenerator.getQueryToGetTargetIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&k=id&v=C0")));
+		//System.out.println(Janus.sqlGenerator.getQueryToGetTargetIndividualsOfOPAssertion(URI.create("http://www.example.com/college#op_course.id"), URI.create("http://www.example.com/college#t=course&k=id&v=C0")));
+	
+		System.out.println(Janus.sqlGenerator.getQueryToGetObjectPropertiesOfOPAssertion(URI.create("http://www.example.com/college#t=person&k=id&v=P2"), URI.create("http://www.example.com/college#t=person&c=id&v=P2")));
 	}
 	
 	private static void setLookAndFeel() {

@@ -32,4 +32,17 @@ public class DBColumn implements Comparable<DBColumn> {
 	public String toString() {
 		return tableName + "." + columnName;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof DBColumn) {
+			if (((DBColumn)obj).getTableName().equals(tableName) 
+					&& ((DBColumn)obj).getColumnName().equals(columnName))
+				return true;
+			else
+				return false;
+		}
+		
+		return super.equals(obj);
+	}
 }

@@ -279,4 +279,37 @@ public class CachedDBMetadata {
 		
 		return null;
 	}
+	
+	public Set<String> getFamilyTables(String tableName) {
+		Set<String> familyTables = new ConcurrentSkipListSet<String>();
+		
+		String rootTable = getRootTable(tableName);
+		
+		Set<String> allTables = getTableNames();
+		for (String table: allTables)
+			if (getRootTable(table).equals(rootTable))
+				familyTables.add(table);
+		
+		return familyTables;
+	}
+	
+	public Set<DBColumn> getFamilyColumns(DBColumn column) {
+		Set<DBColumn> familyColumns = new ConcurrentSkipListSet<DBColumn>();
+		
+		DBColumn rootColumn = getRootColumn(column.getTableName(), column.getColumnName());
+		
+		Set<String> allTables = getTableNames();
+		for (String table: allTables) {
+			Set<String> columns = getKeyColumns(table);
+			for (String aColumn: columns)
+				if (getRootColumn(table, aColumn).equals(rootColumn))
+					familyColumns.add(new DBColumn(table, aColumn));
+		}
+		
+		return familyColumns;
+	}
+	
+	public Set<DBColumn> getFamilyColumns(String tableName, String columnName) {
+		return getFamilyColumns(new DBColumn(tableName, columnName));
+	}
 }

@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public abstract class SQLGenerator {
 	
@@ -440,7 +441,7 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 2);
 	}
 	
-	// for PropertyValue(?a, ?p, ?d), which ?a, ?p and ?d are empty.
+	// for PropertyValue(?a, ?p, ?d), which ?a, ?p and ?d are all empty.
 	public String getQueryToGetAllPropertyAssertions() {
 		List<String> queries = new Vector<String>();
 		
@@ -458,5 +459,71 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 3);
+	}
+	
+	private Set<DBColumn> getColumsIncludedInTables(Set<String> tables, Set<DBColumn> columns) {
+		Set<DBColumn> members = new ConcurrentSkipListSet<DBColumn>();
+		
+		for (DBColumn column: columns)
+			if (tables.contains(column.getTableName()))
+				members.add(column);
+		
+		return members;
+	}
+	
+	// for PropertyValue(?a, ?p, ?d), which only ?p is a variable and both ?a and ?d are individuals.
+	public String getQueryToGetObjectPropertiesOfOPAssertion(URI aSourceIndividual, URI aTargetIndividual) {
+		List<String> queries = new Vector<String>();
+		
+		String srcTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(aSourceIndividual);
+		
+		Set<String> familyTablesOfSrc = Janus.cachedDBMetadata.getFamilyTables(srcTable);
+		
+		DBField targetField = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(aTargetIndividual);
+		
+		Set<DBColumn> familyColumnsOfTarget = Janus.cachedDBMetadata.getFamilyColumns(targetField.getTableName(), targetField.getColumnName());
+		
+		Set<DBColumn> columnsInFamilyTablesOfSrc = getColumsIncludedInTables(familyTablesOfSrc, familyColumnsOfTarget);
+		
+		List<DBField> srcFields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(aSourceIndividual);
+		
+		for (DBColumn aColumn: columnsInFamilyTablesOfSrc) {
+			String table = aColumn.getTableName();
+			String column = aColumn.getColumnName();
+			String value = targetField.getValue();
+			
+			URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
+			
+			StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(op) + "'" +
+												 " FROM " + table + 
+												 " WHERE ");
+			
+			boolean isTheSameColumn = false;
+			boolean isTheSameValue = false;
+			for (DBField srcField: srcFields) {
+				String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, srcField.getColumnName(), table);
+				
+				query.append(table + "." + matchedColumn + " = " + "'" + srcField.getValue() + "'" + " AND ");
+				
+				if (matchedColumn.equals(column)) {
+					isTheSameColumn = true;
+					
+					if (value.equals(srcField.getValue()))
+						isTheSameValue = true;
+				}
+			}
+			
+			if (isTheSameColumn) {
+				if (isTheSameValue)
+					query.delete(query.lastIndexOf(" AND "), query.length());
+				else
+					continue;
+			} else
+				query.append(table + "." + column + " = " + "'" + value + "'");
+			
+			queries.add(query.toString());
+		}
+		
+		return getUnionQuery(queries, 1);
 	}
 }
