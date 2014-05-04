@@ -5,6 +5,7 @@ import janus.database.DBColumn;
 import janus.database.DBField;
 import janus.mapping.DatatypeMap;
 import janus.mapping.OntEntity;
+import janus.mapping.OntEntityTypes;
 import janus.mapping.OntMapper;
 
 import java.net.URI;
@@ -332,6 +333,70 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		query.append(table + "." + matchedColumn + " = " + "'" + lastSrcField.getValue() + "'");
 		
 		return query.toString();
+	}
+	
+	public String getQueryToGetTargetLiteralsOfDPAssertion(URI dp, URI aSourceIndividual) {
+		DBColumn dpColumn = Janus.mappingMetadata.getMappedColumnToProperty(dp);
+		String table = dpColumn.getTableName();
+		String column = dpColumn.getColumnName();
+		
+		OntEntityTypes srcIndividualType = Janus.mappingMetadata.getIndividualType(aSourceIndividual);
+		
+		if (srcIndividualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+			
+			String srcTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(aSourceIndividual);
+			
+			Set<String> familyTablesOfSrc = Janus.cachedDBMetadata.getFamilyTables(srcTable);
+			
+			if (!familyTablesOfSrc.contains(table))
+				return getQueryToGetEmptyResultSet(1);
+			
+			StringBuffer query = new StringBuffer("SELECT " + getConcatCallStatementToBuildLiteral(table, column) + 
+												 " FROM " + table +
+												 " WHERE ");
+			
+			List<DBField> srcFields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(aSourceIndividual);
+			
+			for (DBField field: srcFields) {
+				String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, field.getColumnName(), table);
+				
+				query.append(table + "." + matchedColumn + " = " + "'" + field.getValue() + "'" + " AND ");
+			}
+			
+			query.delete(query.lastIndexOf(" AND "), query.length());
+			
+			return query.toString();
+			
+		} else if (srcIndividualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			
+			DBField srcField = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(aSourceIndividual);
+			String srcTable = srcField.getTableName();
+			String srcColumn = srcField.getColumnName();
+			
+			Set<DBColumn> familyColumnsOfSrc = Janus.cachedDBMetadata.getFamilyColumns(srcTable, srcColumn);
+			
+			if (!familyColumnsOfSrc.contains(dpColumn))
+				return getQueryToGetEmptyResultSet(1);
+			
+			StringBuffer query = new StringBuffer("SELECT ");
+			
+			if (!(Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)
+					|| ((Janus.cachedDBMetadata.isPrimaryKey(table, column) 
+							&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))))
+				query.append("DISTINCT ");
+			
+			query.append(getConcatCallStatementToBuildLiteral(table, column) + 
+					" FROM " + table +
+					" WHERE ");
+			
+			String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, srcColumn, table);
+			
+			query.append(table + "." + matchedColumn + " = " + "'" + srcField.getValue() + "'");
+			
+			return query.toString();
+			
+		} else
+			return getQueryToGetEmptyResultSet(1);
 	}
 	
 	public String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral) {

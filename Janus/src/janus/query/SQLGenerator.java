@@ -76,6 +76,9 @@ public abstract class SQLGenerator {
 	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is a data property.
 	public abstract String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral);
 	
+	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is a data property.
+	public abstract String getQueryToGetTargetLiteralsOfDPAssertion(URI dp, URI aSourceIndividual);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
