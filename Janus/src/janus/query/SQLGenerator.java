@@ -3,6 +3,7 @@ package janus.query;
 import janus.Janus;
 import janus.database.DBColumn;
 import janus.database.DBField;
+import janus.mapping.DatatypeMap;
 import janus.mapping.OntEntity;
 import janus.mapping.OntEntityTypes;
 
@@ -522,6 +523,119 @@ public abstract class SQLGenerator {
 				query.append(table + "." + column + " = " + "'" + value + "'");
 			
 			queries.add(query.toString());
+		}
+		
+		return getUnionQuery(queries, 1);
+	}
+	
+	// for PropertyValue(?a, ?p, ?d), which only ?p is a variable, ?a is an individual and ?d is a literal.
+	public String getQueryToGetDataPropertiesOfDPAssertion(URI aSourceIndividual, String aTargetLiteral) {
+		OntEntityTypes individualType = Janus.mappingMetadata.getIndividualType(aSourceIndividual);
+		
+		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL))
+			return getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(aSourceIndividual, aTargetLiteral);
+		else if (individualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) 
+			return getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(aSourceIndividual, aTargetLiteral);
+		else
+			return getQueryToGetEmptyResultSet(1);
+	}
+	
+	private String getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(URI aSourceIndividual, String aTargetLiteral) {
+		List<String> queries = new Vector<String>();
+		
+		String datatypeOfTargetLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(aTargetLiteral);
+		
+		Set<Integer> mappedSQLTypes = DatatypeMap.getMappedSQLTypes(datatypeOfTargetLiteral);
+		
+		String valueOfTargetLiteral = Janus.mappingMetadata.getLexicalValueOfTypedLiteral(aTargetLiteral);
+		
+		DBField srcField = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(aSourceIndividual);
+		String srcTable = srcField.getTableName();
+		String srcColumn = srcField.getColumnName();
+		String srcValue = srcField.getValue();
+		
+		if (!mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(srcTable, srcColumn)) 
+				|| !srcValue.equals(valueOfTargetLiteral))
+			return getUnionQuery(queries, 1);
+		
+		Set<DBColumn> familyColumnsOfSrc = Janus.cachedDBMetadata.getFamilyColumns(srcField.getTableName(), srcField.getColumnName());
+		
+		for (DBColumn aColumn: familyColumnsOfSrc) {
+			String table = aColumn.getTableName();
+			String column = aColumn.getColumnName();
+			
+			URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
+			
+			StringBuffer query = new StringBuffer("SELECT ");
+			
+			
+			if (!(Janus.cachedDBMetadata.isPrimaryKey(table, column)
+					&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
+				query.append("DISTINCT ");
+				
+			query.append("'" + OntEntity.getCURIE(dp) + "'" + 
+						" FROM " + table + 
+						" WHERE " + table + "." + column + " = " + "'" + valueOfTargetLiteral + "'");
+			
+			queries.add(query.toString());
+		}
+		
+		return getUnionQuery(queries, 1);
+	}
+	
+	private String getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(URI aSourceIndividual, String aTargetLiteral) {
+		List<String> queries = new Vector<String>();
+		
+		String srcTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(aSourceIndividual);
+		
+		Set<String> familyTablesOfSrc = Janus.cachedDBMetadata.getFamilyTables(srcTable);
+		
+		List<DBField> srcFields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(aSourceIndividual);
+		
+		String datatypeOfTargetLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(aTargetLiteral);
+		
+		Set<Integer> mappedSQLTypes = DatatypeMap.getMappedSQLTypes(datatypeOfTargetLiteral);
+		
+		String valueOfTargetLiteral = Janus.mappingMetadata.getLexicalValueOfTypedLiteral(aTargetLiteral);
+		
+		for (String table: familyTablesOfSrc) {
+			Set<String> columns = Janus.cachedDBMetadata.getNonKeyColumns(table);
+			
+			for (String column: columns) {
+				if (mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(table, column))) {
+					URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
+					
+					StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" +
+														 " FROM " + table + 
+														 " WHERE ");
+					
+					boolean isTheSameColumn = false;
+					boolean isTheSameValue = false;
+					
+					for (DBField srcField: srcFields) {
+						String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, srcField.getColumnName(), table);
+
+						query.append(table + "." + matchedColumn + " = " + "'" + srcField.getValue() + "'" + " AND ");
+
+						if (matchedColumn.equals(column)) {
+							isTheSameColumn = true;
+
+							if (valueOfTargetLiteral.equals(srcField.getValue()))
+								isTheSameValue = true;
+						}
+					}
+					
+					if (isTheSameColumn) {
+						if (isTheSameValue)
+							query.delete(query.lastIndexOf(" AND "), query.length());
+						else
+							continue;
+					} else
+						query.append(table + "." + column + " = " + "'" + valueOfTargetLiteral + "'");
+
+					queries.add(query.toString());
+				}
+			}	
 		}
 		
 		return getUnionQuery(queries, 1);
