@@ -9,6 +9,7 @@ import janus.mapping.OntMapper;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 class MariaDBSQLGenerator extends SQLGenerator {
 	
@@ -329,6 +330,41 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		DBField lastSrcField = srcFields.get(srcFields.size()-1);
 		String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(lastSrcField.getTableName(), lastSrcField.getColumnName(), table);
 		query.append(table + "." + matchedColumn + " = " + "'" + lastSrcField.getValue() + "'");
+		
+		return query.toString();
+	}
+	
+	public String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral) {
+		DBColumn dpColumn = Janus.mappingMetadata.getMappedColumnToProperty(dp);
+		String table = dpColumn.getTableName();
+		String column = dpColumn.getColumnName();
+		
+		String datatypeOfTargetLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(aTargetLiteral);
+		
+		Set<Integer> mappedSQLTypes = DatatypeMap.getMappedSQLTypes(datatypeOfTargetLiteral);
+		
+		String valueOfTargetLiteral = Janus.mappingMetadata.getLexicalValueOfTypedLiteral(aTargetLiteral);
+		
+		if (!mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(table, column)))
+			return getQueryToGetEmptyResultSet(1);
+		
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		if (Janus.cachedDBMetadata.isKey(table, column)) {
+			
+			if (!(Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)
+					|| ((Janus.cachedDBMetadata.isPrimaryKey(table, column) 
+							&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))))
+				query.append("DISTINCT ");
+			
+			query.append(getConcatCallStatementToBuildFieldIndividual(table, column));
+			
+		} else {
+			query.append(getConcatCallStatementToBuildRecordIndividual(table));
+		}
+		
+		query.append(" FROM " + table + 
+					 " WHERE " + dpColumn.toString() + " = " + "'" + valueOfTargetLiteral + "'");
 		
 		return query.toString();
 	}

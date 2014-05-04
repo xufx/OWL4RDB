@@ -102,9 +102,15 @@ public class Janus {
 	
 		//System.out.println(Janus.sqlGenerator.getQueryToGetDataPropertiesOfDPAssertion(URI.create("http://www.example.com/college#t=takes&k=sid&v=P3&k=cid&v=c2"), "\"" + "T" +"\"" + "^^xsd:string"));
 		
-		System.out.println(Janus.sqlGenerator.getQueryToGetDataPropertiesOfDPAssertion(URI.create("http://www.example.com/college#t=person&k=id&v=P3"), "\"" + "2" +"\"" + "^^xsd:string"));
+		//System.out.println(Janus.sqlGenerator.getQueryToGetDataPropertiesOfDPAssertion(URI.create("http://www.example.com/college#t=person&k=id&v=P3"), "\"" + "2" +"\"" + "^^xsd:string"));
 		
 		//System.out.println(Janus.sqlGenerator.getQueryToGetDataPropertiesOfDPAssertion(URI.create("http://www.example.com/college#t=person&c=id&v=P3"), "\"" + "P3" +"\"" + "^^xsd:string"));
+		
+		//System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfDPAssertion(URI.create("http://www.example.com/college#dp_course.id"), "\"" + "C2" +"\"" + "^^xsd:string"));
+		
+		//System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfDPAssertion(URI.create("http://www.example.com/college#dp_lecturer.id"), "\"" + "P4" +"\"" + "^^xsd:string"));
+		
+		System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfDPAssertion(URI.create("http://www.example.com/college#dp_lecturer.room"), "\"" + "102" +"\"" + "^^xsd:string"));
 	}
 	
 	private static void setLookAndFeel() {

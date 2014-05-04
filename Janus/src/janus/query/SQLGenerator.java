@@ -73,6 +73,9 @@ public abstract class SQLGenerator {
 	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is an object property.
 	public abstract String getQueryToGetTargetIndividualsOfOPAssertion(URI op, URI aSourceIndividual);
 	
+	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is a data property.
+	public abstract String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -566,11 +569,11 @@ public abstract class SQLGenerator {
 			
 			URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 			
-			StringBuffer query = new StringBuffer("SELECT ");
+			StringBuffer query = new StringBuffer("SELECT ");	
 			
-			
-			if (!(Janus.cachedDBMetadata.isPrimaryKey(table, column)
-					&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
+			if (!(Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)
+					|| ((Janus.cachedDBMetadata.isPrimaryKey(table, column) 
+							&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))))
 				query.append("DISTINCT ");
 				
 			query.append("'" + OntEntity.getCURIE(dp) + "'" + 
