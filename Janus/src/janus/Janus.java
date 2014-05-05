@@ -1,6 +1,7 @@
 package janus;
 
 import java.io.File;
+
 import janus.application.JanusWindow;
 import janus.application.dialog.SessionManager;
 import janus.database.DBBridge;
@@ -13,8 +14,8 @@ import janus.mapping.metadata.MappingMetadata;
 import janus.ontology.OntBridge;
 import janus.ontology.OntBridgeFactory;
 import janus.ontology.ReasonerType;
-import janus.rewriter.SQLGenerator;
-import janus.rewriter.SQLGeneratorFactory;
+import janus.query.rewriter.SQLGenerator;
+import janus.query.rewriter.SQLGeneratorFactory;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
