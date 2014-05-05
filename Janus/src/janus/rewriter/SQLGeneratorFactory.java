@@ -1,4 +1,4 @@
-package janus.query;
+package janus.rewriter;
 
 import janus.database.DBMSTypes;
 
