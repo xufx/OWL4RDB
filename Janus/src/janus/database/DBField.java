@@ -1,6 +1,7 @@
 package janus.database;
 
 public class DBField implements Comparable<DBField> {
+	
 	private String tableName;
 	private String columnName;
 	private String value;
@@ -26,5 +27,10 @@ public class DBField implements Comparable<DBField> {
 	@Override
 	public int compareTo(DBField o) {
 		return columnName.compareTo(o.getColumnName());
+	}
+	
+	@Override
+	public String toString() {
+		return tableName + "." + columnName + " = " + "'" + value + "'";
 	}
 }

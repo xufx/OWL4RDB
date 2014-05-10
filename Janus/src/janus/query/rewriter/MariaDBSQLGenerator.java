@@ -44,7 +44,7 @@ class MariaDBSQLGenerator extends SQLGenerator {
 				+ " WHERE " + keyColumn + " IS NOT NULL";
 	}
 	
-	protected String getQueryToGetEmptyResultSet(int columnCount) {
+	public String getQueryToGetEmptyResultSet(int columnCount) {
 		StringBuffer query = new StringBuffer("SELECT ");
 		
 		for (int i = 0; i < columnCount-1; i++)
@@ -55,7 +55,11 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		query.append(" FROM DUAL WHERE FALSE");
 		
 		return query.toString();
-	} 
+	}
+	
+	public String getQueryToGetOneBooleanValueResultSet(boolean value) {
+		return "SELECT " + value + "''";
+	}
 	
 	private String getConcatCallStatementToBuildFieldIndividual(String table, String keyColumn) {
 		DBColumn rootColumn = Janus.cachedDBMetadata.getRootColumn(table, keyColumn);

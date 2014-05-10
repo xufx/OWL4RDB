@@ -312,4 +312,14 @@ public class CachedDBMetadata {
 	public Set<DBColumn> getFamilyColumns(String tableName, String columnName) {
 		return getFamilyColumns(new DBColumn(tableName, columnName));
 	}
+	
+	public Set<DBColumn> getColumsIncludedInTables(Set<String> tables, Set<DBColumn> columns) {
+		Set<DBColumn> members = new ConcurrentSkipListSet<DBColumn>();
+		
+		for (DBColumn column: columns)
+			if (tables.contains(column.getTableName()))
+				members.add(column);
+		
+		return members;
+	}
 }

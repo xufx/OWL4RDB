@@ -5,8 +5,7 @@ import janus.application.UIRegistry;
 import janus.application.query.QueryTypes;
 import janus.application.query.Showable;
 import janus.application.query.Submittable;
-import janus.sparqldl.SPARQLDLQueryEngine;
-
+import janus.query.sparqldl.QueryEngine;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -28,19 +27,32 @@ public class RunAction extends AbstractAction {
 				break;
 		}
 
-		Showable displayer = UIRegistry.getQueryResultTable();
-		
-		displayer.showResult(selectedSubmissionType);
+//		Showable displayer = UIRegistry.getQueryResultTable();
+//		
+//		displayer.showResult(selectedSubmissionType);
 	}
 	
 	private void submitSPARQLDL(Submittable submitter) {
 		String stmt = submitter.getQuery();
 		
-		SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
+		//->using derivo
+		//SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
+		//queryAgent.executeQuery();
+		//<-using derivo
+		
+		QueryEngine queryEngine = new QueryEngine(stmt);
+		
+		janus.query.sparqldl.QueryTypes queryType = queryEngine.getQueryType();
+		
+		if (queryType.equals(janus.query.sparqldl.QueryTypes.ASK)) {
+			boolean result = queryEngine.executeAskQuery();
+			
+			Showable displayer = UIRegistry.getQueryResultTable();
+			
+			displayer.showResult(result);
+		}
 		
 		//long start = System.currentTimeMillis();
-		
-		queryAgent.executeQuery();
 		
 		//long end = System.currentTimeMillis();
 		
@@ -50,6 +62,10 @@ public class RunAction extends AbstractAction {
 	private void submitSQL(Submittable submitter) {
 		String stmt = submitter.getQuery();
 		Janus.dbBridge.executeQuery(stmt);
+		
+		Showable displayer = UIRegistry.getQueryResultTable();
+		
+		displayer.showResult(QueryTypes.SPARQL_DL);
 	}
 	
 	public String getToolTipText() {

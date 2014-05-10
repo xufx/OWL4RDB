@@ -1,6 +1,7 @@
 package janus;
 
 import java.io.File;
+import java.net.URI;
 
 import janus.application.JanusWindow;
 import janus.application.dialog.SessionManager;
@@ -112,6 +113,8 @@ public class Janus {
 		//System.out.println(Janus.sqlGenerator.getQueryToGetSourceIndividualsOfDPAssertion(URI.create("http://www.example.com/college#dp_lecturer.room"), "\"" + "102" +"\"" + "^^xsd:string"));
 		
 		//System.out.println(Janus.sqlGenerator.getQueryToGetTargetLiteralsOfDPAssertion(URI.create("http://www.example.com/college#dp_student.id"), URI.create("http://www.example.com/college#t=person&c=id&v=P4")));
+	
+		//System.out.println(Janus.ontBridge.isEquivalentClass(URI.create("http://www.example.com/college#person"), URI.create("http://www.example.com/college#person")));
 	}
 	
 	private static void setLookAndFeel() {

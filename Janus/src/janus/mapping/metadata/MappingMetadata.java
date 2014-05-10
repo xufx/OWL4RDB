@@ -105,6 +105,24 @@ public class MappingMetadata {
 		return null;
 	}
 	
+	public OntEntityTypes getPropertyType(URI propertyURI) {
+		String property = propertyURI.toString();
+		
+		if (property.equals(OntEntityTypes.OWL_TOP_DATA_PROPERTY.pattern()))
+			return OntEntityTypes.OWL_TOP_DATA_PROPERTY;
+		
+		if (property.equals(OntEntityTypes.OWL_TOP_OBJECT_PROPERTY.pattern()))
+			return OntEntityTypes.OWL_TOP_OBJECT_PROPERTY;
+		
+		String propertyFragment = propertyURI.getFragment();
+		for (PropertyMetadata p: properties) {
+			if (p.getPropertyFragment().equals(propertyFragment))
+				return p.getPropertyType();
+		}
+		
+		return null;
+	}
+	
 	public URI getMappedDataProperty(String table, String column) {
 		return getURIOfFragment(getMappedDataPropertyFragment(table, column));
 	}

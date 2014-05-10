@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public abstract class SQLGenerator {
 	
@@ -35,7 +34,9 @@ public abstract class SQLGenerator {
 	 */
 	protected abstract String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table);
 	
-	protected abstract String getQueryToGetEmptyResultSet(int columnCount);
+	public abstract String getQueryToGetEmptyResultSet(int columnCount);
+	
+	public abstract String getQueryToGetOneBooleanValueResultSet(boolean value);
 	
 	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields);
 	
@@ -468,16 +469,6 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 3);
 	}
 	
-	private Set<DBColumn> getColumsIncludedInTables(Set<String> tables, Set<DBColumn> columns) {
-		Set<DBColumn> members = new ConcurrentSkipListSet<DBColumn>();
-		
-		for (DBColumn column: columns)
-			if (tables.contains(column.getTableName()))
-				members.add(column);
-		
-		return members;
-	}
-	
 	// for PropertyValue(?a, ?p, ?d), which only ?p is a variable and both ?a and ?d are individuals.
 	public String getQueryToGetObjectPropertiesOfOPAssertion(URI aSourceIndividual, URI aTargetIndividual) {
 		List<String> queries = new Vector<String>();
@@ -490,7 +481,7 @@ public abstract class SQLGenerator {
 		
 		Set<DBColumn> familyColumnsOfTarget = Janus.cachedDBMetadata.getFamilyColumns(targetField.getTableName(), targetField.getColumnName());
 		
-		Set<DBColumn> columnsInFamilyTablesOfSrc = getColumsIncludedInTables(familyTablesOfSrc, familyColumnsOfTarget);
+		Set<DBColumn> columnsInFamilyTablesOfSrc = Janus.cachedDBMetadata.getColumsIncludedInTables(familyTablesOfSrc, familyColumnsOfTarget);
 		
 		List<DBField> srcFields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(aSourceIndividual);
 		
@@ -645,5 +636,74 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 1);
+	}
+	
+	public String getQueryToCheckPresenceOfIndividual(URI individual) {
+		StringBuffer query = new StringBuffer("SELECT " + "1 ");
+		
+		OntEntityTypes type = Janus.mappingMetadata.getIndividualType(individual);
+		
+		if (type.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+			String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
+			
+			query.append("FROM " + table + 
+						" WHERE ");
+			
+			List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
+			
+			for (DBField field: fields)
+				query.append(field.toString() + " AND ");
+			
+			query.delete(query.lastIndexOf(" AND "), query.length());
+			
+		} else if (type.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
+			String table = field.getTableName();
+			
+			query.append("FROM " + table + 
+						" WHERE " + field.toString());
+		}
+		
+		return query.toString();
+	}
+	
+	public String getQueryToCheckPresenceOfPKFields(List<DBField> pk) {
+		StringBuffer query = new StringBuffer("SELECT " + "1 ");
+		
+		String table = pk.get(0).getTableName();
+		
+		query.append("FROM " + table + 
+					" WHERE ");
+		
+		for (DBField field: pk)
+			query.append(field.toString() + " AND ");
+			
+		query.delete(query.lastIndexOf(" AND "), query.length());
+		
+		return query.toString();
+	}
+	
+	public String getQueryToCheckPresenceOfField(DBField field) {
+		String table = field.getTableName();
+		
+		return "SELECT " + "1 " + 
+			   "FROM " + table + 
+			  " WHERE " + field.toString();
+	}
+	
+	public String getQueryToCheckPresence(Set<String> queries) {
+		StringBuffer query = new StringBuffer("SELECT CASE " + 
+													 "WHEN " + "count(*) > 0 " + "THEN " + "'true' " +
+													 "ELSE " + "'false' " + 
+													 "END " + "AS " + "'' " +
+											  "FROM " + "DUAL " +
+											  "WHERE ");
+		
+		for (String aQuery: queries)
+			query.append("EXISTS (" + aQuery + ") AND ");
+		
+		query.delete(query.lastIndexOf(" AND "), query.length());
+		
+		return query.toString();
 	}
 }

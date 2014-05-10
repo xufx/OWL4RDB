@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import janus.Janus;
+import janus.database.SQLResultSet;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,4 +30,17 @@ public class ResultSetPane extends JScrollPane implements Showable {
 			setViewportView(table);
 		}
 	}
+	
+	public void showResult(boolean result) {
+		
+		String[] columnNames = {""};
+
+		String[][] rowData = {{String.valueOf(result)}};
+
+		JTable table = new JTable(rowData, columnNames);
+
+		setViewportView(table);
+	}
+	
+	public void showResult(SQLResultSet resultSet) {}
 }

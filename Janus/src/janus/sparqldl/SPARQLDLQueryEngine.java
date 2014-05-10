@@ -5758,6 +5758,23 @@ public class SPARQLDLQueryEngine {
 	}
 	
 	private void preprocess() {
+		
+		group_a_0 = new Vector<QueryAtom>();
+		group_a_1 = new Vector<QueryAtom>();
+		group_a_2 = new Vector<QueryAtom>();
+		group_a_3 = new Vector<QueryAtom>();
+		group_t_0 = new Vector<QueryAtom>();
+		group_t_1 = new Vector<QueryAtom>();
+		group_t_2 = new Vector<QueryAtom>();
+		group_r_0 = new Vector<QueryAtom>();
+		group_r_1 = new Vector<QueryAtom>();
+		group_r_2 = new Vector<QueryAtom>();
+		
+		groupGT1 = new Vector<QueryAtom>();
+		
+		prefixMap = new Hashtable<String, String>();
+		varsMap = new Hashtable<String, Variable>();
+		
 		buildPrefixMap();
 		
 		divideAtomsIntoGroups();
