@@ -1,7 +1,5 @@
 package janus.database.metadata;
 
-import janus.Janus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -138,7 +136,7 @@ class TableMetadata implements Comparable<TableMetadata> {
 		return columns;
 	}
 	
-	int getRowCount() {
+	/*int getRowCount() {
 		List<String> primaryKeys = getPrimaryKey();
 		
 		String query = "SELECT COUNT(DISTINCT ";
@@ -153,7 +151,7 @@ class TableMetadata implements Comparable<TableMetadata> {
 		List<String> rowData = Janus.dbBridge.getResultSetRowAt(1);
 		
 		return Integer.parseInt(rowData.get(0));
-	}
+	}*/
 	
 	public String getTableName() {
 		return tableName;

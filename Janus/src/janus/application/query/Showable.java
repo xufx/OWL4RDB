@@ -1,10 +1,9 @@
 package janus.application.query;
 
-import janus.database.SQLResultSet;
+import javax.swing.table.TableModel;
 
 
 public interface Showable {
-	void showResult(QueryTypes submissionType);
-	void showResult(SQLResultSet resultSet);
+	void showResult(TableModel resultSet);
 	void showResult(boolean result);
 }

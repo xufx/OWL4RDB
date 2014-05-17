@@ -1,7 +1,6 @@
 package janus;
 
 import java.io.File;
-import java.net.URI;
 
 import janus.application.JanusWindow;
 import janus.application.dialog.SessionManager;
@@ -17,7 +16,6 @@ import janus.ontology.OntBridgeFactory;
 import janus.ontology.ReasonerType;
 import janus.query.rewriter.SQLGenerator;
 import janus.query.rewriter.SQLGeneratorFactory;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;

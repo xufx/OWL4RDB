@@ -68,16 +68,16 @@ public class SPARQLDLQueryEngine {
 			//return;
 		//}
 		
-		preprocess();
+		//preprocess();
 
 		//long start = System.currentTimeMillis();
 
-		execute();
+		//execute();
 		
 		//long end = System.currentTimeMillis();
 		//System.out.println( "질의 엔진 처리 시간 : " + ( end - start));
 		
-		show();
+		//show();
 		
 		//if (group_t.size() > 0 || group_r.size() > 0)
 			//executeTBoxAndRBoxQuery(buildTBoxAndRBoxQuery());

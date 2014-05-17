@@ -157,13 +157,13 @@ public class CachedDBMetadata {
 		return false;
 	}
 	
-	public int getRowCount(String tableName) {
+	/*public int getRowCount(String tableName) {
 		for (TableMetadata table: tables)
 			if (table.getTableName().equals(tableName))
 				return table.getRowCount();
 		
 		return -1;
-	}
+	}*/
 	
 	public Set<String> getForeignKeys(String tableName) {
 		for (TableMetadata table: tables)

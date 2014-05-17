@@ -5,7 +5,10 @@ import janus.application.UIRegistry;
 import janus.application.query.QueryTypes;
 import janus.application.query.Showable;
 import janus.application.query.Submittable;
-import janus.query.sparqldl.QueryEngine;
+import janus.database.SQLResultSetTableModel;
+import janus.query.sparqldl.SPARQLDLEngine;
+import janus.sparqldl.SPARQLDLQueryEngine;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -36,21 +39,20 @@ public class RunAction extends AbstractAction {
 		String stmt = submitter.getQuery();
 		
 		//->using derivo
-		//SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
-		//queryAgent.executeQuery();
+		SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
+		queryAgent.executeQuery();
 		//<-using derivo
 		
-		QueryEngine queryEngine = new QueryEngine(stmt);
+		SPARQLDLEngine queryEngine = new SPARQLDLEngine(stmt);
 		
 		janus.query.sparqldl.QueryTypes queryType = queryEngine.getQueryType();
 		
-		if (queryType.equals(janus.query.sparqldl.QueryTypes.ASK)) {
-			boolean result = queryEngine.executeAskQuery();
-			
-			Showable displayer = UIRegistry.getQueryResultTable();
-			
-			displayer.showResult(result);
-		}
+		Showable displayer = UIRegistry.getQueryResultTable();
+		
+		if (queryType.equals(janus.query.sparqldl.QueryTypes.ASK))
+			displayer.showResult(queryEngine.executeAskQuery());
+		else if (queryType.equals(janus.query.sparqldl.QueryTypes.SELECT))
+			displayer.showResult(queryEngine.executeSelectQuery());
 		
 		//long start = System.currentTimeMillis();
 		
@@ -61,11 +63,10 @@ public class RunAction extends AbstractAction {
 	
 	private void submitSQL(Submittable submitter) {
 		String stmt = submitter.getQuery();
-		Janus.dbBridge.executeQuery(stmt);
 		
 		Showable displayer = UIRegistry.getQueryResultTable();
 		
-		displayer.showResult(QueryTypes.SPARQL_DL);
+		displayer.showResult(new SQLResultSetTableModel(Janus.dbBridge.executeQuery(stmt)));
 	}
 	
 	public String getToolTipText() {

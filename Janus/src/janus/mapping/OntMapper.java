@@ -2,6 +2,7 @@ package janus.mapping;
 
 import janus.Janus;
 import janus.database.DBField;
+import janus.database.SQLResultSet;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -212,21 +213,21 @@ public class OntMapper {
 			
 			List<String> primaryKeys = Janus.cachedDBMetadata.getPrimaryKey(tableName);
 			String query = "SELECT * FROM " + tableName;
-			Janus.dbBridge.executeQuery(query);
+			SQLResultSet resultSet = Janus.dbBridge.executeQuery(query);
 			
-			int columnCount = Janus.dbBridge.getResultSetColumnCount();
+			int columnCount = resultSet.getResultSetColumnCount();
 			
 			List<String> columnNames = new Vector<String>(columnCount);
 			int[] columnDataTypes = new int[columnCount];
 			for(int column = 1; column <= columnCount; column++) {
-				String columnName = Janus.dbBridge.getResultSetColumnLabel(column);
+				String columnName = resultSet.getResultSetColumnLabel(column);
 				columnNames.add(columnName);
 				columnDataTypes[column - 1] = Janus.cachedDBMetadata.getDataType(tableName, columnName);
 			}
 			
-			int rowCount = Janus.dbBridge.getResultSetRowCount();
+			int rowCount = resultSet.getResultSetRowCount();
 			for (int rowIndex = 1; rowIndex <= rowCount; rowIndex++) {
-				List<String> rowData = Janus.dbBridge.getResultSetRowAt(rowIndex);
+				List<String> rowData = resultSet.getResultSetRowAt(rowIndex);
 				
 				List<DBField> pkFields = new ArrayList<DBField>();
 				for (String pk: primaryKeys) {
