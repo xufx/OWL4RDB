@@ -322,4 +322,29 @@ public class CachedDBMetadata {
 		
 		return members;
 	}
+	
+	public Set<String> getRootTables() {
+		Set<String> rootTables = new ConcurrentSkipListSet<String>();
+		
+		Set<String> tables = getTableNames();
+		for (String table: tables)
+			if (isRootTable(table))
+				rootTables.add(table);
+		
+		return rootTables;
+	}
+	
+	public Set<DBColumn> getRootColumns() {
+		Set<DBColumn> rootColumns = new ConcurrentSkipListSet<DBColumn>();
+		
+		Set<String> tables = getTableNames();
+		for (String table: tables) {
+			Set<String> keyColumns = getKeyColumns(table);
+			for (String column: keyColumns)
+				if (isRootColumn(table, column))
+					rootColumns.add(new DBColumn(table, column));
+		}
+		
+		return rootColumns;
+	}
 }

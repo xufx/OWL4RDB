@@ -137,6 +137,10 @@ public class MappingMetadata {
 		return null;
 	}
 	
+	public boolean isBeableIndividual(URI individual) {
+		return IndividualMetadata.isBeableIndividual(individual); 
+	}
+	
 	public URI getMappedObjectProperty(String table, String column) {
 		return getURIOfFragment(getMappedObjectPropertyFragment(table, column));
 	}

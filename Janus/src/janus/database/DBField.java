@@ -33,4 +33,8 @@ public class DBField implements Comparable<DBField> {
 	public String toString() {
 		return tableName + "." + columnName + " = " + "'" + value + "'";
 	}
+	
+	public String getNotEqualExpression() {
+		return tableName + "." + columnName + " <> " + "'" + value + "'";
+	}
 }

@@ -11,6 +11,7 @@ import janus.mapping.OntMapper;
 import java.net.URI;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 class MariaDBSQLGenerator extends SQLGenerator {
 	
@@ -436,5 +437,137 @@ class MariaDBSQLGenerator extends SQLGenerator {
 					 " WHERE " + dpColumn.toString() + " = " + "'" + valueOfTargetLiteral + "'");
 		
 		return query.toString();
+	}
+	
+	public String getQueryToGetAllPairsOfTheSameIndividuals(String variable1, String variable2) {
+		List<String> queries = new Vector<String>();
+		
+		Set<String> rootTables = Janus.cachedDBMetadata.getRootTables();
+		
+		for (String table: rootTables) {
+			String query = "SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + variable1 + ", " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + variable2 +
+						  " FROM " + table;
+			queries.add(query);
+		}
+		
+		Set<DBColumn> rootColumns = Janus.cachedDBMetadata.getRootColumns();
+		
+		for (DBColumn aDBColumn: rootColumns) {
+			String table = aDBColumn.getTableName();
+			String column = aDBColumn.getColumnName();
+			
+			StringBuffer query = new StringBuffer("SELECT ");
+			
+			if (!((Janus.cachedDBMetadata.isPrimaryKey(table, column) && Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
+					|| Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)))
+				query.append("DISTINCT ");
+			
+			query.append(getConcatCallStatementToBuildFieldIndividual(table, column) + " AS " + variable1 + ", " + getConcatCallStatementToBuildFieldIndividual(table, column) + " AS " + variable2 + 
+					" FROM " + table);
+			
+			if (!Janus.cachedDBMetadata.isPrimaryKey(table, column))
+				query.append(" WHERE " + aDBColumn.toString() + " IS NOT NULL");
+			
+			queries.add(query.toString());
+		}
+		
+		return getUnionQuery(queries, 2);
+	}
+	
+	public String getQueryToGetTheDiffIndividualsFrom(URI individual, String variable) {
+		List<String> queries = new Vector<String>();
+		
+		Set<String> rootTables = Janus.cachedDBMetadata.getRootTables();
+		
+		Set<DBColumn> rootColumns = Janus.cachedDBMetadata.getRootColumns();
+		
+		OntEntityTypes type = Janus.mappingMetadata.getIndividualType(individual);
+		
+		if (type.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+						
+			for (DBColumn aDBColumn: rootColumns) {
+				String table = aDBColumn.getTableName();
+				String column = aDBColumn.getColumnName();
+				
+				StringBuffer query = new StringBuffer("SELECT ");
+				
+				if (!((Janus.cachedDBMetadata.isPrimaryKey(table, column) && Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
+						|| Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)))
+					query.append("DISTINCT ");
+				
+				query.append(getConcatCallStatementToBuildFieldIndividual(table, column) + " AS " + variable + 
+						" FROM " + table);
+				
+				if (!Janus.cachedDBMetadata.isPrimaryKey(table, column))
+					query.append(" WHERE " + aDBColumn.toString() + " IS NOT NULL");
+				
+				queries.add(query.toString());
+			}
+			
+			List<DBField> mappedRecord = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
+			String mappedTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
+			
+			for (String table: rootTables) {
+				
+				StringBuffer query = new StringBuffer("SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + variable + 
+													 " FROM " + table);
+				
+				if (table.equals(mappedTable)) {
+					query.append(" WHERE ");
+					for (DBField field: mappedRecord)
+						query.append(field.getNotEqualExpression() + " AND ");
+					
+					query.delete(query.lastIndexOf(" AND "), query.length());
+				}
+				
+				queries.add(query.toString());
+			}
+			
+			
+			
+		} else if (type.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			
+			for (String table: rootTables) {
+				String query = "SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + variable +
+							  " FROM " + table;
+				queries.add(query);
+			}
+			
+			DBField mappedField = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
+			
+			for (DBColumn aDBColumn: rootColumns) {
+				String table = aDBColumn.getTableName();
+				String column = aDBColumn.getColumnName();
+				
+				StringBuffer query = new StringBuffer("SELECT ");
+				
+				boolean isPK = Janus.cachedDBMetadata.isPrimaryKey(table, column);
+				
+				if (!((isPK && Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
+						|| Janus.cachedDBMetadata.isSingleColumnUniqueKey(table, column)))
+					query.append("DISTINCT ");
+				
+				query.append(getConcatCallStatementToBuildFieldIndividual(table, column) + " AS " + variable + 
+						" FROM " + table);
+				
+				if (!isPK)
+					query.append(" WHERE " + aDBColumn.toString() + " IS NOT NULL");
+				
+				if (table.equals(mappedField.getTableName()) && column.equals(mappedField.getColumnName())) {
+					
+					if (!isPK)
+						query.append(" AND ");
+					else
+						query.append(" WHERE ");
+					
+					query.append(mappedField.getNotEqualExpression());
+				}
+				
+				queries.add(query.toString());
+			}
+			
+		}
+		
+		return getUnionQuery(queries, 1);
 	}
 }

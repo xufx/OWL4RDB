@@ -219,4 +219,47 @@ public class IndividualMetadata {
 		
 		return null;
 	}
+	
+	static boolean isBeableIndividual(URI individual) {
+		
+		try {
+			URI ontologyURI = new URI(individual.getScheme(), individual.getSchemeSpecificPart(), null);
+			
+			if (!ontologyURI.toString().equals(Janus.ontologyURI))
+				return false;
+			
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		OntEntityTypes type = Janus.mappingMetadata.getIndividualType(individual);
+		
+		if (type.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+			
+			String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
+			List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
+			
+			if (Janus.cachedDBMetadata.isRootTable(table)) {
+				List<String> pks = Janus.cachedDBMetadata.getPrimaryKey(table);
+
+				for (DBField field: fields)
+					pks.remove(field.getColumnName());
+				
+				if (!pks.isEmpty())
+					return false;
+				
+			} else 
+				return false;
+			
+		} else if (type.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
+			
+			if (!Janus.cachedDBMetadata.isRootColumn(field.getTableName(), field.getColumnName()))
+				return false;
+		} else
+			return false;
+		
+		return true;
+	}
 }

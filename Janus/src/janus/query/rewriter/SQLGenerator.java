@@ -80,6 +80,12 @@ public abstract class SQLGenerator {
 	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is a data property.
 	public abstract String getQueryToGetTargetLiteralsOfDPAssertion(URI dp, URI aSourceIndividual);
 	
+	// for SameAs(?a1, ?a2), which both ?a1 and ?a2 are empty.
+	public abstract String getQueryToGetAllPairsOfTheSameIndividuals(String variable1, String variable2);
+	
+	// for DifferentFrom(?a1, ?a2), which both ?a1 and ?a2 are empty.
+	public abstract String getQueryToGetTheDiffIndividualsFrom(URI individual, String variable);
+	
 	public String getQueryToGetIndividualsOfClass(URI cls) {
 		String query = null;
 		
@@ -212,7 +218,7 @@ public abstract class SQLGenerator {
 		return query.toString();
 	}
 	
-	private String getUnionQuery(List<String> queries, int columnCount) {
+	String getUnionQuery(List<String> queries, int columnCount) {
 		if (queries.isEmpty())
 			return getQueryToGetEmptyResultSet(columnCount);
 		
@@ -636,6 +642,20 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 1);
+	}
+	
+	public String getQueryToGetTheSameIndividualsAs(URI individual, String variable) {
+		StringBuffer query = new StringBuffer(getQueryToCheckPresenceOfIndividual(individual));
+		
+		int start = query.indexOf("SELECT ") + "SELECT ".length();
+		
+		int end = query.indexOf("FROM");
+		
+		String str = "'" + OntEntity.getCURIE(individual) + "'" + " AS " + variable + " ";
+		
+		query.replace(start, end, str);
+		
+		return query.toString();
 	}
 	
 	public String getQueryToCheckPresenceOfIndividual(URI individual) {
