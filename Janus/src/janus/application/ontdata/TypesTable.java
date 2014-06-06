@@ -55,7 +55,7 @@ class TypesTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	TypesTableModel(URI individual) {
-		String query = Janus.sqlGenerator.getQueryToGetTypesOfIndividual(individual);
+		String query = Janus.sqlGenerator.getQueryToGetTypesOfIndividual(individual, "Types");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		

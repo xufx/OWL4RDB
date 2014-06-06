@@ -17,36 +17,40 @@ public abstract class SQLGenerator {
 	/* Type I-I: when a table has one column primary key. 
 	 * SELECT aPK FROM table
 	 */
-	protected abstract String getQueryToGetIndividualsOfSinglePKColumnClass(String aPK, String table);
+	protected abstract String getQueryToGetIndividualsOfSinglePKColumnClass(String aPK, String table, String columnName);
 	
 	/* Type I-II: when a table has multiple column primary key.
 	 * SELECT pk1, pk2, ... , pkn FROM table
 	 */
-	protected abstract String getQueryToGetIndividualsOfTableClass(String table);
+	protected abstract String getQueryToGetIndividualsOfTableClass(String table, String columnName);
 	
 	/* Type I-III: to select a non-nullable key column.
 	 * SELECT DISTINCT keyColumn FROM table
 	 */
-	protected abstract String getQueryToGetIndividualsOfNonNullableColumnClass(String keyColumn, String table);
+	protected abstract String getQueryToGetIndividualsOfNonNullableColumnClass(String keyColumn, String table, String columnName);
 	
 	/* Type I-IV: to select a nullable key column.
 	 * SELECT DISTINCT keyColumn FROM table WHERE keyColumn IS NOT NULL
 	 */
-	protected abstract String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table);
+	protected abstract String getQueryToGetIndividualsOfNullableColumnClass(String keyColumn, String table, String columnName);
 	
 	public abstract String getQueryToGetEmptyResultSet(int columnCount);
 	
+	public abstract String getQueryToGetEmptyResultSet(List<String> columnNames);
+	
+	public abstract String getQueryToGetEmptyResultSet(String columnName);
+	
 	public abstract String getQueryToGetOneBooleanValueResultSet(boolean value);
 	
-	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields);
+	protected abstract String getQueryToGetOPAssertionOfRecord(URI op, String opColumn, String table, List<DBField> PKFields, String pColumnName, String tColumnName);
 	
 	// the param record is a source individual.
-	protected abstract String getQueryToGetDPAssertionOfRecord(URI dp, String dpColumn, String table, List<DBField> PKFields);
+	protected abstract String getQueryToGetDPAssertionOfRecord(URI dp, String dpColumn, String table, List<DBField> PKFields, String pColumnName, String tColumnName);
 	
 	// the param field is a source individual.
-	protected abstract String getQueryToGetDPAssertionOfField(URI dp, String dpColumn, String table, String value);
+	protected abstract String getQueryToGetDPAssertionOfField(URI dp, String dpColumn, String table, String value, String pColumnName, String tColumnName);
 	
-	protected abstract String getQueryToGetOPAssertionOfField(DBField field);
+	protected abstract String getQueryToGetOPAssertionOfField(DBField field, String pColumnName, String sColumnName);
 	
 	protected abstract String getQueryToGetDPAssertionsOfDPWithTableClassDomain(URI dp);
 	
@@ -54,13 +58,13 @@ public abstract class SQLGenerator {
 	
 	public abstract String getQueryToGetOPAsserionsOfOP(URI op);
 	
-	protected abstract String getQueryToGetDPAssertionsOfKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
+	protected abstract String getQueryToGetDPAssertionsOfKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral, String pColumnName, String sColumnName);
 	
-	protected abstract String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral);
+	protected abstract String getQueryToGetDPAssertionsOfNonKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral, String pColumnName, String sColumnName);
 	
-	protected abstract String getQueryToGetAllClsAssertionsOfTableClass(String table, URI cls);
+	protected abstract String getQueryToGetAllClsAssertionsOfTableClass(String table, URI cls, String columnName1, String columnName2);
 	
-	protected abstract String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls);
+	protected abstract String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls, String columnName1, String columnName2);
 	
 	protected abstract String getQueryToGetAllOPAssertions(String table, String column);
 	
@@ -69,37 +73,41 @@ public abstract class SQLGenerator {
 	protected abstract String getQueryToGetAllDPAssertionsOfFields(String table, String column);
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is an object property.
-	public abstract String getQueryToGetSourceIndividualsOfOPAssertion(URI op, URI aTargetIndividual);
+	public abstract String getQueryToGetSourceIndividualsOfOPAssertion(URI op, URI aTargetIndividual, String columnName);
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is an object property.
-	public abstract String getQueryToGetTargetIndividualsOfOPAssertion(URI op, URI aSourceIndividual);
+	public abstract String getQueryToGetTargetIndividualsOfOPAssertion(URI op, URI aSourceIndividual, String columnName);
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is a data property.
-	public abstract String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral);
+	public abstract String getQueryToGetSourceIndividualsOfDPAssertion(URI dp, String aTargetLiteral, String columnName);
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?d is a variable and ?p is a data property.
-	public abstract String getQueryToGetTargetLiteralsOfDPAssertion(URI dp, URI aSourceIndividual);
+	public abstract String getQueryToGetTargetLiteralsOfDPAssertion(URI dp, URI aSourceIndividual, String columnName);
 	
 	// for SameAs(?a1, ?a2), which both ?a1 and ?a2 are empty.
-	public abstract String getQueryToGetAllPairsOfTheSameIndividuals(String variable1, String variable2);
+	public abstract String getQueryToGetAllPairsOfTheSameIndividuals(String columnName1, String columnName2);
 	
 	// for DifferentFrom(?a1, ?a2), which both ?a1 and ?a2 are empty.
-	public abstract String getQueryToGetTheDiffIndividualsFrom(URI individual, String variable);
+	public abstract String getQueryToGetDiffIndividualsFrom(URI individual, String columnName);
 	
-	public String getQueryToGetIndividualsOfClass(URI cls) {
+	protected abstract String getQueryToGetAllIndividuals(String columnName);
+	
+	public abstract String getQueryToGetAllPairsOfDiffIndividuals(String columnName1, String columnName2);
+	
+	public String getQueryToGetIndividualsOfClass(URI cls, String columnName) {
 		String query = null;
 		
 		if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.TABLE_CLASS))
-			query = getQueryToGetIndividualsOfTableClass(cls);
+			query = getQueryToGetIndividualsOfTableClass(cls, columnName);
 		else if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.COLUMN_CLASS))
-			query = getQueryToGetIndividualsOfColumnClass(cls);
+			query = getQueryToGetIndividualsOfColumnClass(cls, columnName);
 		else if (Janus.mappingMetadata.getClassType(cls).equals(OntEntityTypes.OWL_THING_CLASS))
-			query = getQueryToGetIndividualsOfOwlThing();
+			query = getQueryToGetAllIndividuals(columnName);
 		
 		return query;
 	}
 	
-	private String getQueryToGetIndividualsOfOwlThing() {
+	/*private String getQueryToGetIndividualsOfOwlThing() {
 		List<String> queries = new Vector<String>();
 		
 		Set<URI> clses = Janus.ontBridge.getSubClses(Janus.ontBridge.getOWLThingURI());
@@ -111,28 +119,28 @@ public abstract class SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 1);
-	}
+	}*/
 	
-	private String getQueryToGetIndividualsOfTableClass(URI cls) {
+	private String getQueryToGetIndividualsOfTableClass(URI cls, String columnName) {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 		
-		return getQueryToGetIndividualsOfTableClass(table);
+		return getQueryToGetIndividualsOfTableClass(table, columnName);
 	}
 	
-	private String getQueryToGetIndividualsOfColumnClass(URI cls) {
+	private String getQueryToGetIndividualsOfColumnClass(URI cls, String columnName) {
 		String table = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 		String column = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
 		
 		if (Janus.cachedDBMetadata.isPrimaryKey(table, column) 
 				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table))
-			return getQueryToGetIndividualsOfSinglePKColumnClass(column, table);
+			return getQueryToGetIndividualsOfSinglePKColumnClass(column, table, columnName);
 		else if (Janus.cachedDBMetadata.isNotNull(table, column))
-			return getQueryToGetIndividualsOfNonNullableColumnClass(column, table);
+			return getQueryToGetIndividualsOfNonNullableColumnClass(column, table, columnName);
 		else
-			return getQueryToGetIndividualsOfNullableColumnClass(column, table);
+			return getQueryToGetIndividualsOfNullableColumnClass(column, table, columnName);
 	}
 	
-	private String getQueryToGetTypesOfFieldIndividual(URI individual) {
+	private String getQueryToGetTypesOfFieldIndividual(URI individual, String columnName) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
 		
 		String table = field.getTableName();
@@ -141,7 +149,7 @@ public abstract class SQLGenerator {
 		
 		List<String> queries = new Vector<String>();
 		
-		queries.add(getQueryToGetTypeOfField(Janus.ontBridge.getOWLThingURI(), table, column, value));
+		queries.add(getQueryToGetTypeOfField(Janus.ontBridge.getOWLThingURI(), table, column, value, columnName));
 		
 		URI mappedClass = Janus.mappingMetadata.getMappedClass(table, column);
 		
@@ -151,20 +159,20 @@ public abstract class SQLGenerator {
 			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 			String mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
 			
-			queries.add(getQueryToGetTypeOfField(cls, mappedTable, mappedColumn, value));
+			queries.add(getQueryToGetTypeOfField(cls, mappedTable, mappedColumn, value, columnName));
 		}
 		
 		return getUnionQuery(queries, 1);
 	}
 	
-	private String getQueryToGetTypesOfRecordIndividual(URI individual) {
+	private String getQueryToGetTypesOfRecordIndividual(URI individual, String columnName) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 		
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
 		
 		List<String> queries = new Vector<String>();
 		
-		queries.add(getQueryToGetTypeOfRecord(Janus.ontBridge.getOWLThingURI(), table, fields));
+		queries.add(getQueryToGetTypeOfRecord(Janus.ontBridge.getOWLThingURI(), table, fields, columnName));
 		
 		URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
 		
@@ -180,15 +188,15 @@ public abstract class SQLGenerator {
 				familyFields.add(new DBField(mappedTable, matchedPKColumn, field.getValue()));
 			}
 			
-			queries.add(getQueryToGetTypeOfRecord(cls, mappedTable, familyFields));
+			queries.add(getQueryToGetTypeOfRecord(cls, mappedTable, familyFields, columnName));
 		}
 		
 		return getUnionQuery(queries, 1);
 	}
 	
-	private String getQueryToGetTypeOfRecord(URI cls, String table, List<DBField> fields) {
+	private String getQueryToGetTypeOfRecord(URI cls, String table, List<DBField> fields, String columnName) {
 		
-		StringBuffer query = new StringBuffer("SELECT '"  + OntEntity.getCURIE(cls) +"'"
+		StringBuffer query = new StringBuffer("SELECT '" + OntEntity.getCURIE(cls) + "'" + " AS " + columnName 
 												+ " FROM " + table
 												+ " WHERE ");
 		
@@ -204,14 +212,14 @@ public abstract class SQLGenerator {
 		return query.toString();
 	}
 	
-	private String getQueryToGetTypeOfField(URI cls, String table, String column, String value) {
+	private String getQueryToGetTypeOfField(URI cls, String table, String column, String value, String columnName) {
 		StringBuffer query = new StringBuffer("SELECT ");
 		
 		if (!(Janus.cachedDBMetadata.isPrimaryKey(table, column)
 				&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))
 			query.append("DISTINCT ");
 		
-		query.append("'" + OntEntity.getCURIE(cls) +"'"
+		query.append("'" + OntEntity.getCURIE(cls) + "'" + " AS " + columnName
 				+ " FROM " + table
 				+ " WHERE " + table + "." + column + " = " + "'" + value + "'");
 		
@@ -235,31 +243,77 @@ public abstract class SQLGenerator {
 		return query.toString();
 	}
 	
-	public String getQueryToGetTypesOfIndividual(URI individual) {
+	String getUnionQuery(List<String> queries, List<String> columnNames) {
+		if (queries.isEmpty())
+			return getQueryToGetEmptyResultSet(columnNames);
+		
+		if (queries.size() == 1)
+			return queries.get(0);
+		
+		StringBuffer query = new StringBuffer();
+		
+		for (int i = 0; i < queries.size() - 1; i++)
+			query.append("(" + queries.get(i) +") UNION ");
+		
+		query.append("(" + queries.get(queries.size() - 1) + ")");
+		
+		return query.toString();
+	}
+	
+	String getUnionQuery(List<String> queries, String columnName) {
+		if (queries.isEmpty())
+			return getQueryToGetEmptyResultSet(columnName);
+		
+		if (queries.size() == 1)
+			return queries.get(0);
+		
+		StringBuffer query = new StringBuffer();
+		
+		for (int i = 0; i < queries.size() - 1; i++)
+			query.append("(" + queries.get(i) +") UNION ");
+		
+		query.append("(" + queries.get(queries.size() - 1) + ")");
+		
+		return query.toString();
+	}
+	
+	public String getQueryToGetTypesOfIndividual(URI individual, String columnName) {
 		String query = null;
 		
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetTypesOfRecordIndividual(individual);
+			query = getQueryToGetTypesOfRecordIndividual(individual, columnName);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetTypesOfFieldIndividual(individual);
+			query = getQueryToGetTypesOfFieldIndividual(individual, columnName);
 		
 		return query;
 	}
 	
 	//object property assertions 
-	public String getQueryToGetOPAssertionsOfIndividual(URI individual) {
+	public String getQueryToGetOPAssertionsOfIndividual(URI individual, String pColumnName, String stColumnName) {
 		String query = null;
 		
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetOPAssertionsOfRecordSourceIndividual(individual);
+			query = getQueryToGetOPAssertionsOfRecordSourceIndividual(individual, pColumnName, stColumnName); // stColumnName = tColumnName
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetOPAssertionsOfFieldTargetIndividual(individual);
+			query = getQueryToGetOPAssertionsOfFieldTargetIndividual(individual, pColumnName, stColumnName); //stColumnName = sColumnName
 		
 		return query;
 	}
 	
+	public String getQueryToGetAllPropertyAssertionsOfSourceIndividual(URI srcIndividual, String pColumnName, String tColumnName) {
+		List<String> queries = null;
+		
+		if (Janus.mappingMetadata.getIndividualType(srcIndividual).equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+			queries = getQueriesToGetOPAssertionsOfRecordSourceIndividual(srcIndividual, pColumnName, tColumnName);
+			queries.addAll(getQueriesToGetDPAssertionsOfSourceIndividual(srcIndividual, pColumnName, tColumnName));
+		} else if (Janus.mappingMetadata.getIndividualType(srcIndividual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
+			queries = getQueriesToGetDPAssertionsOfSourceIndividual(srcIndividual, pColumnName, tColumnName);
+		
+		return getUnionQuery(queries, 2);
+	}
+	
 	// the parameter individual is object.
-	private String getQueryToGetOPAssertionsOfFieldTargetIndividual(URI individual) {
+	private String getQueryToGetOPAssertionsOfFieldTargetIndividual(URI individual, String pColumnName, String sColumnName) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
 		
 		String table = field.getTableName();
@@ -276,48 +330,60 @@ public abstract class SQLGenerator {
 			String familyTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 			String familyColumn = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
 						
-			queries.add(getQueryToGetOPAssertionOfField(new DBField(familyTable, familyColumn, value)));
+			queries.add(getQueryToGetOPAssertionOfField(new DBField(familyTable, familyColumn, value), pColumnName, sColumnName));
 		}
 		
 		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetOPAssertionsOfRecordSourceIndividual(URI individual) {
+	private String getQueryToGetOPAssertionsOfRecordSourceIndividual(URI individual, String pColumnName, String tColumnName) {
+		List<String> queries = getQueriesToGetOPAssertionsOfRecordSourceIndividual(individual, pColumnName, tColumnName);
+		return getUnionQuery(queries, 2);
+	}
+	
+	// the parameter individual is subject.
+	private List<String> getQueriesToGetOPAssertionsOfRecordSourceIndividual(URI individual, String pColumnName, String tColumnName) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
-		
+
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
-		
+
 		List<String> queries = new Vector<String>();
-		
+
 		URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
-		
+
 		Set<URI> familyClsses = Janus.ontBridge.getAllFamilyClasses(mappedClass);
-		
+
 		for (URI cls: familyClsses) {
 			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
-			
+
 			List<DBField> familyFields = new Vector<DBField>();
-			
+
 			for (DBField field: fields) {
 				String matchedPKColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(field.getTableName(), field.getColumnName(), mappedTable);
 				familyFields.add(new DBField(mappedTable, matchedPKColumn, field.getValue()));
 			}
-			
+
 			Set<String> keyColumns = Janus.cachedDBMetadata.getKeyColumns(mappedTable);
-			
+
 			for (String keyColumn: keyColumns) {
 				URI mappedOP = Janus.mappingMetadata.getMappedObjectProperty(mappedTable, keyColumn);
-				
-				queries.add(getQueryToGetOPAssertionOfRecord(mappedOP, keyColumn, mappedTable, familyFields));
+
+				queries.add(getQueryToGetOPAssertionOfRecord(mappedOP, keyColumn, mappedTable, familyFields, pColumnName, tColumnName));
 			}
 		}
-		
+
+		return queries;
+	}
+	
+	// the parameter individual is subject.
+	private String getQueryToGetDPAssertionsOfRecordSourceIndividual(URI individual, String pColumnName, String tColumnName) {
+		List<String> queries = getQueriesToGetDPAssertionsOfRecordSourceIndividual(individual, pColumnName, tColumnName);		
 		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfRecordSourceIndividual(URI individual) {
+	private List<String> getQueriesToGetDPAssertionsOfRecordSourceIndividual(URI individual, String pColumnName, String tColumnName) {
 		List<DBField> fields = Janus.mappingMetadata.getMappedDBFieldsToRecordIndividual(individual);
 
 		String table = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(individual);
@@ -343,17 +409,23 @@ public abstract class SQLGenerator {
 			for (String nonKeyColumn: nonKeyColumns) {
 				URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(mappedTable, nonKeyColumn);
 
-				queries.add(getQueryToGetDPAssertionOfRecord(mappedDP, nonKeyColumn, mappedTable, familyFields));
+				queries.add(getQueryToGetDPAssertionOfRecord(mappedDP, nonKeyColumn, mappedTable, familyFields, pColumnName, tColumnName));
 			}
 		}
-		
+
+		return queries;
+	}
+	
+	// the parameter individual is subject.
+	private String getQueryToGetDPAssertionsOfFieldSourceIndividual(URI individual, String pColumnName, String tColumnName) {
+		List<String> queries = getQueriesToGetDPAssertionsOfFieldSourceIndividual(individual, pColumnName, tColumnName);
 		return getUnionQuery(queries, 2);
 	}
 	
 	// the parameter individual is subject.
-	private String getQueryToGetDPAssertionsOfFieldSourceIndividual(URI individual) {
+	private List<String> getQueriesToGetDPAssertionsOfFieldSourceIndividual(URI individual, String pColumnName, String tColumnName) {
 		DBField field = Janus.mappingMetadata.getMappedDBFieldToFieldIndividual(individual);
-		
+
 		String table = field.getTableName();
 		String column = field.getColumnName();
 		String value = field.getValue();
@@ -367,25 +439,37 @@ public abstract class SQLGenerator {
 		for (URI cls: familyClsses) {
 			String mappedTable = Janus.mappingMetadata.getMappedTableNameToClass(cls);
 			String mappedColumn = Janus.mappingMetadata.getMappedColumnNameToClass(cls);
-			
+
 			URI mappedDP = Janus.mappingMetadata.getMappedDataProperty(mappedTable, mappedColumn);
 
-			queries.add(getQueryToGetDPAssertionOfField(mappedDP, mappedColumn, mappedTable, value));
+			queries.add(getQueryToGetDPAssertionOfField(mappedDP, mappedColumn, mappedTable, value, pColumnName, tColumnName));
 		}
 
-		return getUnionQuery(queries, 2);
+		return queries;
 	}
 	
 	//data property assertions 
-	public String getQueryToGetDPAssertionsOfSourceIndividual(URI individual) {
+	public String getQueryToGetDPAssertionsOfSourceIndividual(URI individual, String pColumnName, String tColumnName) {
 		String query = null;
 
 		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfRecordSourceIndividual(individual);
+			query = getQueryToGetDPAssertionsOfRecordSourceIndividual(individual, pColumnName, tColumnName);
 		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
-			query = getQueryToGetDPAssertionsOfFieldSourceIndividual(individual);
+			query = getQueryToGetDPAssertionsOfFieldSourceIndividual(individual, pColumnName, tColumnName);
 
 		return query;
+	}
+	
+	//data property assertions 
+	public List<String> getQueriesToGetDPAssertionsOfSourceIndividual(URI individual, String pColumnName, String tColumnName) {
+		List<String> queries = null;
+
+		if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.RECORD_INDIVIDUAL))
+			queries = getQueriesToGetDPAssertionsOfRecordSourceIndividual(individual, pColumnName, tColumnName);
+		else if (Janus.mappingMetadata.getIndividualType(individual).equals(OntEntityTypes.FIELD_INDIVIDUAL))
+			queries = getQueriesToGetDPAssertionsOfFieldSourceIndividual(individual, pColumnName, tColumnName);
+
+		return queries;
 	}
 	
 	//data property assertions 
@@ -405,7 +489,7 @@ public abstract class SQLGenerator {
 	}
 	
 	//data property assertions
-	public String getQueryToGetDPAssertionsOfTargetLiteral(String literal) {
+	public String getQueryToGetDPAssertionsOfTargetLiteral(String literal, String pColumnName, String sColumnName) {
 		String lexicalValue = Janus.mappingMetadata.getLexicalValueOfTypedLiteral(literal);
 		String datatypeOfTypedLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(literal);
 		
@@ -416,16 +500,16 @@ public abstract class SQLGenerator {
 		for(DBColumn dbColumn: dbColumns) {
 			
 			if (Janus.cachedDBMetadata.isKey(dbColumn.getTableName(), dbColumn.getColumnName()))
-				queries.add(getQueryToGetDPAssertionsOfKeyColumnLiteral(dbColumn, lexicalValue));
+				queries.add(getQueryToGetDPAssertionsOfKeyColumnLiteral(dbColumn, lexicalValue, pColumnName, sColumnName));
 			else
-				queries.add(getQueryToGetDPAssertionsOfNonKeyColumnLiteral(dbColumn, lexicalValue));
+				queries.add(getQueryToGetDPAssertionsOfNonKeyColumnLiteral(dbColumn, lexicalValue, pColumnName, sColumnName));
 		}
 		
 		return getUnionQuery(queries, 2);
 	}
 	
 	// for Type(?a, ?C), which both ?a and ?C are empty.
-	public String getQueryToGetAllClsAssertions() {
+	public String getQueryToGetAllClsAssertions(String columnName1, String columnName2) {
 		List<String> queries = new Vector<String>();
 		
 		URI owlThing = Janus.ontBridge.getOWLThingURI();
@@ -435,20 +519,20 @@ public abstract class SQLGenerator {
 		for (String table: tables) {
 			
 			if (Janus.cachedDBMetadata.isRootTable(table)) {
-				queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, owlThing));
+				queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, owlThing, columnName1, columnName2));
 			}
 			
 			URI mappedClass = Janus.mappingMetadata.getMappedClass(table);
-			queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, mappedClass));
+			queries.add(getQueryToGetAllClsAssertionsOfTableClass(table, mappedClass, columnName1, columnName2));
 			
 			Set<String> keys = Janus.cachedDBMetadata.getKeyColumns(table);
 			
 			for (String key: keys) {
 				if (Janus.cachedDBMetadata.isRootColumn(table, key))
-					queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, owlThing));
+					queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, owlThing, columnName1, columnName2));
 				
 				mappedClass = Janus.mappingMetadata.getMappedClass(table, key);
-				queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, mappedClass));
+				queries.add(getQueryToGetAllClsAssertionsOfColumnClass(table, key, mappedClass, columnName1, columnName2));
 			}
 		}
 		
@@ -476,7 +560,7 @@ public abstract class SQLGenerator {
 	}
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?p is a variable and both ?a and ?d are individuals.
-	public String getQueryToGetObjectPropertiesOfOPAssertion(URI aSourceIndividual, URI aTargetIndividual) {
+	public String getQueryToGetObjectPropertiesOfOPAssertion(URI aSourceIndividual, URI aTargetIndividual, String columnName) {
 		List<String> queries = new Vector<String>();
 		
 		String srcTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(aSourceIndividual);
@@ -498,7 +582,7 @@ public abstract class SQLGenerator {
 			
 			URI op = Janus.mappingMetadata.getMappedObjectProperty(table, column);
 			
-			StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(op) + "'" +
+			StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(op) + "'" + " AS " + columnName + 
 												 " FROM " + table + 
 												 " WHERE ");
 			
@@ -528,22 +612,22 @@ public abstract class SQLGenerator {
 			queries.add(query.toString());
 		}
 		
-		return getUnionQuery(queries, 1);
+		return getUnionQuery(queries, columnName);
 	}
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?p is a variable, ?a is an individual and ?d is a literal.
-	public String getQueryToGetDataPropertiesOfDPAssertion(URI aSourceIndividual, String aTargetLiteral) {
+	public String getQueryToGetDataPropertiesOfDPAssertion(URI aSourceIndividual, String aTargetLiteral, String columnName) {
 		OntEntityTypes individualType = Janus.mappingMetadata.getIndividualType(aSourceIndividual);
 		
 		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL))
-			return getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(aSourceIndividual, aTargetLiteral);
+			return getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(aSourceIndividual, aTargetLiteral, columnName);
 		else if (individualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) 
-			return getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(aSourceIndividual, aTargetLiteral);
+			return getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(aSourceIndividual, aTargetLiteral, columnName);
 		else
-			return getQueryToGetEmptyResultSet(1);
+			return getQueryToGetEmptyResultSet(columnName);
 	}
 	
-	private String getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(URI aSourceIndividual, String aTargetLiteral) {
+	private String getQueryToGetDataPropertiesOfDPAssertionWithFieldSrcIndividual(URI aSourceIndividual, String aTargetLiteral, String columnName) {
 		List<String> queries = new Vector<String>();
 		
 		String datatypeOfTargetLiteral = Janus.mappingMetadata.getDatatypeOfTypedLiteral(aTargetLiteral);
@@ -559,7 +643,7 @@ public abstract class SQLGenerator {
 		
 		if (!mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(srcTable, srcColumn)) 
 				|| !srcValue.equals(valueOfTargetLiteral))
-			return getUnionQuery(queries, 1);
+			return getUnionQuery(queries, columnName);
 		
 		Set<DBColumn> familyColumnsOfSrc = Janus.cachedDBMetadata.getFamilyColumns(srcField.getTableName(), srcField.getColumnName());
 		
@@ -576,7 +660,7 @@ public abstract class SQLGenerator {
 							&& Janus.cachedDBMetadata.isPrimaryKeySingleColumn(table)))))
 				query.append("DISTINCT ");
 				
-			query.append("'" + OntEntity.getCURIE(dp) + "'" + 
+			query.append("'" + OntEntity.getCURIE(dp) + "'" + " AS " + columnName + 
 						" FROM " + table + 
 						" WHERE " + table + "." + column + " = " + "'" + valueOfTargetLiteral + "'");
 			
@@ -586,7 +670,7 @@ public abstract class SQLGenerator {
 		return getUnionQuery(queries, 1);
 	}
 	
-	private String getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(URI aSourceIndividual, String aTargetLiteral) {
+	private String getQueryToGetDataPropertiesOfDPAssertionWithRecordSrcIndividual(URI aSourceIndividual, String aTargetLiteral, String columnName) {
 		List<String> queries = new Vector<String>();
 		
 		String srcTable = Janus.mappingMetadata.getMappedTableNameToRecordIndividual(aSourceIndividual);
@@ -608,7 +692,7 @@ public abstract class SQLGenerator {
 				if (mappedSQLTypes.contains(Janus.cachedDBMetadata.getDataType(table, column))) {
 					URI dp = Janus.mappingMetadata.getMappedDataProperty(table, column);
 					
-					StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" +
+					StringBuffer query = new StringBuffer("SELECT " + "'" + OntEntity.getCURIE(dp) + "'" + " AS " + columnName + 
 														 " FROM " + table + 
 														 " WHERE ");
 					

@@ -84,8 +84,6 @@ class SubDPAssertionsTable extends JScrollPane {
 
 @SuppressWarnings("serial")
 class SubDPAssertionsTableModel extends AbstractTableModel {
-	private OntEntityTypes entityType;
-
 	private int columnCount;
 	private int rowCount;
 	private CachedRecord cache;
@@ -99,9 +97,9 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	SubDPAssertionsTableModel(URI individual) {
 		this();
 		
-		entityType = Janus.mappingMetadata.getIndividualType(individual);
+		Janus.mappingMetadata.getIndividualType(individual);
 		
-		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSourceIndividual(individual);
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfSourceIndividual(individual, "'Data Property'", "'Target Value'");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -112,9 +110,7 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	SubDPAssertionsTableModel(String literal) {
 		this();
 		
-		entityType = OntEntityTypes.TYPED_LITERAL;
-		
-		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfTargetLiteral(literal);
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfTargetLiteral(literal, "'Data Property'", "'Source Individual'");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -124,19 +120,12 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		if (column == 0)
-			return "Data Property";
+		int index = column + 1;
 		
-		if (entityType.equals(OntEntityTypes.RECORD_INDIVIDUAL) 
-				|| entityType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
-			if (column == 1)
-				return "Target Value";
-		} else if (entityType.equals(OntEntityTypes.TYPED_LITERAL)) {
-			if (column == 1)
-				return "Source Individual";
-		}
+		if (column == 0 || column == 1)
+			return resultSet.getColumnName(index);
 		
-		return super.getColumnName(column);
+		return super.getColumnName(index);
 	}
 
 	public int getRowCount() {

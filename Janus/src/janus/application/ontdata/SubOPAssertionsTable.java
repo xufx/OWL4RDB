@@ -65,9 +65,13 @@ class SubOPAssertionsTableModel extends AbstractTableModel {
 	SubOPAssertionsTableModel(URI individual) {
 		individualType = Janus.mappingMetadata.getIndividualType(individual);
 		
-		String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfIndividual(individual);
-		
-		resultSet = Janus.dbBridge.executeQuery(query);
+		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
+			String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfIndividual(individual, "'Object Property'", "'Target Individual'");
+			resultSet = Janus.dbBridge.executeQuery(query);
+		} else if (individualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
+			String query = Janus.sqlGenerator.getQueryToGetOPAssertionsOfIndividual(individual, "'Object Property'", "'Source Individual'");
+			resultSet = Janus.dbBridge.executeQuery(query);
+		}
 		
 		rowCount = resultSet.getResultSetRowCount();
 		columnCount = resultSet.getResultSetColumnCount();
@@ -77,18 +81,12 @@ class SubOPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		if (column == 0)
-			return "Object Property";
+		int index = column + 1;
 		
-		if (individualType.equals(OntEntityTypes.RECORD_INDIVIDUAL)) {
-			if (column == 1)
-				return "Target Individual";
-		} else if (individualType.equals(OntEntityTypes.FIELD_INDIVIDUAL)) {
-			if (column == 1)
-				return "Source Individual";
-		}
+		if (column == 0 || column == 1)
+			return resultSet.getColumnName(index);
 		
-		return super.getColumnName(column);
+		return super.getColumnName(index);
 	}
 
 	public int getRowCount() {
