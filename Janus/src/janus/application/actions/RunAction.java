@@ -7,8 +7,6 @@ import janus.application.query.Showable;
 import janus.application.query.Submittable;
 import janus.database.SQLResultSetTableModel;
 import janus.query.sparqldl.SPARQLDLEngine;
-import janus.sparqldl.SPARQLDLQueryEngine;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -39,8 +37,8 @@ public class RunAction extends AbstractAction {
 		String stmt = submitter.getQuery();
 		
 		//->using derivo
-		SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
-		queryAgent.executeQuery();
+		//SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
+		//queryAgent.executeQuery();
 		//<-using derivo
 		
 		SPARQLDLEngine queryEngine = new SPARQLDLEngine(stmt);

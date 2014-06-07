@@ -1,8 +1,6 @@
 package janus;
 
 import java.io.File;
-import java.net.URI;
-
 import janus.application.JanusWindow;
 import janus.application.dialog.SessionManager;
 import janus.database.DBBridge;
