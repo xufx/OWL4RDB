@@ -1,36 +1,20 @@
 package janus.query.sparqldl;
 
 import janus.Janus;
-import janus.database.DBColumn;
-import janus.database.DBField;
 import janus.database.SQLResultSet;
-import janus.mapping.DatatypeMap;
-import janus.mapping.OntEntityTypes;
-import janus.mapping.OntMapper;
-
-import java.io.File;
-import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import de.derivo.sparqldlapi.QueryArgument;
 import de.derivo.sparqldlapi.QueryAtom;
-import de.derivo.sparqldlapi.QueryAtomGroup;
-import de.derivo.sparqldlapi.exceptions.QueryParserException;
 import de.derivo.sparqldlapi.types.QueryArgumentType;
 import de.derivo.sparqldlapi.types.QueryAtomType;
-import de.derivo.sparqldlapi.types.QueryType;
 
 public class SPARQLDLEngine {
 	private QueryMetadata query;
@@ -54,14 +38,20 @@ public class SPARQLDLEngine {
 	public boolean executeAskQuery() {
 		
 		if (query.isEmptyQuery()) {
-			System.out.println("The number of atoms is 0.");
+			System.err.println("The number of atoms is 0.");
 			return true;
 		}
 		
 		if (query.hasAnnotationAtoms()) {
-			System.out.println("The ontology does't have annotation assertions.");
+			System.err.println("The ontology does't have annotation assertions.");
 			return false;
 		}
+		
+		if (query.hasInconsistency()) {
+			return false;
+		}
+		
+		query.optimize();
 		
 		List<QueryAtom> R0BoxAtoms = query.getR0BoxAtoms();
 		if (R0BoxAtoms.size() > 0)
@@ -87,6 +77,22 @@ public class SPARQLDLEngine {
 	
 	public TableModel executeSelectQuery() {
 		
+		if (query.isEmptyQuery()) {
+			System.err.println("The number of atoms is 0.");
+			return new DefaultTableModel();
+		}
+		
+		if (query.hasAnnotationAtoms()) {
+			System.err.println("The ontology does't have annotation assertions.");
+			return new DefaultTableModel();
+		}
+		
+		if (query.hasInconsistency()) {
+			return new DefaultTableModel();
+		}
+		
+		query.optimize();
+		
 		identifyVariableType();
 		
 		atomResultSetPairs = new Hashtable<QueryAtom, SPARQLDLResultSet>();
@@ -103,9 +109,13 @@ public class SPARQLDLEngine {
 		if (!executeR2BoxAtoms(query.getR2BoxAtoms()))
 			return new DefaultTableModel();
 		
+		if (!executeA1BoxAtoms(query.getA1BoxAtoms()))
+			return new DefaultTableModel();
 		
+		if (!executeA2BoxAtoms(query.getA2BoxAtoms()))
+			return new DefaultTableModel();
 		
-		
+		executeA3BoxAtoms(query.getA3BoxAtoms());
 		
 		return null;
 	}
@@ -216,7 +226,7 @@ public class SPARQLDLEngine {
 		return variables.get(name);
 	}
 	
-	private boolean execute() {
+	/*private boolean execute() {
 		boolean result = executeR0BoxAtoms();
 		
 		if (result)
@@ -264,7 +274,7 @@ public class SPARQLDLEngine {
 		}
 		
 		return true;
-	}
+	}*/
 	
 	private boolean executeA1BoxAtoms(List<QueryAtom> A1BoxAtoms) {
 		for (QueryAtom atom: A1BoxAtoms) {
@@ -830,102 +840,4 @@ public class SPARQLDLEngine {
 		return true;
 	}
 	
-	private void preprocess() {
-		
-		checkConflict();
-	}
-	
-	private void checkConflict() {
-		List<QueryAtomGroup> groups = queryObject.getAtomGroups();
-		
-		for (QueryAtomGroup group : groups) {
-			List<QueryAtom> atoms = group.getAtoms();
-			
-			for (QueryAtom atom : atoms) {
-				
-				if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM)) {
-					
-					List<QueryArgument> args = atom.getArguments();
-					
-					for (QueryAtom atom2 : atoms) {
-						
-						if (atom2.getType().equals(QueryAtomType.SAME_AS)) {
-							
-							List<QueryArgument> args2 = atom2.getArguments();
-							
-							if (args.containsAll(args2)) {
-								System.out.println("Catched conflict...");
-								
-								QueryArgument arg1 = args2.get(0);
-								QueryArgument arg2 = args2.get(1);
-								
-								if (arg1.getType().equals(QueryArgumentType.VAR) && arg2.getType().equals(QueryArgumentType.VAR)) {
-									String varName1 = arg1.toString();
-									String varName2 = arg2.toString();
-									
-									Variable variable1 = variables.get(varName1);
-									Variable variable2 = variables.get(varName2);
-									
-									variable1.makeFinished();
-									variable2.makeFinished();
-								}
-							}
-						}
-					}
-				}
-				
-				if (atom.getType().equals(QueryAtomType.DISJOINT_WITH) || atom.getType().equals(QueryAtomType.COMPLEMENT_OF)) {
-					
-					List<QueryArgument> args = atom.getArguments();
-					
-					for (QueryAtom atom2 : atoms) {
-						
-						if (atom2.getType().equals(QueryAtomType.SUB_CLASS_OF) || atom2.getType().equals(QueryAtomType.EQUIVALENT_CLASS)) {
-							
-							List<QueryArgument> args2 = atom2.getArguments();
-							
-							if (args.containsAll(args2)) {
-								System.out.println("Catched conflict...");
-								
-								QueryArgument arg1 = args2.get(0);
-								QueryArgument arg2 = args2.get(1);
-								
-								if (arg1.getType().equals(QueryArgumentType.VAR) && arg2.getType().equals(QueryArgumentType.VAR)) {
-									String varName1 = arg1.toString();
-									String varName2 = arg2.toString();
-									
-									Variable variable1 = variables.get(varName1);
-									Variable variable2 = variables.get(varName2);
-									
-									variable1.makeFinished();
-									variable2.makeFinished();
-								}
-							}
-						}
-					}
-				}
-				
-				if (atom.getType().equals(QueryAtomType.EQUIVALENT_CLASS)) {
-					
-					List<QueryArgument> args = atom.getArguments();
-					
-					for (QueryAtom atom2 : atoms) {
-						
-						if (atom2.getType().equals(QueryAtomType.SUB_CLASS_OF)) {
-							
-							List<QueryArgument> args2 = atom2.getArguments();
-							
-							if (args.containsAll(args2)) {
-								System.out.println("Optimize...");
-								
-								group_t_0.remove(atom2);
-								group_t_1.remove(atom2);
-								group_t_2.remove(atom2);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
 }

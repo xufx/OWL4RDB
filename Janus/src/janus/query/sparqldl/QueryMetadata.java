@@ -2,6 +2,7 @@ package janus.query.sparqldl;
 
 import java.util.List;
 import java.util.Vector;
+
 import de.derivo.sparqldlapi.Query;
 import de.derivo.sparqldlapi.QueryArgument;
 import de.derivo.sparqldlapi.QueryAtom;
@@ -118,6 +119,18 @@ class QueryMetadata {
 		return R2BoxAtoms;
 	}
 	
+	List<QueryAtom> getA1BoxAtoms() {
+		return A1BoxAtoms;
+	}
+	
+	List<QueryAtom> getA2BoxAtoms() {
+		return A2BoxAtoms;
+	}
+	
+	List<QueryAtom> getA3BoxAtoms() {
+		return A3BoxAtoms;
+	}
+	
 	private boolean isABoxAtom(QueryAtom atom) {
 		QueryAtomType type = atom.getType();
 		if (type.equals(QueryAtomType.DIFFERENT_FROM)
@@ -144,6 +157,20 @@ class QueryMetadata {
 		}
 		
 		return false;
+	}
+	
+	List<QueryAtom> getAllAtoms() {
+		List<QueryAtom> allAtoms = new Vector<QueryAtom>();
+		
+		List<QueryAtomGroup> groups = queryObject.getAtomGroups();
+
+		for (QueryAtomGroup group : groups) {
+			List<QueryAtom> atoms = group.getAtoms();
+			for (QueryAtom atom : atoms)
+				allAtoms.add(atom);
+		}
+		
+		return allAtoms;
 	}
 	
 	private void seperateAtoms() {
@@ -200,6 +227,7 @@ class QueryMetadata {
 	List<QueryAtom> getABoxAtoms() {
 		List<QueryAtom> ABoxAtoms = new Vector<QueryAtom>();
 		
+		ABoxAtoms.addAll(A0BoxAtoms);
 		ABoxAtoms.addAll(A1BoxAtoms);
 		ABoxAtoms.addAll(A2BoxAtoms);
 		ABoxAtoms.addAll(A3BoxAtoms);
@@ -210,6 +238,7 @@ class QueryMetadata {
 	List<QueryAtom> getTBoxAtoms() {
 		List<QueryAtom> TBoxAtoms = new Vector<QueryAtom>();
 		
+		TBoxAtoms.addAll(T0BoxAtoms);
 		TBoxAtoms.addAll(T1BoxAtoms);
 		TBoxAtoms.addAll(T2BoxAtoms);
 		
@@ -219,9 +248,89 @@ class QueryMetadata {
 	List<QueryAtom> getRBoxAtoms() {
 		List<QueryAtom> RBoxAtoms = new Vector<QueryAtom>();
 		
+		RBoxAtoms.addAll(R0BoxAtoms);
 		RBoxAtoms.addAll(R1BoxAtoms);
 		RBoxAtoms.addAll(R2BoxAtoms);
 		
 		return RBoxAtoms;
 	}
+	
+	boolean hasInconsistency() {
+		List<QueryAtom> ABoxAtoms = getABoxAtoms();
+		
+		for (QueryAtom atom : ABoxAtoms) {
+
+			if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM)) {
+
+				List<QueryArgument> args = atom.getArguments();
+
+				for (QueryAtom atom2 : ABoxAtoms) {
+
+					if (atom2.getType().equals(QueryAtomType.SAME_AS)) {
+
+						List<QueryArgument> args2 = atom2.getArguments();
+
+						if (args.containsAll(args2)) {
+							System.err.println("Catched Inconsistency...");
+							return true;
+						}
+					}
+				}
+			}
+		}
+		
+		List<QueryAtom> TBoxAtoms = getTBoxAtoms();
+		
+		for (QueryAtom atom : TBoxAtoms) {
+
+			if (atom.getType().equals(QueryAtomType.DISJOINT_WITH) || atom.getType().equals(QueryAtomType.COMPLEMENT_OF)) {
+
+				List<QueryArgument> args = atom.getArguments();
+
+				for (QueryAtom atom2 : TBoxAtoms) {
+
+					if (atom2.getType().equals(QueryAtomType.SUB_CLASS_OF) || atom2.getType().equals(QueryAtomType.EQUIVALENT_CLASS)) {
+
+						List<QueryArgument> args2 = atom2.getArguments();
+
+						if (args.containsAll(args2)) {
+							System.err.println("Catched Inconsistency...");
+							return true;
+						}
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	void optimize() {
+		List<QueryAtom> TBoxAtoms = getTBoxAtoms();
+		
+		for (QueryAtom atom : TBoxAtoms) {
+
+			if (atom.getType().equals(QueryAtomType.EQUIVALENT_CLASS)) {
+
+				List<QueryArgument> args = atom.getArguments();
+
+				for (QueryAtom atom2 : TBoxAtoms) {
+
+					if (atom2.getType().equals(QueryAtomType.SUB_CLASS_OF)) {
+
+						List<QueryArgument> args2 = atom2.getArguments();
+
+						if (args.containsAll(args2)) {
+							System.out.println("Optimize...");
+
+							T0BoxAtoms.remove(atom2);
+							T1BoxAtoms.remove(atom2);
+							T2BoxAtoms.remove(atom2);
+						}
+					}
+				}
+			}
+		}
+	}
+
 }
