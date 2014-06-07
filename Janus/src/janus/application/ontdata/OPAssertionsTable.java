@@ -79,7 +79,7 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	OPAssertionsTableModel(URI op) {
-		String query = Janus.sqlGenerator.getQueryToGetOPAsserionsOfOP(op);
+		String query = Janus.sqlGenerator.getQueryToGetOPAsserionsOfOP(op, "'Source Individual'", "'Target Individual'");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -91,12 +91,12 @@ class OPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		if (column == 0)
-			return "Source Individual";
-		else if (column == 1)
-			return "Target Individual";
+		int index = column + 1;
 		
-		return super.getColumnName(column);
+		if (column == 0 || column == 1)
+			return resultSet.getColumnName(index);
+		
+		return super.getColumnName(index);
 	}
 
 	public int getRowCount() {

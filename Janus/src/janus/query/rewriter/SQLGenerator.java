@@ -52,11 +52,11 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetOPAssertionOfField(DBField field, String pColumnName, String sColumnName);
 	
-	protected abstract String getQueryToGetDPAssertionsOfDPWithTableClassDomain(URI dp);
+	protected abstract String getQueryToGetDPAssertionsOfDPWithTableClassDomain(URI dp, String sColumnName, String tColumnName);
 	
-	protected abstract String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp);
+	protected abstract String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp, String sColumnName, String tColumnName);
 	
-	public abstract String getQueryToGetOPAsserionsOfOP(URI op);
+	public abstract String getQueryToGetOPAsserionsOfOP(URI op, String sColumnName, String tColumnName);
 	
 	protected abstract String getQueryToGetDPAssertionsOfKeyColumnLiteral(DBColumn dbColumn, String lexicalValueOfLiteral, String pColumnName, String sColumnName);
 	
@@ -66,11 +66,11 @@ public abstract class SQLGenerator {
 	
 	protected abstract String getQueryToGetAllClsAssertionsOfColumnClass(String table, String column, URI cls, String columnName1, String columnName2);
 	
-	protected abstract String getQueryToGetAllOPAssertions(String table, String column);
+	protected abstract String getQueryToGetAllOPAssertions(String table, String column, String pColumnName, String sColumnName, String tColumnName);
 	
-	protected abstract String getQueryToGetAllDPAssertionsOfRecords(String table, String column);
+	protected abstract String getQueryToGetAllDPAssertionsOfRecords(String table, String column, String pColumnName, String sColumnName, String tColumnName);
 	
-	protected abstract String getQueryToGetAllDPAssertionsOfFields(String table, String column);
+	protected abstract String getQueryToGetAllDPAssertionsOfFields(String table, String column, String pColumnName, String sColumnName, String tColumnName);
 	
 	// for PropertyValue(?a, ?p, ?d), which only ?a is a variable and ?p is an object property.
 	public abstract String getQueryToGetSourceIndividualsOfOPAssertion(URI op, URI aTargetIndividual, String columnName);
@@ -473,7 +473,7 @@ public abstract class SQLGenerator {
 	}
 	
 	//data property assertions 
-	public String getQueryToGetDPAsserionsOfDP(URI dp) {
+	public String getQueryToGetDPAsserionsOfDP(URI dp, String sColumnName, String tColumnName) {
 		String query = null;
 		
 		URI domainCls = Janus.mappingMetadata.getDomainClassOfProperty(dp);
@@ -481,9 +481,9 @@ public abstract class SQLGenerator {
 		OntEntityTypes type = Janus.mappingMetadata.getClassType(domainCls);
 		
 		if (type.equals(OntEntityTypes.TABLE_CLASS))
-			query = getQueryToGetDPAssertionsOfDPWithTableClassDomain(dp);
+			query = getQueryToGetDPAssertionsOfDPWithTableClassDomain(dp, sColumnName, tColumnName);
 		else if (type.equals(OntEntityTypes.COLUMN_CLASS))
-			query = getQueryToGetDPAssertionsOfDPWithColumnClassDomain(dp);
+			query = getQueryToGetDPAssertionsOfDPWithColumnClassDomain(dp, sColumnName, tColumnName);
 		
 		return query;
 	}
@@ -540,7 +540,7 @@ public abstract class SQLGenerator {
 	}
 	
 	// for PropertyValue(?a, ?p, ?d), which ?a, ?p and ?d are all empty.
-	public String getQueryToGetAllPropertyAssertions() {
+	public String getQueryToGetAllPropertyAssertions(String pColumnName, String sColumnName, String tColumnName) {
 		List<String> queries = new Vector<String>();
 		
 		Set<String> tables = Janus.cachedDBMetadata.getTableNames();
@@ -550,10 +550,10 @@ public abstract class SQLGenerator {
 			
 			for (String column: columns)
 				if (Janus.cachedDBMetadata.isKey(table, column)) {
-					queries.add(getQueryToGetAllOPAssertions(table, column));
-					queries.add(getQueryToGetAllDPAssertionsOfFields(table, column));
+					queries.add(getQueryToGetAllOPAssertions(table, column, pColumnName, sColumnName, tColumnName));
+					queries.add(getQueryToGetAllDPAssertionsOfFields(table, column, pColumnName, sColumnName, tColumnName));
 				} else
-					queries.add(getQueryToGetAllDPAssertionsOfRecords(table, column));
+					queries.add(getQueryToGetAllDPAssertionsOfRecords(table, column, pColumnName, sColumnName, tColumnName));
 		}
 		
 		return getUnionQuery(queries, 3);

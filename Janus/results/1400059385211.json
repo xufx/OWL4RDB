@@ -1,0 +1,9 @@
+?x: http://www.example.com/college#op_course.id
+?x: http://www.example.com/college#op_department.id
+?x: http://www.example.com/college#op_lecturer.deptid
+?x: http://www.example.com/college#op_lecturer.id
+?x: http://www.example.com/college#op_person.id
+?x: http://www.example.com/college#op_student.deptid
+?x: http://www.example.com/college#op_student.id
+?x: http://www.example.com/college#op_takes.cid
+?x: http://www.example.com/college#op_takes.sid

@@ -96,7 +96,7 @@ class DPAssertionsTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	DPAssertionsTableModel(URI dp) {
-		String query = Janus.sqlGenerator.getQueryToGetDPAsserionsOfDP(dp);
+		String query = Janus.sqlGenerator.getQueryToGetDPAsserionsOfDP(dp, "'Source Individual'", "'Target Value'");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		
@@ -108,12 +108,12 @@ class DPAssertionsTableModel extends AbstractTableModel {
 	
 	@Override
 	public String getColumnName(int column) {
-		if (column == 0)
-			return "Source Individual";
-		else if (column == 1)
-			return "Target Value";
+		int index = column + 1;
 		
-		return super.getColumnName(column);
+		if (column == 0 || column == 1)
+			return resultSet.getColumnName(index);
+		
+		return super.getColumnName(index);
 	}
 
 	public int getRowCount() {
