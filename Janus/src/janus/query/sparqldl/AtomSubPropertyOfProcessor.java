@@ -45,11 +45,11 @@ class AtomSubPropertyOfProcessor {
 		URI pURI = null;
 		
 		if (arg1.getType().equals(QueryArgumentType.VAR)) {
-			varName = arg1.toString();
+			varName = arg1.getValue();
 			pURI = URI.create(arg2.getValue());
 		}
 		else {
-			varName = arg2.toString();
+			varName = arg2.getValue();
 			pURI = URI.create(arg1.getValue());
 		}
 		
@@ -83,8 +83,8 @@ class AtomSubPropertyOfProcessor {
 		
 		Vector<String> varNames = new Vector<String>(2);
 		
-		varNames.addElement(args.get(0).toString());
-		varNames.addElement(args.get(1).toString());
+		varNames.addElement(args.get(0).getValue());
+		varNames.addElement(args.get(1).getValue());
 		
 		if (!var1.getType().equals(var2.getType()))
 			return new URIResultSet();

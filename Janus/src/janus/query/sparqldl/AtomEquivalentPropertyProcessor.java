@@ -43,7 +43,7 @@ class AtomEquivalentPropertyProcessor {
 		
 		for (QueryArgument arg: args)
 			if (arg.getType().equals(QueryArgumentType.VAR))
-				varName = arg.toString();
+				varName = arg.getValue();
 			else
 				pURI = URI.create(arg.getValue());
 		
@@ -73,8 +73,8 @@ class AtomEquivalentPropertyProcessor {
 		
 		Vector<String> varNames = new Vector<String>(2);
 		
-		varNames.addElement(args.get(0).toString());
-		varNames.addElement(args.get(1).toString());
+		varNames.addElement(args.get(0).getValue());
+		varNames.addElement(args.get(1).getValue());
 		
 		if (!var1.getType().equals(var2.getType()))
 			return new URIResultSet();

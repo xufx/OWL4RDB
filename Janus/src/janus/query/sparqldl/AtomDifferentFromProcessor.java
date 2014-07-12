@@ -55,11 +55,11 @@ class AtomDifferentFromProcessor {
 		URI iURI = null;
 		
 		if (arg1.getType().equals(QueryArgumentType.VAR)) {
-			varName = arg1.toString();
+			varName = arg1.getValue();
 			iURI = URI.create(arg2.getValue());
 		}
 		else {
-			varName = arg2.toString();
+			varName = arg2.getValue();
 			iURI = URI.create(arg1.getValue());
 		}
 		
@@ -78,8 +78,8 @@ class AtomDifferentFromProcessor {
 	static SQLResultSet execute2(QueryAtom atom) {
 		List<QueryArgument> args = atom.getArguments();
 		
-		String varName1 = args.get(0).toString();
-		String varName2 = args.get(1).toString();
+		String varName1 = args.get(0).getValue();
+		String varName2 = args.get(1).getValue();
 		
 		String query = Janus.sqlGenerator.getQueryToGetAllPairsOfDiffIndividuals(varName1, varName2);
 		

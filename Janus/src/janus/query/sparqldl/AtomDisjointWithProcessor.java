@@ -39,7 +39,7 @@ class AtomDisjointWithProcessor {
 		
 		for (QueryArgument arg: args)
 			if (arg.getType().equals(QueryArgumentType.VAR))
-				varName = arg.toString();
+				varName = arg.getValue();
 			else
 				cURI = URI.create(arg.getValue());
 		
@@ -66,8 +66,8 @@ class AtomDisjointWithProcessor {
 		
 		Vector<String> varNames = new Vector<String>(2);
 		
-		varNames.addElement(args.get(0).toString());
-		varNames.addElement(args.get(1).toString());
+		varNames.addElement(args.get(0).getValue());
+		varNames.addElement(args.get(1).getValue());
 		
 		Vector<Vector<URI>> rows = new Vector<Vector<URI>>();
 		

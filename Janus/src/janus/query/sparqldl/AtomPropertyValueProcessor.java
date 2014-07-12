@@ -190,7 +190,7 @@ class AtomPropertyValueProcessor {
 
 		if (arg1.isVar()) {
 			
-			varName = arg1.toString();
+			varName = arg1.getValue();
 			pURI = URI.create(arg2.getValue());
 
 			if (Janus.ontBridge.containsObjectProperty(pURI)) {
@@ -216,7 +216,7 @@ class AtomPropertyValueProcessor {
 		
 		} else if (arg2.isVar()) {
 			
-			varName = arg2.toString();
+			varName = arg2.getValue();
 			sURI = URI.create(arg1.getValue());
 
 			if (!Janus.mappingMetadata.isBeableIndividual(sURI)) {
@@ -249,7 +249,7 @@ class AtomPropertyValueProcessor {
 				
 			}
 		} else {
-			varName = arg3.toString();
+			varName = arg3.getValue();
 
 			sURI = URI.create(arg1.getValue());
 
@@ -294,8 +294,8 @@ class AtomPropertyValueProcessor {
 		String oLit = null;
 		
 		if (!arg1.isVar()) {
-			String pVarName = arg2.toString();
-			String oVarName = arg3.toString();
+			String pVarName = arg2.getValue();
+			String oVarName = arg3.getValue();
 			
 			sURI = URI.create(arg1.getValue());
 			
@@ -316,8 +316,8 @@ class AtomPropertyValueProcessor {
 			return new SQLResultSet(query, varNames);
 			
 		} else if (!arg2.isVar()) {
-			String sVarName = arg1.toString();
-			String oVarName = arg3.toString();
+			String sVarName = arg1.getValue();
+			String oVarName = arg3.getValue();
 			
 			pURI = URI.create(arg2.getValue());
 			
@@ -350,8 +350,8 @@ class AtomPropertyValueProcessor {
 			}
 			
 		} else {
-			String sVarName = arg1.toString();
-			String pVarName = arg2.toString();
+			String sVarName = arg1.getValue();
+			String pVarName = arg2.getValue();
 			
 			if (arg3.isURI())
 				oURI = URI.create(arg3.getValue());
@@ -385,9 +385,9 @@ class AtomPropertyValueProcessor {
 		QueryArgument arg2 = args.get(1);
 		QueryArgument arg3 = args.get(2);
 		
-		String sVarName = arg1.toString();
-		String pVarName = arg2.toString();
-		String oVarName = arg3.toString();
+		String sVarName = arg1.getValue();
+		String pVarName = arg2.getValue();
+		String oVarName = arg3.getValue();
 		
 		String query = Janus.sqlGenerator.getQueryToGetAllPropertyAssertions(pVarName, sVarName, oVarName);
 		List<String> varNames = new Vector<String>(3);

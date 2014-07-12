@@ -366,7 +366,7 @@ class QueryMetadata {
 				argIndex++;
 				if (arg.isVar()) {
 					
-					String var = arg.toString();
+					String var = arg.getValue();
 					Variable variable;
 					
 					if (variables.containsKey(var))
@@ -405,7 +405,7 @@ class QueryMetadata {
 			for (QueryArgument arg: args)
 				if (arg.isVar()) {
 					
-					String var = arg.toString();
+					String var = arg.getValue();
 					Variable variable;
 					
 					if (variables.containsKey(var))
@@ -428,7 +428,7 @@ class QueryMetadata {
 			for (QueryArgument arg: args)
 				if (arg.isVar()) {
 					
-					String var = arg.toString();
+					String var = arg.getValue();
 					Variable variable;
 					
 					if (variables.containsKey(var))
