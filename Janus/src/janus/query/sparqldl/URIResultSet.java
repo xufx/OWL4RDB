@@ -1,5 +1,7 @@
 package janus.query.sparqldl;
 
+import janus.Janus;
+
 import java.net.URI;
 import java.util.Hashtable;
 import java.util.List;
@@ -52,7 +54,7 @@ class URIResultSet extends DefaultTableModel implements SPARQLDLResultSet {
 		return buf.toString();
 	}
 	
-	Vector<String> getColumnNames() {
+	public Vector<String> getColumnNames() {
 		int colCount = getColumnCount();
 		Vector<String> varNames = new Vector<String>();
 		for (int i = 0; i < colCount; i++)
@@ -71,7 +73,33 @@ class URIResultSet extends DefaultTableModel implements SPARQLDLResultSet {
 		return varNamesOfArg;
 	}
 	
-	URIResultSet getNaturalJoinedURIResultSet(URIResultSet arg) {
+	public String getQuery() {
+		return Janus.sqlGenerator.getQueryCorrespondingToURIResultSet(this);
+	}
+	
+	public SPARQLDLResultSet getNaturalJoinedResultSet(SPARQLDLResultSet arg) {
+		if (arg instanceof SQLResultSet) {
+			SQLResultSet argResultSet = (SQLResultSet) arg;
+			
+			String thisQuery = getQuery();
+			String argQuery = argResultSet.getQuery();
+			
+			List<String> thisColumnNames = getColumnNames();
+			List<String> argColumnNames = argResultSet.getColumnNames();
+			
+			argColumnNames.removeAll(thisColumnNames);
+			thisColumnNames.addAll(argColumnNames);
+			List<String> naturalJoinedColumnNames = thisColumnNames;
+			
+			String naturalJoinedQuery = Janus.sqlGenerator.getNaturalJoinedQuery(thisQuery, argQuery, naturalJoinedColumnNames);
+			
+			return new SQLResultSet(naturalJoinedQuery, naturalJoinedColumnNames);
+			
+		} else
+			return getNaturalJoinedURIResultSet((URIResultSet)arg);
+	}
+	
+	private URIResultSet getNaturalJoinedURIResultSet(URIResultSet arg) {
 		Vector<String> columnNames = getColumnNames();
 		columnNames.addAll(arg.getColumnNames());
 		

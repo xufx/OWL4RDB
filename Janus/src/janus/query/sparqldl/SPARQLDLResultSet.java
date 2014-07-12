@@ -1,7 +1,13 @@
 package janus.query.sparqldl;
 
+import java.util.Vector;
+
 interface SPARQLDLResultSet {
 	boolean isEmptySet();
 	
-	//URIResultSet getNaturalJoinedURIResultSet(URIResultSet arg);
+	SPARQLDLResultSet getNaturalJoinedResultSet(SPARQLDLResultSet arg);
+	
+	String getQuery();
+	
+	Vector<String> getColumnNames();
 }

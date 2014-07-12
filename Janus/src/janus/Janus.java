@@ -114,7 +114,7 @@ public class Janus {
 	
 		//System.out.println(Janus.ontBridge.isEquivalentClass(URI.create("http://www.example.com/college#person"), URI.create("http://www.example.com/college#person")));
 		
-		System.out.println(Janus.ontBridge.containsClass(Janus.ontBridge.getOWLNothingURI()));
+		//System.out.println(Janus.ontBridge.containsClass(Janus.ontBridge.getOWLNothingURI()));
 	}
 	
 	private static void setLookAndFeel() {

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.table.TableModel;
+
 public abstract class SQLGenerator {
 	
 	/* Type I-I: when a table has one column primary key. 
@@ -93,6 +95,8 @@ public abstract class SQLGenerator {
 	protected abstract String getQueryToGetAllIndividuals(String columnName);
 	
 	public abstract String getQueryToGetAllPairsOfDiffIndividuals(String columnName1, String columnName2);
+	
+	public abstract String getQueryCorrespondingToURIResultSet(TableModel aURIResultSet);
 	
 	public String getQueryToGetIndividualsOfClass(URI cls, String columnName) {
 		String query = null;
@@ -807,6 +811,23 @@ public abstract class SQLGenerator {
 			query.append("EXISTS (" + aQuery + ") AND ");
 		
 		query.delete(query.lastIndexOf(" AND "), query.length());
+		
+		return query.toString();
+	}
+	
+	public String getNaturalJoinedQuery(String query1, String query2, List<String> columnNamesToBeSelected) {
+		StringBuffer query = new StringBuffer("SELECT ");
+		
+		int columnCount = columnNamesToBeSelected.size();
+		for (int i = 0; i < columnCount; i++) {
+			query.append(columnNamesToBeSelected.get(i));
+			
+			if (i != columnCount - 1)
+				query.append(", ");
+			
+		}
+		
+		query.append(" FROM " + "(" + query1 + ")" + " AS " + "T1" + " NATURAL JOIN " + "(" + query2 + ")" + " AS " + "T2");
 		
 		return query.toString();
 	}

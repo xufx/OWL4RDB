@@ -1,6 +1,8 @@
 package janus.query.sparqldl;
 
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import de.derivo.sparqldlapi.Query;
@@ -18,10 +20,18 @@ class QueryMetadata {
 	
 	private List<QueryAtom> A0BoxAtoms, A1BoxAtoms, A2BoxAtoms, A3BoxAtoms, T0BoxAtoms, T1BoxAtoms, T2BoxAtoms, R0BoxAtoms, R1BoxAtoms, R2BoxAtoms; // The number means the count of variables.
 	
+	private Map<String, Variable> variables;
+	
 	QueryMetadata(String query) {
 		queryObject = createQueryObject(query);
 		
 		seperateAtoms();
+		
+		variables = new Hashtable<String, Variable>();
+	}
+	
+	Variable getVariable(String variable) {
+		return variables.get(variable);
 	}
 	
 	private Query createQueryObject(String query) {
@@ -66,7 +76,7 @@ class QueryMetadata {
 		return false;
 	}
 	
-	private boolean isTBoxAtom(QueryAtom atom) {
+	static boolean isTBoxAtom(QueryAtom atom) {
 		QueryAtomType type = atom.getType();
 		if (type.equals(QueryAtomType.COMPLEMENT_OF)
 				|| type.equals(QueryAtomType.DISJOINT_WITH)
@@ -90,7 +100,14 @@ class QueryMetadata {
 		return T2BoxAtoms;
 	}
 	
-	private boolean isRBoxAtom(QueryAtom atom) {
+	List<QueryAtom> getT1T2BoxAtoms() {
+		List<QueryAtom> T1T2BoxAtoms = new Vector<QueryAtom>(T1BoxAtoms);
+		T1T2BoxAtoms.addAll(T2BoxAtoms);
+		
+		return T1T2BoxAtoms;
+	}
+	
+	static boolean isRBoxAtom(QueryAtom atom) {
 		QueryAtomType type = atom.getType();
 		if (type.equals(QueryAtomType.DATA_PROPERTY)
 				|| type.equals(QueryAtomType.FUNCTIONAL)
@@ -131,7 +148,7 @@ class QueryMetadata {
 		return A3BoxAtoms;
 	}
 	
-	private boolean isABoxAtom(QueryAtom atom) {
+	static boolean isABoxAtom(QueryAtom atom) {
 		QueryAtomType type = atom.getType();
 		if (type.equals(QueryAtomType.DIFFERENT_FROM)
 				|| type.equals(QueryAtomType.PROPERTY_VALUE)
@@ -159,17 +176,17 @@ class QueryMetadata {
 		return false;
 	}
 	
-	List<QueryAtom> getAllAtoms() {
+	List<QueryAtom> getGT0Atoms() {
 		List<QueryAtom> allAtoms = new Vector<QueryAtom>();
 		
-		List<QueryAtomGroup> groups = queryObject.getAtomGroups();
-
-		for (QueryAtomGroup group : groups) {
-			List<QueryAtom> atoms = group.getAtoms();
-			for (QueryAtom atom : atoms)
-				allAtoms.add(atom);
-		}
-		
+		allAtoms.addAll(T1BoxAtoms);
+		allAtoms.addAll(R1BoxAtoms);
+		allAtoms.addAll(T2BoxAtoms);
+		allAtoms.addAll(R2BoxAtoms);
+		allAtoms.addAll(A1BoxAtoms);
+		allAtoms.addAll(A2BoxAtoms);
+		allAtoms.addAll(A3BoxAtoms);
+				
 		return allAtoms;
 	}
 	
@@ -332,5 +349,102 @@ class QueryMetadata {
 			}
 		}
 	}
-
+	
+	void identifyVariableType() {
+		identifyVariableTypeFromRBoxAtoms();
+		identifyVariableTypeFromTBoxAtoms();
+		identifyVariableTypeFromABoxAtoms();
+	}
+	
+	private void identifyVariableTypeFromABoxAtoms() {
+		List<QueryAtom> ABoxAtoms = getABoxAtoms();
+		
+		for (QueryAtom atom: ABoxAtoms) {
+			List<QueryArgument> args = atom.getArguments();
+			int argIndex = 0;
+			for (QueryArgument arg: args) {
+				argIndex++;
+				if (arg.isVar()) {
+					
+					String var = arg.toString();
+					Variable variable;
+					
+					if (variables.containsKey(var))
+						variable = variables.get(var);
+					else
+						variable = new Variable(var);
+					
+					if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM) || atom.getType().equals(QueryAtomType.SAME_AS))
+						variable.setType(VariableTypes.INDIVIDUALS);
+					else if (atom.getType().equals(QueryAtomType.TYPE)) {
+						if (argIndex == 1)
+							variable.setType(VariableTypes.INDIVIDUALS);
+						else
+							variable.setType(VariableTypes.CLASSES);
+					}
+					else if (atom.getType().equals(QueryAtomType.PROPERTY_VALUE)) {
+						if (argIndex == 1)
+							variable.setType(VariableTypes.INDIVIDUALS);
+						else if(argIndex == 2)
+							variable.setType(VariableTypes.PROPERTIES);
+						else if(argIndex == 3)
+							variable.setType(VariableTypes.INDIVIDUALS_OR_LITERALS);
+					}
+					
+					variables.put(var, variable);
+				}
+			}
+		}
+	}
+	
+	private void identifyVariableTypeFromTBoxAtoms() {
+		List<QueryAtom> TBoxAtoms = getTBoxAtoms();
+		
+		for (QueryAtom atom: TBoxAtoms) {
+			List<QueryArgument> args = atom.getArguments();
+			for (QueryArgument arg: args)
+				if (arg.isVar()) {
+					
+					String var = arg.toString();
+					Variable variable;
+					
+					if (variables.containsKey(var))
+						variable = variables.get(var);
+					else
+						variable = new Variable(var);
+					
+					variable.setType(VariableTypes.CLASSES);
+					
+					variables.put(var, variable);
+				}
+		}
+	}
+	
+	private void identifyVariableTypeFromRBoxAtoms() {
+		List<QueryAtom> RBoxAtoms = getRBoxAtoms();
+		
+		for (QueryAtom atom: RBoxAtoms) {
+			List<QueryArgument> args = atom.getArguments();
+			for (QueryArgument arg: args)
+				if (arg.isVar()) {
+					
+					String var = arg.toString();
+					Variable variable;
+					
+					if (variables.containsKey(var))
+						variable = variables.get(var);
+					else
+						variable = new Variable(var);
+					
+					if (atom.getType().equals(QueryAtomType.DATA_PROPERTY))
+						variable.setType(VariableTypes.DATA_PROPERTIES);
+					else if (atom.getType().equals(QueryAtomType.OBJECT_PROPERTY) || atom.getType().equals(QueryAtomType.INVERSE_FUNCTIONAL) || atom.getType().equals(QueryAtomType.SYMMETRIC) || atom.getType().equals(QueryAtomType.TRANSITIVE) || atom.getType().equals(QueryAtomType.INVERSE_OF))
+						variable.setType(VariableTypes.OBJECT_PROPERTIES);
+					else if (atom.getType().equals(QueryAtomType.FUNCTIONAL) || atom.getType().equals(QueryAtomType.SUB_PROPERTY_OF) || atom.getType().equals(QueryAtomType.EQUIVALENT_PROPERTY))
+						variable.setType(VariableTypes.PROPERTIES);
+					
+					variables.put(var, variable);
+				}
+		}
+	}
 }

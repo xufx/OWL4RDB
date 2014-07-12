@@ -1,34 +1,23 @@
 package janus.query.sparqldl;
 
-import janus.Janus;
-import janus.database.SQLResultSet;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import de.derivo.sparqldlapi.QueryArgument;
 import de.derivo.sparqldlapi.QueryAtom;
-import de.derivo.sparqldlapi.types.QueryArgumentType;
-import de.derivo.sparqldlapi.types.QueryAtomType;
 
 public class SPARQLDLEngine {
 	private QueryMetadata query;
 	
-	private Map<String, Variable> variables;
+	//private Hashtable<QueryAtom, SPARQLDLResultSet> atomResultSetPairs;
 	
-	private Hashtable<QueryAtom, SPARQLDLResultSet> atomResultSetPairs;
-	
-	private List<QueryAtom> groupGT1;
+	private AtomProcessor atomProcessor;
 	
 	public SPARQLDLEngine(String queryString) {
 		query = new QueryMetadata(queryString);
-		
-		variables = new Hashtable<String, Variable>();
+		atomProcessor = new AtomProcessor(query);
 	}
 	
 	public QueryTypes getQueryType() {
@@ -55,20 +44,20 @@ public class SPARQLDLEngine {
 		
 		List<QueryAtom> R0BoxAtoms = query.getR0BoxAtoms();
 		if (R0BoxAtoms.size() > 0)
-			if (!executeR0BoxAtoms(R0BoxAtoms))
+			if (!atomProcessor.executeR0BoxAtoms(R0BoxAtoms))
 				return false;
 		
 		List<QueryAtom> T0BoxAtoms = query.getT0BoxAtoms();
 		if (T0BoxAtoms.size() > 0)
-			if (!executeT0BoxAtoms(T0BoxAtoms))
+			if (!atomProcessor.executeT0BoxAtoms(T0BoxAtoms))
 				return false;
 			
 		List<QueryAtom> A0BoxAtoms = query.getA0BoxAtoms();
 		if (A0BoxAtoms.size() > 0) {
-			if (!executeA0BoxAtomsWithoutPresenceCheck(A0BoxAtoms))
+			if (!atomProcessor.executeA0BoxAtomsWithoutPresenceCheck(A0BoxAtoms))
 				return false;
 			
-			if (!executeA0BoxAtomsWithPresenceCheck(A0BoxAtoms))
+			if (!atomProcessor.executeA0BoxAtomsWithPresenceCheck(A0BoxAtoms))
 				return false;
 		}
 		
@@ -93,15 +82,87 @@ public class SPARQLDLEngine {
 		
 		query.optimize();
 		
-		identifyVariableType();
+		query.identifyVariableType();
 		
-		atomResultSetPairs = new Hashtable<QueryAtom, SPARQLDLResultSet>();
+		//atomResultSetPairs = new Hashtable<QueryAtom, SPARQLDLResultSet>();
 		
-		if (!executeT1BoxAtoms(query.getT1BoxAtoms()))
+		List<Vertex> mergedVertices = new Vector<Vertex>();
+		
+		List<QueryAtom> T1BoxAtoms = query.getT1BoxAtoms();
+		if (!T1BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, T1BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> T2BoxAtoms = query.getT2BoxAtoms();
+		if (!T2BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, T2BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> R1BoxAtoms = query.getR1BoxAtoms();
+		if (!R1BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, R1BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> R2BoxAtoms = query.getR2BoxAtoms();
+		if (!R2BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, R2BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> A1BoxAtoms = query.getA1BoxAtoms();
+		if (!A1BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, A1BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> A2BoxAtoms = query.getA2BoxAtoms();
+		if (!A2BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, A2BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		List<QueryAtom> A3BoxAtoms = query.getA3BoxAtoms();
+		if (!A3BoxAtoms.isEmpty()) {
+			mergedVertices = executeAtoms(mergedVertices, A3BoxAtoms);
+			
+			if (mergedVertices == null)
+				return new DefaultTableModel();
+		}
+		
+		Vertex mergedVertex = null;
+		for (Vertex vertexToBeMerged: mergedVertices) {System.out.println("INSIDE");
+			if (mergedVertex == null)
+				mergedVertex = new Vertex(vertexToBeMerged);
+			else
+				mergedVertex.joinResultSets(vertexToBeMerged);
+		}
+		if (mergedVertex == null) System.out.println("HERE");
+		SPARQLDLResultSet resultSet = mergedVertex.getResultSet();
+		if (query.getABoxAtoms().isEmpty())
+			return (TableModel) resultSet;
+		
+		/*if (!executeT1BoxAtoms(query.getT1BoxAtoms()))
 			return new DefaultTableModel();
 		
 		if (!executeT2BoxAtoms(query.getT2BoxAtoms()))
 			return new DefaultTableModel();
+		
+		mergeResultSets(query.getT1T2BoxAtoms());
 		
 		if (!executeR1BoxAtoms(query.getR1BoxAtoms()))
 			return new DefaultTableModel();
@@ -115,167 +176,51 @@ public class SPARQLDLEngine {
 		if (!executeA2BoxAtoms(query.getA2BoxAtoms()))
 			return new DefaultTableModel();
 		
-		executeA3BoxAtoms(query.getA3BoxAtoms());
+		executeA3BoxAtoms(query.getA3BoxAtoms());*/
 		
 		return null;
 	}
 	
-	void putAtomResult(QueryAtom atom, SPARQLDLResultSet resultSet) {
-		atomResultSetPairs.put(atom, resultSet);
-	}
-	
-	private void identifyVariableType() {
-		identifyVariableTypeFromRBoxAtoms();
-		identifyVariableTypeFromTBoxAtoms();
-		identifyVariableTypeFromABoxAtoms();
-	}
-	
-	private void identifyVariableTypeFromABoxAtoms() {
-		List<QueryAtom> ABoxAtoms = query.getABoxAtoms();
+	private List<Vertex> executeAtoms(List<Vertex> mergedVertices, List<QueryAtom> atoms) {
+		List<Vertex> vertices = new Vector<Vertex>();
+		//if (mergedVertices != null)
+		vertices.addAll(mergedVertices);
+		vertices.addAll(Vertex.buildListOfVertices(atoms));
 		
-		for (QueryAtom atom: ABoxAtoms) {
-			List<QueryArgument> args = atom.getArguments();
-			int argIndex = 0;
-			for (QueryArgument arg: args) {
-				argIndex++;
-				if (arg.isVar()) {
-					
-					String var = arg.toString();
-					Variable variable;
-					
-					if (variables.containsKey(var))
-						variable = variables.get(var);
-					else
-						variable = new Variable(var);
-					
-					if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM) || atom.getType().equals(QueryAtomType.SAME_AS))
-						variable.setType(VariableTypes.INDIVIDUALS);
-					else if (atom.getType().equals(QueryAtomType.TYPE)) {
-						if (argIndex == 1)
-							variable.setType(VariableTypes.INDIVIDUALS);
-						else
-							variable.setType(VariableTypes.CLASSES);
-					}
-					else if (atom.getType().equals(QueryAtomType.PROPERTY_VALUE)) {
-						if (argIndex == 1)
-							variable.setType(VariableTypes.INDIVIDUALS);
-						else if(argIndex == 2)
-							variable.setType(VariableTypes.PROPERTIES);
-						else if(argIndex == 3)
-							variable.setType(VariableTypes.INDIVIDUALS_OR_LITERALS);
-					}
-					
-					variables.put(var, variable);
-				}
-			}
-		}
-	}
-	
-	private void identifyVariableTypeFromTBoxAtoms() {
-		List<QueryAtom> TBoxAtoms = query.getTBoxAtoms();
+		Graph graph = new Graph(vertices);
 		
-		for (QueryAtom atom: TBoxAtoms) {
-			List<QueryArgument> args = atom.getArguments();
-			for (QueryArgument arg: args)
-				if (arg.isVar()) {
-					
-					String var = arg.toString();
-					Variable variable;
-					
-					if (variables.containsKey(var))
-						variable = variables.get(var);
-					else
-						variable = new Variable(var);
-					
-					variable.setType(VariableTypes.CLASSES);
-					
-					variables.put(var, variable);
-				}
-		}
-	}
-	
-	private void identifyVariableTypeFromRBoxAtoms() {
-		List<QueryAtom> RBoxAtoms = query.getRBoxAtoms();
+		List<List<Vertex>> components = graph.getComponents();
 		
-		for (QueryAtom atom: RBoxAtoms) {
-			List<QueryArgument> args = atom.getArguments();
-			for (QueryArgument arg: args)
-				if (arg.isVar()) {
-					
-					String var = arg.toString();
-					Variable variable;
-					
-					if (variables.containsKey(var))
-						variable = variables.get(var);
-					else
-						variable = new Variable(var);
-					
-					if (atom.getType().equals(QueryAtomType.DATA_PROPERTY))
-						variable.setType(VariableTypes.DATA_PROPERTIES);
-					else if (atom.getType().equals(QueryAtomType.OBJECT_PROPERTY) || atom.getType().equals(QueryAtomType.INVERSE_FUNCTIONAL) || atom.getType().equals(QueryAtomType.SYMMETRIC) || atom.getType().equals(QueryAtomType.TRANSITIVE) || atom.getType().equals(QueryAtomType.INVERSE_OF))
-						variable.setType(VariableTypes.OBJECT_PROPERTIES);
-					else if (atom.getType().equals(QueryAtomType.FUNCTIONAL) || atom.getType().equals(QueryAtomType.SUB_PROPERTY_OF) || atom.getType().equals(QueryAtomType.EQUIVALENT_PROPERTY))
-						variable.setType(VariableTypes.PROPERTIES);
-					
-					variables.put(var, variable);
-				}
-		}
-	}
-	
-	Variable getVariable(String name) {
-		return variables.get(name);
-	}
-	
-	/*private boolean execute() {
-		boolean result = executeR0BoxAtoms();
+		List<Vertex> verticesToBeMerged = new Vector<Vertex>(components.size());
 		
-		if (result)
-			result = executeGroupR1();
-		else
-			return false;
-		
-		if (result)
-			result = executeGroupT1();
-		else
-			return false;
-		
-		if (result)
-			result = executeA1BoxAtoms();
-		else
-			return false;
-		
-		ABox2Processor abox2Processor = new ABox2Processor();
-		ABox3Processor abox3Processor = new ABox3Processor();
-		RBox2Processor rbox2Processor = new RBox2Processor();
-		TBox2Processor tbox2Processor = new TBox2Processor();
-		
-		AtomGraph graph = new AtomGraph(groupGT1);
-		
-		for (QueryAtom atom: groupGT1) {
-			List<QueryAtom> bfsPath = graph.getBFSPath(atom);
+		for (List<Vertex> component: components) {
 			
-			for (QueryAtom vAtom: bfsPath) {
-				if (isTBoxAtom(vAtom))
-					tbox2Processor.execute(vAtom, variables);
-				else if (isRBoxAtom(vAtom))
-					rbox2Processor.execute(vAtom, variables);
-				else {
-					List<QueryArgument> args = vAtom.getArguments();
-					int groupIndex = args.size();
-					for (QueryArgument arg: args)
-						if (!arg.isVar()) groupIndex--;
-					
-					if (groupIndex < 3)
-						abox2Processor.execute(vAtom, variables);
-					else
-						abox3Processor.execute(vAtom, variables);
-				}
+			Vertex vertexToBeMerged = null;
+			
+			for (Vertex vertex: component) {
+				
+				if (!vertex.isExecuted())
+					atomProcessor.executeVertex(vertex);
+				
+				if (vertex.isResultEmptySet())
+					return null;
+				
+				if (vertexToBeMerged == null)
+					vertexToBeMerged = new Vertex(vertex);
+				else
+					vertexToBeMerged.joinResultSets(vertex);
 			}
+			
+			verticesToBeMerged.add(vertexToBeMerged);
 		}
 		
-		return true;
-	}*/
+		return verticesToBeMerged;
+	}
 	
+	/*void putAtomResult(QueryAtom atom, SPARQLDLResultSet resultSet) {
+		atomResultSetPairs.put(atom, resultSet);
+	}*/
+	/*
 	private boolean executeA1BoxAtoms(List<QueryAtom> A1BoxAtoms) {
 		for (QueryAtom atom: A1BoxAtoms) {
 			
@@ -366,202 +311,6 @@ public class SPARQLDLEngine {
 			
 				putAtomResult(atom, AtomPropertyValueProcessor.execute3(atom));
 				
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean executeA0BoxAtomsWithoutPresenceCheck(List<QueryAtom> A0BoxAtoms) {
-		for (QueryAtom atom: A0BoxAtoms) {
-			
-			if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM)) {
-				
-				if (AtomDifferentFromProcessor.execute0WithoutPresenceCheck(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.SAME_AS)) {
-				
-				if (AtomSameAsProcessor.execute0WithoutPresenceCheck(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.TYPE)) {
-				
-				if (AtomTypeProcessor.execute0WithoutPresenceCheck(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.PROPERTY_VALUE)) {
-				
-				if (AtomPropertyValueProcessor.execute0WithoutPresenceCheck(atom))
-					continue;
-				else
-					return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean executeA0BoxAtomsWithPresenceCheck(List<QueryAtom> A0BoxAtoms) {
-		Set<String> queries = new ConcurrentSkipListSet<String>();
-		
-		for (QueryAtom atom: A0BoxAtoms) {
-			
-			if (atom.getType().equals(QueryAtomType.DIFFERENT_FROM)) {
-				
-				queries.addAll(AtomDifferentFromProcessor.execute0WithPresenceCheck(atom));
-			
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.SAME_AS)) {
-				
-				queries.add(AtomSameAsProcessor.execute0WithPresenceCheck(atom));
-					
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.TYPE)) {
-				
-				queries.add(AtomTypeProcessor.execute0WithPresenceCheck(atom));
-				
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.PROPERTY_VALUE)) {
-				
-				queries.addAll(AtomPropertyValueProcessor.execute0WithPresenceCheck(atom));
-		
-			}
-		}
-		
-		String query = Janus.sqlGenerator.getQueryToCheckPresence(queries);
-		
-		SQLResultSet resultSet = Janus.dbBridge.executeQuery(query);
-		
-		List<String> record = resultSet.getResultSetRowAt(1);
-		
-		return Boolean.parseBoolean(record.get(0));
-	}
-	
-	private boolean executeT0BoxAtoms(List<QueryAtom> T0BoxAtoms) {
-		for (QueryAtom atom: T0BoxAtoms) {
-			
-			if (atom.getType().equals(QueryAtomType.COMPLEMENT_OF)) {
-				
-				if (AtomComplementOfProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.DISJOINT_WITH)) {
-				
-				if (AtomDisjointWithProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.EQUIVALENT_CLASS)) {
-				
-				if (AtomEquivalentClassProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.SUB_CLASS_OF)) {
-				
-				if (AtomSubClassOfProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean executeR0BoxAtoms(List<QueryAtom> R0BoxAtoms) {
-		for (QueryAtom atom: R0BoxAtoms) {
-			
-			if (atom.getType().equals(QueryAtomType.TRANSITIVE)) {
-				
-				if (AtomTransitiveProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.SYMMETRIC)) {
-				
-				if (AtomSymmetricProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.INVERSE_FUNCTIONAL)) {
-				
-				if (AtomInverseFunctionalProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.FUNCTIONAL)) {
-				
-				if (AtomFunctionalProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.DATA_PROPERTY)) {
-				
-				if (AtomDataPropertyProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.OBJECT_PROPERTY)) {
-				
-				if (AtomObjectPropertyProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.INVERSE_OF)) {
-				
-				if (AtomInverseOfProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.EQUIVALENT_PROPERTY)) {
-				
-				if (AtomEquivalentPropertyProcessor.execute0(atom))
-					continue;
-				else
-					return false;
-			}
-			
-			else if (atom.getType().equals(QueryAtomType.SUB_PROPERTY_OF)) {
-				
-				if (AtomSubPropertyOfProcessor.execute0(atom))
-					continue;
-				else
-					return false;
 			}
 		}
 		
@@ -839,5 +588,5 @@ public class SPARQLDLEngine {
 		
 		return true;
 	}
-	
+	*/
 }

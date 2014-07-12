@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.table.TableModel;
+
 class MariaDBSQLGenerator extends SQLGenerator {
 	
 	static SQLGenerator getInstance() {
@@ -644,5 +646,31 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		}
 		
 		return getUnionQuery(queries, 1);
+	}
+	
+	public String getQueryCorrespondingToURIResultSet(TableModel aURIResultSet) {
+		List<String> queries = new Vector<String>();
+		
+		int rowCount = aURIResultSet.getRowCount();
+		int columnCount = aURIResultSet.getColumnCount();
+		
+		for (int i = 0; i < rowCount; i++) {
+			StringBuffer query = new StringBuffer("SELECT ");
+			for (int j = 0; j < columnCount; j++) {
+				URI value = (URI)aURIResultSet.getValueAt(i, j);
+				String curie = OntEntity.getCURIE(value);
+				
+				query.append("'" + curie + "'");
+				
+				if (i == 0)
+					query.append(" AS " + aURIResultSet.getColumnName(j));
+				
+				if (j != columnCount - 1)
+					query.append(", ");
+			}
+			queries.add(query.toString());
+		}
+		 
+		return getUnionQuery(queries, columnCount);
 	}
 }
