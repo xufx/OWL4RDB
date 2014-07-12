@@ -4,7 +4,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 import de.derivo.sparqldlapi.Query;
 import de.derivo.sparqldlapi.QueryArgument;
 import de.derivo.sparqldlapi.QueryAtom;
@@ -14,6 +13,8 @@ import de.derivo.sparqldlapi.types.QueryAtomType;
 import de.derivo.sparqldlapi.types.QueryType;
 
 class QueryMetadata {
+	private String queryString;
+	
 	private Query queryObject;
 	
 	private QueryTypes queryType;
@@ -23,11 +24,39 @@ class QueryMetadata {
 	private Map<String, Variable> variables;
 	
 	QueryMetadata(String query) {
+		queryString = query;
+		
 		queryObject = createQueryObject(query);
 		
 		seperateAtoms();
 		
 		variables = new Hashtable<String, Variable>();
+	}
+	
+	List<String> getResultVariables() {
+		List<String> resultVars = new Vector<String>();
+		
+		int beginIndex = queryString.indexOf("SELECT") + 7;
+		int endIndex = queryString.indexOf("WHERE") - 1;
+		
+		if (beginIndex < 0 || endIndex < 0 || endIndex - beginIndex <= 0)
+			return resultVars;
+		
+		do {
+			beginIndex = queryString.indexOf("?", beginIndex);
+			int nextVarIndex = queryString.indexOf("?", beginIndex + 1);
+			
+			if (nextVarIndex < endIndex) {
+				resultVars.add(queryString.substring(beginIndex + 1, nextVarIndex).trim());
+				beginIndex = nextVarIndex;
+			} else {
+				resultVars.add(queryString.substring(beginIndex + 1, endIndex).trim());
+				break;
+			}
+				
+		} while(true);
+		
+		return resultVars;
 	}
 	
 	Variable getVariable(String variable) {

@@ -152,6 +152,9 @@ public class SPARQLDLEngine {
 		}
 		
 		SPARQLDLResultSet resultSet = mergedVertex.getResultSet();
+		
+		resultSet.getProjectedResultSet(query.getResultVariables());
+		
 		if (query.getABoxAtoms().isEmpty())
 			return (TableModel) resultSet;
 		else

@@ -31,6 +31,10 @@ class URIResultSet extends DefaultTableModel implements SPARQLDLResultSet {
 		super(columnNames, rowCount);
 	}
 	
+	public SPARQLDLResultSet getProjectedResultSet(List<String> resultVariables) {
+		
+	}
+	
 	public boolean isEmptySet() {
 		return getRowCount() < 1;
 	}

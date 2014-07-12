@@ -24,6 +24,10 @@ class SQLResultSet implements SPARQLDLResultSet {
 		columnNames.add(columnName);
 	}
 	
+	public SPARQLDLResultSet getProjectedResultSet(List<String> resultVariables) {
+		
+	}
+	
 	public boolean isEmptySet() {
 		return isEmptySet;
 	}
