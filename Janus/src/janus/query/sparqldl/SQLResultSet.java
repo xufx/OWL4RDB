@@ -24,8 +24,8 @@ class SQLResultSet implements SPARQLDLResultSet {
 		columnNames.add(columnName);
 	}
 	
-	public SPARQLDLResultSet getProjectedResultSet(List<String> resultVariables) {
-		
+	public SPARQLDLResultSet getProjectedResultSet(Vector<String> resultVariables) {
+		return new SQLResultSet(Janus.sqlGenerator.getProjectedQuery(resultVariables, query), resultVariables);
 	}
 	
 	public boolean isEmptySet() {

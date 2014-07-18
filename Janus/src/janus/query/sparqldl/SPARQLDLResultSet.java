@@ -1,6 +1,5 @@
 package janus.query.sparqldl;
 
-import java.util.List;
 import java.util.Vector;
 
 interface SPARQLDLResultSet {
@@ -12,5 +11,5 @@ interface SPARQLDLResultSet {
 	
 	Vector<String> getColumnNames();
 	
-	SPARQLDLResultSet getProjectedResultSet(List<String> resultVariables); 
+	SPARQLDLResultSet getProjectedResultSet(Vector<String> resultVariables); 
 }

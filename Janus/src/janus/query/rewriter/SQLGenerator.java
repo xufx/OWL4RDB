@@ -831,4 +831,20 @@ public abstract class SQLGenerator {
 		
 		return query.toString();
 	}
+	
+	public String getProjectedQuery(List<String> columnNames, String query) {
+		StringBuffer projectedQuery = new StringBuffer("SELECT ");
+		
+		int columnCount = columnNames.size();
+		for (int i = 0; i < columnCount; i++) {
+			projectedQuery.append(columnNames.get(i));
+			
+			if (i != columnCount - 1)
+				projectedQuery.append(", ");
+		}
+		
+		projectedQuery.append(" FROM " + "(" + query + ")" + " AS " + "T");
+		
+		return projectedQuery.toString();
+	}
 }

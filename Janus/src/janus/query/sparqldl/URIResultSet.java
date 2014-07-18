@@ -31,8 +31,26 @@ class URIResultSet extends DefaultTableModel implements SPARQLDLResultSet {
 		super(columnNames, rowCount);
 	}
 	
-	public SPARQLDLResultSet getProjectedResultSet(List<String> resultVariables) {
+	public SPARQLDLResultSet getProjectedResultSet(Vector<String> resultVariables) {
+		int rowCount = getRowCount();
+		URIResultSet projectedResultSet = new URIResultSet(resultVariables, rowCount);
 		
+		int argColumnCount = projectedResultSet.getColumnCount();
+		int thisColumnCount = getColumnCount();
+		for (int i = 0; i < argColumnCount; i++) {
+			for (int j = 0; j < thisColumnCount; j++) {
+				if (projectedResultSet.getColumnName(i).equals(getColumnName(j))) {
+					
+					for (int k = 0; k < rowCount; k++)
+						projectedResultSet.setValueAt(getValueAt(k, j), k, i);
+					
+					break;
+				}
+			}
+	
+		}
+		
+		return projectedResultSet;
 	}
 	
 	public boolean isEmptySet() {

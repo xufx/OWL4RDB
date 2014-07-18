@@ -33,8 +33,8 @@ class QueryMetadata {
 		variables = new Hashtable<String, Variable>();
 	}
 	
-	List<String> getResultVariables() {
-		List<String> resultVars = new Vector<String>();
+	Vector<String> getResultVariables() {
+		Vector<String> resultVars = new Vector<String>();
 		
 		int beginIndex = queryString.indexOf("SELECT") + 7;
 		int endIndex = queryString.indexOf("WHERE") - 1;
