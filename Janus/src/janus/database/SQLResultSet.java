@@ -1,5 +1,7 @@
 package janus.database;
 
+import janus.util.DateUtility;
+
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -62,7 +64,7 @@ public class SQLResultSet {
 						v.add(rs.getBigDecimal(i).toString());
 						break;
 					case Types.BIT:
-						v.add(Boolean.toString(rs.getBoolean(i)));
+						v.add(rs.getBoolean(i)?"1":"0");
 						break;
 					case Types.TINYINT:
 						v.add(Byte.toString(rs.getByte(i)));
@@ -94,12 +96,12 @@ public class SQLResultSet {
 						break;
 					case Types.DATE:
 					case Types.TIME:
-						case Types.TIMESTAMP:
+					case Types.TIMESTAMP:
 						Timestamp timestamp = rs.getTimestamp(i);
 						if (timestamp == null)
 							v.add(null);
 						else
-							v.add(timestamp.toString());
+							v.add(DateUtility.convertDateToXSDString(timestamp));
 						break;
 				}
 			}
