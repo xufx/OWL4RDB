@@ -96,7 +96,7 @@ class DPAssertionsTableModel extends AbstractTableModel {
 	private SQLResultSet resultSet;
 
 	DPAssertionsTableModel(URI dp) {
-		String query = Janus.sqlGenerator.getQueryToGetDPAsserionsOfDP(dp, "'Source Individual'", "'Target Value'");
+		String query = Janus.sqlGenerator.getQueryToGetDPAsserionsOfDP(dp, "'Source Individual'", "'Target Value'");System.out.println(query);
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		

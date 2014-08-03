@@ -195,8 +195,13 @@ class MariaDBSQLGenerator extends SQLGenerator {
 		String table = mappedColumn.getTableName();
 		String dpColumn = mappedColumn.getColumnName();
 		
-		return "SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + sColumnName + ", " + getConcatCallStatementToBuildLiteral(table, dpColumn) + " AS " + tColumnName 
-				+ " FROM " + table;
+		StringBuffer query = new StringBuffer("SELECT " + getConcatCallStatementToBuildRecordIndividual(table) + " AS " + sColumnName + ", " + getConcatCallStatementToBuildLiteral(table, dpColumn) + " AS " + tColumnName 
+										   + " FROM " + table);
+		
+		if (!Janus.cachedDBMetadata.isNotNull(table, dpColumn))
+			query.append(" WHERE " + table + "." + dpColumn + " IS NOT NULL");
+		
+		return query.toString();
 	}
 	
 	protected String getQueryToGetDPAssertionsOfDPWithColumnClassDomain(URI dp, String sColumnName, String tColumnName) {
