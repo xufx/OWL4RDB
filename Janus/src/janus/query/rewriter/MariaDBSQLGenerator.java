@@ -426,11 +426,11 @@ class MariaDBSQLGenerator extends SQLGenerator {
 			
 			query.append(getConcatCallStatementToBuildLiteral(table, column) + " AS " + columnName +
 					" FROM " + table +
-					" WHERE ");
+					" WHERE " + table + "." + column + " = " + "'" + srcField.getValue() + "'");
 			
-			String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, srcColumn, table);
+			//String matchedColumn = Janus.cachedDBMetadata.getMatchedPKColumnAmongFamilyTables(srcTable, srcColumn, table);
 			
-			query.append(table + "." + matchedColumn + " = " + "'" + srcField.getValue() + "'");
+			//query.append(table + "." + matchedColumn + " = " + "'" + srcField.getValue() + "'");
 			
 			return query.toString();
 			

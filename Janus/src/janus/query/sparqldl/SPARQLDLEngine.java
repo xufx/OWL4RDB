@@ -65,7 +65,7 @@ public class SPARQLDLEngine {
 		return true;
 	}
 	
-	public TableModel executeSelectQuery() {
+	public TableModel executeSelectQuery() {long start = System.currentTimeMillis();
 		
 		if (query.isEmptyQuery()) {
 			System.err.println("The number of atoms is 0.");
@@ -155,10 +155,20 @@ public class SPARQLDLEngine {
 		
 		resultSet = resultSet.getProjectedResultSet(query.getResultVariables());
 		
-		if (query.getABoxAtoms().isEmpty())
+		if (query.getABoxAtoms().isEmpty()) {
+			long end = System.currentTimeMillis();
+			System.out.println( "(Through DB Reasoner) 질의 처리 시간 : " + ( end - start));
 			return (TableModel) resultSet;
-		else
-			return new SQLResultSetTableModel(Janus.dbBridge.executeQuery(resultSet.getQuery()));
+		} else {
+			janus.database.SQLResultSet sqlResultSet = Janus.dbBridge.executeQuery(resultSet.getQuery());
+			long end = System.currentTimeMillis();
+			System.out.println( "(Through DB Reasoner) 질의 처리 시간 : " + ( end - start));
+			return new SQLResultSetTableModel(sqlResultSet);
+		}
+//		if (query.getABoxAtoms().isEmpty()) 
+//			return (TableModel) resultSet;
+//		else
+//			return new SQLResultSetTableModel(Janus.dbBridge.executeQuery(resultSet.getQuery()));
 	}
 	
 	private List<Vertex> executeAtoms(List<Vertex> mergedVertices, List<QueryAtom> atoms) {
