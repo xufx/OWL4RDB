@@ -39,7 +39,7 @@ public class RunAction extends AbstractAction {
 		//->using derivo
 		//SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
 		//queryAgent.executeQuery();
-		Janus.ontBridge.executeQuery(stmt);
+		//Janus.ontBridge.executeQuery(stmt);
 		//<-using derivo
 		
 		SPARQLDLEngine queryEngine = new SPARQLDLEngine(stmt);

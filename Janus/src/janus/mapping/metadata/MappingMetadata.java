@@ -211,7 +211,7 @@ public class MappingMetadata {
 		return IndividualMetadata.getMappedRecordIndividualFragment(table, pkFields);
 	}
 	
-	public String getMappedLiteral(String table, String column, String value) {
+	public String getEncodedMappedLiteral(String table, String column, String value) {
 		return LiteralMetadata.getMappedLiteral(table, column, value);
 	}
 	

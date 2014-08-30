@@ -322,7 +322,7 @@ public class AtomProcessor {
 		else if (atom.getType().equals(QueryAtomType.FUNCTIONAL)) {
 			List<QueryArgument> args = atom.getArguments();
 
-			String varName = args.get(0).toString();
+			String varName = args.get(0).getValue();
 			Variable variable = query.getVariable(varName);
 
 			return AtomFunctionalProcessor.execute1(atom, variable);
@@ -344,7 +344,7 @@ public class AtomProcessor {
 
 			for (QueryArgument arg: args)
 				if (arg.getType().equals(QueryArgumentType.VAR)) {
-					varName = arg.toString();
+					varName = arg.getValue();
 					break;
 				}
 
@@ -362,9 +362,9 @@ public class AtomProcessor {
 			String varName = null;
 
 			if (arg1.getType().equals(QueryArgumentType.VAR))
-				varName = arg1.toString();
+				varName = arg1.getValue();
 			else
-				varName = arg2.toString();
+				varName = arg2.getValue();
 
 			Variable variable = query.getVariable(varName);
 
@@ -381,8 +381,8 @@ public class AtomProcessor {
 		else if (atom.getType().equals(QueryAtomType.EQUIVALENT_PROPERTY)) {
 			List<QueryArgument> args = atom.getArguments();
 
-			String varName1 = args.get(0).toString();
-			String varName2 = args.get(1).toString();
+			String varName1 = args.get(0).getValue();
+			String varName2 = args.get(1).getValue();
 
 			Variable var1 = query.getVariable(varName1);
 			Variable var2 = query.getVariable(varName2);
@@ -394,8 +394,8 @@ public class AtomProcessor {
 
 			List<QueryArgument> args = atom.getArguments();
 
-			String varName1 = args.get(0).toString();
-			String varName2 = args.get(1).toString();
+			String varName1 = args.get(0).getValue();
+			String varName2 = args.get(1).getValue();
 
 			Variable var1 = query.getVariable(varName1);
 			Variable var2 = query.getVariable(varName2);

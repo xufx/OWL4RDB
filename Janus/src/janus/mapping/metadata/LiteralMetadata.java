@@ -7,6 +7,10 @@ class LiteralMetadata {
 	static String getMappedLiteral(String table, String column, String value) {
 		int sqlDataType = Janus.cachedDBMetadata.getDataType(table, column);
 		String xmlSchemaDataType = DatatypeMap.get(sqlDataType);
+		
+		if (value.contains("\""))
+			value = value.replaceAll("\"", "&quot;");
+		
 		String literal = "\"" + value + "\"^^" + xmlSchemaDataType;
 		
 		return literal;

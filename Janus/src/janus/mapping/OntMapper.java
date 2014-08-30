@@ -253,7 +253,7 @@ public class OntMapper {
 					if (cellData == null) continue;
 					
 					String columnName = columnNames.get(columnIndex);
-					String literal = Janus.mappingMetadata.getMappedLiteral(tableName, columnName, cellData);
+					String literal = Janus.mappingMetadata.getEncodedMappedLiteral(tableName, columnName, cellData);
 					String dp = Janus.mappingMetadata.getMappedDataPropertyFragment(tableName, columnName);
 					
 					if (Janus.cachedDBMetadata.isKey(tableName, columnName)) {
