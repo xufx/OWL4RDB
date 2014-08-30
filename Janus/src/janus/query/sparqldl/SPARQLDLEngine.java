@@ -159,7 +159,7 @@ public class SPARQLDLEngine {
 			long end = System.currentTimeMillis();
 			System.out.println( "(Through DB Reasoner) 질의 처리 시간 : " + ( end - start));
 			return (TableModel) resultSet;
-		} else {System.out.println(resultSet.getQuery());
+		} else {//System.out.println("\n" + resultSet.getQuery() + "\n");
 			janus.database.SQLResultSet sqlResultSet = Janus.dbBridge.executeQuery(resultSet.getQuery());
 			long end = System.currentTimeMillis();
 			System.out.println( "(Through DB Reasoner) 질의 처리 시간 : " + ( end - start));

@@ -110,7 +110,7 @@ class SubDPAssertionsTableModel extends AbstractTableModel {
 	SubDPAssertionsTableModel(String literal) {
 		this();
 		
-		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfTargetLiteral(literal, "'Data Property'", "'Source Individual'");System.out.println(query);
+		String query = Janus.sqlGenerator.getQueryToGetDPAssertionsOfTargetLiteral(literal, "'Data Property'", "'Source Individual'");
 		
 		resultSet = Janus.dbBridge.executeQuery(query);
 		

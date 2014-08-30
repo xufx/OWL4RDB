@@ -37,11 +37,10 @@ public class RunAction extends AbstractAction {
 		String stmt = submitter.getQuery();
 		
 		//->using derivo
-		//SPARQLDLQueryEngine queryAgent = new SPARQLDLQueryEngine(stmt);
-		//queryAgent.executeQuery();
 		//Janus.ontBridge.executeQuery(stmt);
 		//<-using derivo
 		
+		//->using Janus
 		SPARQLDLEngine queryEngine = new SPARQLDLEngine(stmt);
 		
 		janus.query.sparqldl.QueryTypes queryType = queryEngine.getQueryType();
@@ -52,12 +51,7 @@ public class RunAction extends AbstractAction {
 			displayer.showResult(queryEngine.executeAskQuery());
 		else if (queryType.equals(janus.query.sparqldl.QueryTypes.SELECT))
 			displayer.showResult(queryEngine.executeSelectQuery());
-		
-		//long start = System.currentTimeMillis();
-		
-		//long end = System.currentTimeMillis();
-		
-		//System.out.println( "(Through OWL View for RDB) 질의 처리 시간 : " + ( end - start));	
+		//<-using Janus
 	}
 	
 	private void submitSQL(Submittable submitter) {

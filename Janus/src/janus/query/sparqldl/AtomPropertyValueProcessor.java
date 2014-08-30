@@ -309,7 +309,7 @@ class AtomPropertyValueProcessor {
 				return resultSet;
 			}
 			
-			String query = Janus.sqlGenerator.getQueryToGetAllPropertyAssertionsOfSourceIndividual(sURI, pVarName, oVarName);System.out.println(query);
+			String query = Janus.sqlGenerator.getQueryToGetAllPropertyAssertionsOfSourceIndividual(sURI, pVarName, oVarName);
 			List<String> varNames = new Vector<String>(2);
 			varNames.add(pVarName);
 			varNames.add(oVarName);

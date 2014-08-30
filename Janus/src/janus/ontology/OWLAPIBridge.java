@@ -173,9 +173,6 @@ class OWLAPIBridge implements OntBridge {
 			long start = System.currentTimeMillis();
 			
 			QueryResult queryResult = queryEngine.execute(query);
-	
-			long end = System.currentTimeMillis();
-			System.out.println( "(Through In-Memory Reasoner) 질의 처리 시간 : " + ( end - start));
 			
 			if (query.isAsk())
 				System.out.println(queryResult.ask());
@@ -183,7 +180,8 @@ class OWLAPIBridge implements OntBridge {
 				System.out.println(queryResult.toString());
 			;
 			System.out.println("...finished");
-			
+			long end = System.currentTimeMillis();
+			System.out.println( "(Through In-Memory Reasoner) 질의 처리 시간 : " + ( end - start));
 		} catch (QueryEngineException e) {
 			e.printStackTrace();
 		}
